@@ -3,7 +3,7 @@ package kr.mashup.ladder.common.dto.response
 data class ApiResponse<T>(
     val code: String = "",
     val message: String = "",
-    val data: T?
+    val data: T?,
 ) {
 
     companion object {

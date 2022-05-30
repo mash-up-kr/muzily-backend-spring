@@ -7,3 +7,14 @@ indent_size = 4
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
+
+[{*.gradle.kts,*.kt,*.kts,*.main.kts}]
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_name_count_to_use_star_import = 2147483647
+ij_kotlin_name_count_to_use_star_import_for_members = 2147483647
+
+[*.md]
+trim_trailing_whitespace = false
+
+[{*.yml, *.yaml}]
+indent_size = 2

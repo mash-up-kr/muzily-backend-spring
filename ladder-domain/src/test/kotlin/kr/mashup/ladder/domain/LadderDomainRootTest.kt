@@ -1,14 +1,17 @@
-package kr.mashup.ladder
+package kr.mashup.ladder.domain
 
 import kr.mashup.ladder.domain.common.constants.PackageConstants.LADDER_BASE_PACKAGE
+import org.junit.jupiter.api.Test
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
-import org.springframework.boot.runApplication
 
 @ConfigurationPropertiesScan(basePackages = [LADDER_BASE_PACKAGE])
 @SpringBootApplication(scanBasePackages = [LADDER_BASE_PACKAGE])
-class LadderServerApplication
+internal class LadderDomainRootTest : LadderDomainRoot() {
 
-fun main(args: Array<String>) {
-    runApplication<LadderServerApplication>(*args)
+    @Test
+    fun contextsLoad() {
+
+    }
+
 }

@@ -1,13 +1,8 @@
 package kr.mashup.ladder.domain.common.error
 
 /**
- * ErrorCode (v2022.05.30)
- * 400: 잘못된 요청 + 필수 파라미터 안 넘겼을 때
- * 401: 인증 실패
- * 403: 권한이 없는 경우
- * 404: NotFound 리소스
- * 409: 중복된 리소스
- * 500: 서버 에러
+ * 에러 코드
+ * https://github.com/mash-up-kr/ladder-server/wiki/004.-%EC%97%90%EB%9F%AC-%EC%BD%94%EB%93%9C
  */
 
 enum class ErrorCode(

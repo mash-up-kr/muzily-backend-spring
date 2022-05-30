@@ -12,7 +12,15 @@ repositories {
     mavenCentral()
 }
 
+java.sourceCompatibility = JavaVersion.VERSION_11
+
 subprojects {
+    group = "kr.mashup.ladder"
+
+    repositories {
+        mavenCentral()
+    }
+
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "java-library")
@@ -21,11 +29,11 @@ subprojects {
     apply(plugin = "kotlin-spring")
     apply(plugin = "kotlin-kapt")
 
-    group = "kr.mashup"
-    java.sourceCompatibility = JavaVersion.VERSION_11
-
-    repositories {
-        mavenCentral()
+    dependencies {
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+        implementation("org.jetbrains.kotlin:kotlin-reflect")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
     }
 
     tasks.withType<KotlinCompile> {
@@ -37,13 +45,6 @@ subprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
-    }
-
-    dependencies {
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-        implementation("org.jetbrains.kotlin:kotlin-reflect")
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-        testImplementation("org.springframework.boot:spring-boot-starter-test")
     }
 }
 
