@@ -14,6 +14,9 @@ repositories {
 
 java.sourceCompatibility = JavaVersion.VERSION_11
 
+val kotestVersion by extra { "4.4.3" }
+val springMockkVersion by extra { "3.1.1" }
+
 subprojects {
     group = "kr.mashup.ladder"
 
@@ -34,6 +37,13 @@ subprojects {
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+        // kotest
+        testImplementation("io.kotest:kotest-runner-junit5:${kotestVersion}")
+        testImplementation("io.kotest:kotest-extensions-spring:${kotestVersion}")
+
+        // Spring MockK
+        testImplementation("com.ninja-squad:springmockk:${springMockkVersion}")
     }
 
     tasks.withType<KotlinCompile> {

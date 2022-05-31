@@ -4,7 +4,7 @@ import kr.mashup.ladder.domain.common.error.ErrorCode
 
 data class ApiResponse<T>(
     val code: String = "",
-    val message: String = "", // TODO: message 서버에서 내려줄 건지 여부 확인 필요
+    val message: String = "",
     val data: T?,
 ) {
 
