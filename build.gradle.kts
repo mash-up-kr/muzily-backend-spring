@@ -14,8 +14,9 @@ repositories {
 
 java.sourceCompatibility = JavaVersion.VERSION_11
 
-val kotestVersion by extra { "4.4.3" }
-val springMockkVersion by extra { "3.1.1" }
+/** Version */
+val kotestVersion = "4.4.3"
+val springMockkVersion = "3.1.1"
 
 subprojects {
     group = "kr.mashup.ladder"
