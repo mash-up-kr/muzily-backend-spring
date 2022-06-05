@@ -1,11 +1,9 @@
-spring.profiles.default: local
+spring.profiles.default: test
 spring.config:
   import:
     - classpath:/application-domain.yml
 
 server:
-  port: 8080
-  shutdown: graceful
   servlet:
     encoding:
       charset: UTF-8
