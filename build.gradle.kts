@@ -17,6 +17,7 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 /** Version */
 val kotestVersion = "4.4.3"
 val springMockkVersion = "3.1.1"
+val kotlinLoggingVersion = "2.1.20"
 
 subprojects {
     group = "kr.mashup.ladder"
@@ -34,9 +35,15 @@ subprojects {
     apply(plugin = "kotlin-kapt")
 
     dependencies {
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+        // kotlin
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+        // kotlin logging
+        implementation("io.github.microutils:kotlin-logging-jvm:${kotlinLoggingVersion}")
+
+        // Spring Test
         testImplementation("org.springframework.boot:spring-boot-starter-test")
 
         // kotest

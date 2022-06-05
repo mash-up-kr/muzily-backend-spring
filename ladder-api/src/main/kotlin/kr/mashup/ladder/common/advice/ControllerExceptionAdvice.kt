@@ -3,13 +3,14 @@ package kr.mashup.ladder.common.advice
 import kr.mashup.ladder.common.dto.response.ApiResponse
 import kr.mashup.ladder.domain.common.error.ErrorCode
 import kr.mashup.ladder.domain.common.error.model.LadderBaseException
-import kr.mashup.ladder.domain.common.utils.logger
-import org.slf4j.Logger
+import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+
+private val logger = KotlinLogging.logger {}
 
 @RestControllerAdvice
 class ControllerExceptionAdvice {
@@ -35,7 +36,5 @@ class ControllerExceptionAdvice {
         logger.error(exception.message, exception)
         return ApiResponse.error(ErrorCode.UNKNOWN_ERROR)
     }
-
-    private val logger: Logger = logger()
 
 }
