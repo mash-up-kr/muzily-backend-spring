@@ -1,0 +1,4 @@
+spring.profiles.default: test
+spring.config:
+  import:
+    - classpath:/application-domain.yml
