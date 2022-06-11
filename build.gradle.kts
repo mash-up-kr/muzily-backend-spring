@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
+    id("com.google.cloud.tools.jib") version "3.2.1"
 }
 
 repositories {
@@ -33,6 +34,7 @@ subprojects {
     apply(plugin = "kotlin-jpa")
     apply(plugin = "kotlin-spring")
     apply(plugin = "kotlin-kapt")
+    apply(plugin = "com.google.cloud.tools.jib")
 
     dependencies {
         // kotlin
