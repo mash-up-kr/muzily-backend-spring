@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class RoomApiController {
 
-    @GetMapping("/api/v1/rooms")
+    @GetMapping("/v1/rooms")
     fun getRooms(): ApiResponse<String> {
-        return ApiResponse.ok("a")
+        return ApiResponse.OK
     }
 }

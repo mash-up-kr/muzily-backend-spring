@@ -4,9 +4,10 @@ spring.config:
     - classpath:/application-domain.yml
 
 server:
-  port: 8080
+  port: 8000
   shutdown: graceful
   servlet:
+    context-path: /api
     encoding:
       charset: UTF-8
       force: true
