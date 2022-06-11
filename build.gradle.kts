@@ -56,6 +56,10 @@ subprojects {
         testImplementation("com.ninja-squad:springmockk:${springMockkVersion}")
     }
 
+    tasks.create("deploy") {
+        dependsOn("jib")
+    }
+
     tasks.withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict")
