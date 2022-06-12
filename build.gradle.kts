@@ -19,6 +19,7 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 val kotestVersion = "4.4.3"
 val springMockkVersion = "3.1.1"
 val kotlinLoggingVersion = "2.1.20"
+val microMeterVersion = "1.9.0"
 
 subprojects {
     group = "kr.mashup.ladder"
@@ -44,6 +45,9 @@ subprojects {
 
         // kotlin logging
         implementation("io.github.microutils:kotlin-logging-jvm:${kotlinLoggingVersion}")
+
+        implementation("org.springframework.boot:spring-boot-starter-actuator")
+        implementation("io.micrometer:micrometer-registry-prometheus:${microMeterVersion}")
 
         // Spring Test
         testImplementation("org.springframework.boot:spring-boot-starter-test")

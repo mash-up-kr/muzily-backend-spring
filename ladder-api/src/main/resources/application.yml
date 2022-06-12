@@ -11,3 +11,13 @@ server:
     encoding:
       charset: UTF-8
       force: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
+          - info
+          - metrics
