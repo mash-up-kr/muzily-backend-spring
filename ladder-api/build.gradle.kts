@@ -1,8 +1,12 @@
 dependencies {
     implementation(project(":ladder-domain"))
 
+    // spring
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+    // rest-assured
+    testImplementation("io.rest-assured:rest-assured:4.4.0")
 }
 
 jib {
