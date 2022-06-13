@@ -7,7 +7,6 @@ server:
   port: 8000
   shutdown: graceful
   servlet:
-    context-path: /api
     encoding:
       charset: UTF-8
       force: true
