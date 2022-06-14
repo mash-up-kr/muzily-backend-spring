@@ -1,17 +1,33 @@
 package kr.mashup.ladder.room
 
+import com.fasterxml.jackson.core.type.TypeReference
 import io.restassured.RestAssured
 import io.restassured.response.ExtractableResponse
 import io.restassured.response.Response
 import kr.mashup.ladder.IntegrationTest
+import kr.mashup.ladder.common.dto.response.WsResponse
+import kr.mashup.ladder.common.dto.response.WsResponseType
 import kr.mashup.ladder.domain.common.error.ErrorCode
 import kr.mashup.ladder.domain.room.dto.RoomDto
+import kr.mashup.ladder.room.dto.RoomChatRequest
 import kr.mashup.ladder.room.dto.RoomCreateRequest
+import kr.mashup.ladder.util.StompTestHelper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.messaging.simp.stomp.StompFrameHandler
+import org.springframework.messaging.simp.stomp.StompHeaders
+import org.springframework.messaging.simp.stomp.StompSession
+import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
+import org.springframework.web.socket.messaging.WebSocketStompClient
+import java.lang.reflect.Type
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
+
 
 class RoomIntegrationTest : IntegrationTest() {
     val `스타벅스 판교점 방 생성 요청값` = RoomCreateRequest(description = "스타벅스 판교점. 테마는 신나게 🎶")
@@ -52,7 +68,7 @@ class RoomIntegrationTest : IntegrationTest() {
     @Test
     fun `방을 조회한다`() {
         // given
-        val 방 = `방 생성되어 있음`(`스타벅스 판교점 방 생성 요청값`);
+        val 방 = `방 생성되어 있음`(`스타벅스 판교점 방 생성 요청값`)
 
         // when
         val response = `방 조회 요청`(`방`.roomId)
@@ -96,5 +112,51 @@ class RoomIntegrationTest : IntegrationTest() {
 
         val actual = response.jsonPath().getObject("code", String::class.java)
         assertThat(actual).isEqualTo(ErrorCode.ROOM_NOT_FOUND.code)
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = ["1,HELLO"])
+    fun `방에 채팅을 보내고 받는다`(roomId: Long, chat: String) {
+        // given
+        val future: CompletableFuture<WsResponse<*>> = CompletableFuture()
+        val client = StompTestHelper.newClient()
+        val session = `웹소켓 연결됨`(client)
+        `방에 접속함`(session, roomId, future)
+
+        // when
+        `방에 채팅 보내기 요청`(session, roomId, chat)
+
+        // then
+        `채팅 받음`(future)
+    }
+
+    fun `웹소켓 연결됨`(client: WebSocketStompClient): StompSession {
+        return client
+            .connect("ws://localhost:${port}/ws", object : StompSessionHandlerAdapter() {})
+            .get(1, TimeUnit.SECONDS)
+    }
+
+    fun `방에 접속함`(session: StompSession, roomId: Long, future: CompletableFuture<WsResponse<*>>) {
+        val handler = object : StompFrameHandler {
+            override fun getPayloadType(headers: StompHeaders): Type {
+                return object : TypeReference<WsResponse<*>>() {}.type
+            }
+
+            override fun handleFrame(headers: StompHeaders, payload: Any?) {
+                future.complete(payload as WsResponse<*>)
+            }
+        }
+
+        session.subscribe("/sub/rooms/${roomId}", handler)
+    }
+
+    fun `방에 채팅 보내기 요청`(session: StompSession, roomId: Long, chat: String) {
+        session.send("/pub/rooms/${roomId}/chats", RoomChatRequest(chat))
+    }
+
+    fun `채팅 받음`(future: CompletableFuture<WsResponse<*>>) {
+        val response = future.get(10, TimeUnit.SECONDS)
+
+        assertThat(response.type).isEqualTo(WsResponseType.CHAT)
     }
 }

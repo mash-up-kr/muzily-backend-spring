@@ -4,6 +4,10 @@ data class RoomCreateRequest(
     val description: String,
 )
 
-data class RoomChatPayload(
+data class RoomChatRequest(
+    val chat: String,
+)
+
+data class RoomChatResponse(
     val chat: String,
 )

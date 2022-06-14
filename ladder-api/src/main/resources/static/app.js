@@ -18,7 +18,7 @@ function connect() {
         setConnected(true);
         console.log('Connected: ' + frame);
         stompClient.subscribe('/sub/rooms/' + $("#room-id").val(), function (message) {
-            showReceivedChat(JSON.parse(message.body).data);
+            showReceivedChat(JSON.parse(message.body).data.chat);
         });
     });
 }
