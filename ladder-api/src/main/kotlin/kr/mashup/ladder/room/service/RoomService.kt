@@ -2,6 +2,7 @@ package kr.mashup.ladder.room.service
 
 import kr.mashup.ladder.common.dto.payload.WsResponsePayload
 import kr.mashup.ladder.domain.room.domain.Room
+import kr.mashup.ladder.domain.room.domain.RoomNotFoundException
 import kr.mashup.ladder.domain.room.domain.RoomRepository
 import kr.mashup.ladder.domain.room.dto.RoomDto
 import kr.mashup.ladder.room.dto.RoomCreateRequest
@@ -22,7 +23,7 @@ class RoomService(
 
     @Transactional(readOnly = true)
     fun findBy(roomId: Long): RoomDto {
-        val room = roomRepository.findById(roomId) ?: throw NoSuchElementException(roomId.toString())
+        val room = roomRepository.findById(roomId) ?: throw RoomNotFoundException("$roomId")
         return RoomDto.from(room)
     }
 
