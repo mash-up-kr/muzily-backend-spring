@@ -22,9 +22,9 @@ class RoomApiController(
         return ApiResponse.ok(room)
     }
 
-    @GetMapping("/{id}")
-    fun getRoom(@PathVariable id: Long): ApiResponse<RoomDto> {
-        val room = roomService.findBy(id)
+    @GetMapping("/{roomId}")
+    fun getRoom(@PathVariable roomId: Long): ApiResponse<RoomDto> {
+        val room = roomService.findBy(roomId)
         return ApiResponse.ok(room)
     }
 }

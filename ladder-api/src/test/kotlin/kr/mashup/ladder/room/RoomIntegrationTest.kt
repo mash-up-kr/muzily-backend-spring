@@ -42,7 +42,7 @@ class RoomIntegrationTest : IntegrationTest() {
         val created = response.jsonPath().getObject("data", RoomDto::class.java)
 
         assertAll(
-            { assertThat(created.id).isNotNull() },
+            { assertThat(created.roomId).isNotNull() },
             { assertThat(created.description).isEqualTo(request.description) })
     }
 
@@ -52,7 +52,7 @@ class RoomIntegrationTest : IntegrationTest() {
         val 방 = `방 생성되어 있음`(`방 생성 요청값`);
 
         // when
-        val response = `방 조회 요청`(`방`.id)
+        val response = `방 조회 요청`(`방`.roomId)
 
         // then
         `방 조회됨`(`방`, response)
@@ -62,10 +62,10 @@ class RoomIntegrationTest : IntegrationTest() {
         return `방 생성 요청`(request).jsonPath().getObject("data", RoomDto::class.java)
     }
 
-    fun `방 조회 요청`(id: Long): ExtractableResponse<Response> {
+    fun `방 조회 요청`(roomId: Long): ExtractableResponse<Response> {
         return RestAssured
             .given().log().all()
-            .`when`().get("/api/v1/rooms/{id}", id)
+            .`when`().get("/api/v1/rooms/{roomId}", roomId)
             .then().log().all()
             .extract()
     }
@@ -74,6 +74,6 @@ class RoomIntegrationTest : IntegrationTest() {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
 
         val actual = response.jsonPath().getObject("data", RoomDto::class.java)
-        assertThat(actual.id).isEqualTo(given.id)
+        assertThat(actual.roomId).isEqualTo(given.roomId)
     }
 }

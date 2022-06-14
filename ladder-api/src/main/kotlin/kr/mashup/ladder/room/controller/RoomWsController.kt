@@ -1,6 +1,6 @@
 package kr.mashup.ladder.room.controller
 
-import kr.mashup.ladder.room.dto.RoomChatMessage
+import kr.mashup.ladder.room.dto.RoomChatPayload
 import kr.mashup.ladder.room.service.RoomService
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Controller
 class RoomWsController(
     private val roomService: RoomService,
 ) {
-    @MessageMapping("/pub/rooms/{id}/chats")
-    fun publishChat(@DestinationVariable id: Long, message: RoomChatMessage) {
-        roomService.publishChat(id, message)
+    @MessageMapping("/pub/rooms/{roomId}/chats")
+    fun publishChat(@DestinationVariable roomId: Long, payload: RoomChatPayload) {
+        roomService.publishChat(roomId, payload.chat)
     }
 }
