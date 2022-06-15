@@ -16,8 +16,7 @@ class DatabaseCleanup : InitializingBean {
 
     override fun afterPropertiesSet() {
         tableNames = entityManager.metamodel.entities
-            .filter { it.javaType.getAnnotation(Table::class.java) != null }
-            .map { it.javaType.getAnnotation(Table::class.java) }
+            .mapNotNull { it.javaType.getAnnotation(Table::class.java) }
             .map { it.name }
     }
 
