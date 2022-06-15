@@ -17,7 +17,7 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/sub/rooms/' + $("#room-id").val(), function (message) {
+        stompClient.subscribe('/sub/v1/rooms/' + $("#room-id").val(), function (message) {
             showReceivedChat(JSON.parse(message.body).data.chat);
         });
     });
@@ -32,7 +32,7 @@ function disconnect() {
 }
 
 function sendChat() {
-    stompClient.send("/pub/rooms/" + $("#room-id").val() + "/chats", {}, JSON.stringify({
+    stompClient.send("/pub/v1/rooms/" + $("#room-id").val() + "/chats", {}, JSON.stringify({
         'chat': $("#chat").val(),
     }));
 }

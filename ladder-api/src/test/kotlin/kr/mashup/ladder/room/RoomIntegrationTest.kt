@@ -147,11 +147,11 @@ class RoomIntegrationTest : IntegrationTest() {
             }
         }
 
-        session.subscribe("/sub/rooms/${roomId}", handler)
+        session.subscribe("/sub/v1/rooms/${roomId}", handler)
     }
 
     fun `방에 채팅 보내기 요청`(session: StompSession, roomId: Long, chat: String) {
-        session.send("/pub/rooms/${roomId}/chats", RoomChatRequest(chat))
+        session.send("/pub/v1/rooms/${roomId}/chats", RoomChatRequest(chat))
     }
 
     fun `채팅 받음`(future: CompletableFuture<WsResponse<*>>) {

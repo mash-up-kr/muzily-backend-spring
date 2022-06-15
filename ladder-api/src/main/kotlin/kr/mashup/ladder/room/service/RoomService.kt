@@ -31,6 +31,6 @@ class RoomService(
 
     fun publishChat(roomId: Long, chat: String) {
         val payload = WsResponse(WsResponseType.CHAT, RoomChatResponse(chat))
-        simpMessagingTemplate.convertAndSend("/sub/rooms/${roomId}", payload)
+        simpMessagingTemplate.convertAndSend("/sub/v1/rooms/${roomId}", payload)
     }
 }

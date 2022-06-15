@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller
 class RoomWsController(
     private val roomService: RoomService,
 ) {
-    @MessageMapping("/pub/rooms/{roomId}/chats")
+    @MessageMapping("/pub/v1/rooms/{roomId}/chats")
     fun publishChat(@DestinationVariable roomId: Long, request: RoomChatRequest) {
         roomService.publishChat(roomId, request.chat)
     }
