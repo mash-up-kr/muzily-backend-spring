@@ -17,6 +17,9 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
+        stompClient.subscribe('/user/queue/errors', function (message) {
+            console.log('Error occurred: ' + message.body);
+        });
         stompClient.subscribe('/sub/v1/rooms/' + $("#room-id").val(), function (message) {
             showReceivedChat(JSON.parse(message.body).data.chat);
         });

@@ -16,6 +16,6 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
 
     // TODO : enable stomp broker relay
     override fun configureMessageBroker(config: MessageBrokerRegistry) {
-        config.enableSimpleBroker("/sub")
+        config.enableSimpleBroker("/sub", "/queue")
     }
 }

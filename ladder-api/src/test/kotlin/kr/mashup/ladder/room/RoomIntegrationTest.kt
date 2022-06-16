@@ -15,8 +15,6 @@ import kr.mashup.ladder.util.StompTestHelper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.messaging.simp.stomp.StompFrameHandler
@@ -31,7 +29,7 @@ import java.util.concurrent.TimeUnit
 
 class RoomIntegrationTest : IntegrationTest() {
     val `스타벅스 판교점 방 생성 요청값` = RoomCreateRequest(description = "스타벅스 판교점. 테마는 신나게 🎶")
-    val `생활맥주 강남점 방 생성 요청값` = RoomCreateRequest(description = "생활 맥주 강남점. 재즈 🎧")
+    val `생활맥주 강남점 방 생성 요청값` = RoomCreateRequest(description = "생활맥주 강남점. 재즈 🎧")
     val `존재하지 않는 방 ID` = 0L
 
     @Test
@@ -114,17 +112,16 @@ class RoomIntegrationTest : IntegrationTest() {
         assertThat(actual).isEqualTo(ErrorCode.ROOM_NOT_FOUND.code)
     }
 
-    @ParameterizedTest
-    @CsvSource(value = ["1,HELLO"])
-    fun `방에 채팅을 보내고 받는다`(roomId: Long, chat: String) {
+    @Test
+    fun `방에 채팅을 보내고 받는다`() {
         // given
         val future: CompletableFuture<WsResponse<*>> = CompletableFuture()
-        val client = StompTestHelper.newClient()
-        val session = `웹소켓 연결됨`(client)
-        `방에 접속함`(session, roomId, future)
+        val 방 = `방 생성되어 있음`(`생활맥주 강남점 방 생성 요청값`)
+        val session = `웹소켓 연결됨`(StompTestHelper.newClient())
+        `방에 접속함`(session, 방.roomId, okFuture = future)
 
         // when
-        `방에 채팅 보내기 요청`(session, roomId, chat)
+        `방에 채팅 보내기 요청`(session, 방.roomId, "Hello, World!")
 
         // then
         `채팅 받음`(future)
@@ -136,18 +133,31 @@ class RoomIntegrationTest : IntegrationTest() {
             .get(1, TimeUnit.SECONDS)
     }
 
-    fun `방에 접속함`(session: StompSession, roomId: Long, future: CompletableFuture<WsResponse<*>>) {
-        val handler = object : StompFrameHandler {
+    fun `방에 접속함`(
+        session: StompSession,
+        roomId: Long,
+        okFuture: CompletableFuture<WsResponse<*>>? = null,
+        errorFuture: CompletableFuture<WsResponse<*>>? = null,
+    ) {
+        session.subscribe("/user/queue/errors", object : StompFrameHandler {
             override fun getPayloadType(headers: StompHeaders): Type {
                 return object : TypeReference<WsResponse<*>>() {}.type
             }
 
             override fun handleFrame(headers: StompHeaders, payload: Any?) {
-                future.complete(payload as WsResponse<*>)
+                errorFuture?.complete(payload as WsResponse<*>)
             }
-        }
+        })
 
-        session.subscribe("/sub/v1/rooms/${roomId}", handler)
+        session.subscribe("/sub/v1/rooms/${roomId}", object : StompFrameHandler {
+            override fun getPayloadType(headers: StompHeaders): Type {
+                return object : TypeReference<WsResponse<*>>() {}.type
+            }
+
+            override fun handleFrame(headers: StompHeaders, payload: Any?) {
+                okFuture?.complete(payload as WsResponse<*>)
+            }
+        })
     }
 
     fun `방에 채팅 보내기 요청`(session: StompSession, roomId: Long, chat: String) {
@@ -158,5 +168,26 @@ class RoomIntegrationTest : IntegrationTest() {
         val response = future.get(10, TimeUnit.SECONDS)
 
         assertThat(response.type).isEqualTo(WsResponseType.CHAT)
+    }
+
+    @Test
+    fun `방이 없으면 채팅을 보낼 수 없다`() {
+        // given
+        val future: CompletableFuture<WsResponse<*>> = CompletableFuture()
+        val session = `웹소켓 연결됨`(StompTestHelper.newClient())
+        `방에 접속함`(session, `존재하지 않는 방 ID`, errorFuture = future)
+
+        // when
+        `방에 채팅 보내기 요청`(session, `존재하지 않는 방 ID`, "Hello, World!")
+
+        // then
+        `방을 찾을 수 없다는 오류 응답을 받음`(future)
+    }
+
+    fun `방을 찾을 수 없다는 오류 응답을 받음`(future: CompletableFuture<WsResponse<*>>) {
+        val response = future.get(10, TimeUnit.SECONDS)
+
+        assertThat(response.type).isEqualTo(WsResponseType.ERROR)
+        assertThat(response.code).isEqualTo(ErrorCode.ROOM_NOT_FOUND.code)
     }
 }

@@ -30,7 +30,8 @@ class RoomService(
     }
 
     fun publishChat(roomId: Long, chat: String) {
-        val payload = WsResponse(WsResponseType.CHAT, RoomChatResponse(chat))
+        roomRepository.findById(roomId) ?: throw RoomNotFoundException("$roomId")
+        val payload = WsResponse.ok(WsResponseType.CHAT, RoomChatResponse(chat))
         simpMessagingTemplate.convertAndSend("/sub/v1/rooms/${roomId}", payload)
     }
 }
