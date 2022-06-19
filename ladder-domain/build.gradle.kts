@@ -22,4 +22,8 @@ dependencies {
 
     // h2
     runtimeOnly("com.h2database:h2")
+
+    // redis
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("it.ozimov:embedded-redis:0.7.3")
 }
