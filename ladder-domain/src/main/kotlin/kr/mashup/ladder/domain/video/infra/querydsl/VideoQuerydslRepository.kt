@@ -1,4 +1,4 @@
-package kr.mashup.ladder.domain.video.infra.repository
+package kr.mashup.ladder.domain.video.infra.querydsl
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import kr.mashup.ladder.domain.video.domain.QVideo

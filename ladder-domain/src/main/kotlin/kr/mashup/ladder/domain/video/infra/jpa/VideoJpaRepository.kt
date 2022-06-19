@@ -1,4 +1,4 @@
-package kr.mashup.ladder.domain.video.infra.repository
+package kr.mashup.ladder.domain.video.infra.jpa
 
 import kr.mashup.ladder.domain.video.domain.Video
 import kr.mashup.ladder.domain.video.domain.VideoRepository

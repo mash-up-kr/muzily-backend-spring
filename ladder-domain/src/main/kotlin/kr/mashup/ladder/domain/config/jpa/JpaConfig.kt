@@ -1,4 +1,4 @@
-package kr.mashup.ladder.domain.config
+package kr.mashup.ladder.domain.config.jpa
 
 import kr.mashup.ladder.domain.LadderDomainRoot
 import org.springframework.boot.autoconfigure.domain.EntityScan
