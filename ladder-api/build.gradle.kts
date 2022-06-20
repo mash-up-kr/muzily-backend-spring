@@ -1,8 +1,20 @@
 dependencies {
     implementation(project(":ladder-domain"))
 
+    // spring
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
+
+    // TODO : remove this
+    implementation("org.webjars:webjars-locator-core")
+    implementation("org.webjars:sockjs-client:1.0.2")
+    implementation("org.webjars:stomp-websocket:2.3.3")
+    implementation("org.webjars:bootstrap:3.3.7")
+    implementation("org.webjars:jquery:3.1.1-1")
+
+    // rest-assured
+    testImplementation("io.rest-assured:rest-assured:4.4.0")
 }
 
 jib {
