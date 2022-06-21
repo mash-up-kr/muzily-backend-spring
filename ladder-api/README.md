@@ -21,7 +21,8 @@ ex) helm install --values values-dev.yaml ladder . -n dev
 ```shell
 helm upgrade --values values-{{NAMESPACE}}.yaml --set image.tag={{IMAGE_TAG}} ladder . -n {{NAMESPACE}}
 
-ex) helm upgrade --values values-dev.yaml --set image.tag=0.0.1 ladder . -n dev
+ex) helm upgrade --values values-dev.yaml ladder . -n dev # values.yml 배포시
+ex) helm upgrade --values values-dev.yaml --set image.tag=0.0.1 ladder . -n dev # values.yml 그대로 tag만 변경
 ```
 
 ### Update ReplicaCount
