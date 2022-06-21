@@ -2,9 +2,9 @@ package kr.mashup.ladder.config.interceptor
 
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.resolver.ACCOUNT_ID
-import kr.mashup.ladder.domain.account.Account
-import kr.mashup.ladder.domain.account.AccountRepository
-import kr.mashup.ladder.domain.account.SocialType
+import kr.mashup.ladder.domain.account.domain.Account
+import kr.mashup.ladder.domain.account.domain.AccountRepository
+import kr.mashup.ladder.domain.account.domain.SocialType
 import kr.mashup.ladder.domain.common.error.model.UnAuthorizedException
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
@@ -43,7 +43,7 @@ class AuthInterceptor(
             request.setAttribute(ACCOUNT_ID, account.id)
             return true
         }
-        throw UnAuthorizedException("인증이 실패하였습니다 - 비거나 ($HEADER_TOKEN_PREFIX) 형식이 아닌 헤더(${header})가 요청되었습니다.")
+        throw UnAuthorizedException("Authorization 헤더에 Bearer 형식이 아닌 [${header}]이 요청되었습니다.")
     }
 
 }

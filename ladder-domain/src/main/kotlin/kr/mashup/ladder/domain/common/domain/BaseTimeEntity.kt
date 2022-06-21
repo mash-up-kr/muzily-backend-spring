@@ -9,7 +9,7 @@ import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
-class BaseTimeEntity {
+abstract class BaseTimeEntity {
     @CreatedDate
     lateinit var createdAt: LocalDateTime
 

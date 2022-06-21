@@ -5,7 +5,7 @@ import kr.mashup.ladder.domain.common.error.ErrorCode
 data class ApiResponse<T>(
     val code: String = "",
     val message: String = "",
-    val data: T?,
+    val data: T? = null,
 ) {
 
     companion object {
@@ -21,7 +21,13 @@ data class ApiResponse<T>(
             return ApiResponse(
                 code = errorCode.code,
                 message = errorCode.message,
-                data = null
+            )
+        }
+
+        fun error(errorCode: ErrorCode, message: String): ApiResponse<Nothing> {
+            return ApiResponse(
+                code = errorCode.code,
+                message = message,
             )
         }
     }

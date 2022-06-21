@@ -15,7 +15,7 @@ internal class HealthCheckControllerTest(
     @Test
     fun `Health Check 200 OK`() {
         // when & then
-        mockMvc.get("/health")
+        mockMvc.get("/api/health")
             .andDo { print() }
             .andExpect { status { isOk() } }
             .andExpect {

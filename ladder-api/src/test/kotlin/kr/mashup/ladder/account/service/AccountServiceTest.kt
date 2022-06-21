@@ -2,11 +2,11 @@ package kr.mashup.ladder.account.service
 
 import kr.mashup.ladder.IntegrationTest
 import kr.mashup.ladder.account.dto.request.UpdateAccountInfoRequest
-import kr.mashup.ladder.domain.account.Account
-import kr.mashup.ladder.domain.account.AccountRepository
-import kr.mashup.ladder.domain.account.AccountSocialInfo
-import kr.mashup.ladder.domain.account.SocialType
-import kr.mashup.ladder.domain.common.error.model.NotFoundException
+import kr.mashup.ladder.domain.account.domain.Account
+import kr.mashup.ladder.domain.account.domain.AccountNotFoundException
+import kr.mashup.ladder.domain.account.domain.AccountRepository
+import kr.mashup.ladder.domain.account.domain.AccountSocialInfo
+import kr.mashup.ladder.domain.account.domain.SocialType
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -56,7 +56,7 @@ internal class AccountServiceTest(
         // when & then
         assertThatThrownBy {
             accountService.updateAccountInfo(request, accountId = notFoundAccountId)
-        }.isInstanceOf(NotFoundException::class.java)
+        }.isInstanceOf(AccountNotFoundException::class.java)
     }
 
 }

@@ -1,6 +1,6 @@
 package kr.mashup.ladder.account.dto.response
 
-import kr.mashup.ladder.domain.account.Account
+import kr.mashup.ladder.domain.account.domain.Account
 
 data class AccountInfoResponse(
     val nickname: String,

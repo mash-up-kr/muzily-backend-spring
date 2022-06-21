@@ -6,14 +6,35 @@ import kr.mashup.ladder.domain.common.error.model.LadderBaseException
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.BindException
+import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import java.util.stream.Collectors
 
 private val logger = KotlinLogging.logger {}
 
 @RestControllerAdvice
 class ControllerExceptionAdvice {
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BindException::class)
+    private fun handleBadRequest(e: BindException): ApiResponse<Nothing> {
+        val errorMessage = e.bindingResult.fieldErrors.stream()
+            .map { fieldError -> fieldError.defaultMessage + " [${fieldError.field}]" }
+            .collect(Collectors.joining("\n"))
+        logger.warn(errorMessage, e)
+        return ApiResponse.error(ErrorCode.INVALID_REQUEST, errorMessage)
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MissingServletRequestParameterException::class)
+    private fun handleMissingServletRequestParameterException(e: MissingServletRequestParameterException): ApiResponse<Nothing> {
+        logger.warn(e.message, e)
+        return ApiResponse.error(ErrorCode.INVALID_REQUEST, "파라미터 (${e.parameterName})을 입력해주세요")
+    }
+
 
     @ExceptionHandler(LadderBaseException::class)
     private fun handleBaseException(exception: LadderBaseException): ResponseEntity<ApiResponse<Nothing>> {

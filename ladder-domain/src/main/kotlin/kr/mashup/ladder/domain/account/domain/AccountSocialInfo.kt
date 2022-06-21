@@ -1,4 +1,4 @@
-package kr.mashup.ladder.domain.account
+package kr.mashup.ladder.domain.account.domain
 
 import javax.persistence.Column
 import javax.persistence.Embeddable
