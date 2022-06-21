@@ -29,6 +29,6 @@ jib {
         jvmFlags = listOf(
             "-Duser.timezone=Asia/Seoul"
         )
-        ports = listOf("8000")
+        ports = listOf("9000")
     }
 }

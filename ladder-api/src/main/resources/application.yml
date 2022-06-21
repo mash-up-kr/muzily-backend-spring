@@ -4,7 +4,7 @@ spring.config:
     - classpath:/application-domain.yml
 
 server:
-  port: 8000
+  port: 9000
   shutdown: graceful
   servlet:
     encoding:

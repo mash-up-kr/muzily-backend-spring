@@ -10,7 +10,6 @@ import javax.persistence.MappedSuperclass
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
 class BaseTimeEntity {
-
     @CreatedDate
     lateinit var createdAt: LocalDateTime
 
