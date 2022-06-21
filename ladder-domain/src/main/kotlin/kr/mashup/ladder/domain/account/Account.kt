@@ -14,10 +14,15 @@ class Account(
     val socialInfo: AccountSocialInfo,
 
     @Column(nullable = false)
-    val nickname: String,
+    var nickname: String,
 
-    val profileUrl: String,
+    var profileUrl: String? = null,
 ) : BaseTimeEntity() {
+
+    fun update(nickname: String, profileUrl: String?) {
+        this.nickname = nickname
+        this.profileUrl = profileUrl
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

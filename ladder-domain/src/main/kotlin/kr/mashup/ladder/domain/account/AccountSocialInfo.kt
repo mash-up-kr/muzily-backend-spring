@@ -6,7 +6,7 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 
 @Embeddable
-class AccountSocialInfo(
+data class AccountSocialInfo(
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     val socialType: SocialType,
