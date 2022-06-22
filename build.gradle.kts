@@ -16,7 +16,6 @@ repositories {
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 /** Version */
-val kotestVersion = "4.4.3"
 val springMockkVersion = "3.1.1"
 val kotlinLoggingVersion = "2.1.20"
 val microMeterVersion = "1.9.0"
@@ -51,10 +50,6 @@ subprojects {
 
         // Spring Test
         testImplementation("org.springframework.boot:spring-boot-starter-test")
-
-        // kotest
-        testImplementation("io.kotest:kotest-runner-junit5:${kotestVersion}")
-        testImplementation("io.kotest:kotest-extensions-spring:${kotestVersion}")
 
         // Spring MockK
         testImplementation("com.ninja-squad:springmockk:${springMockkVersion}")

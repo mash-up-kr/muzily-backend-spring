@@ -19,6 +19,9 @@ enum class ErrorCode(
     CONFLICT(status = 409, code = "C005", message = "중복된 리소스가 존재합니다", shouldLog = false),
     UNKNOWN_ERROR(status = 500, code = "C006", message = "서버에서 에러가 발생하였습니다 ㅠㅠ", shouldLog = true),
 
+    // account
+    ACCOUNT_NOT_FOUND(status = 404, code = "A001", message = "해당하는 계정은 존재하지 않습니다", shouldLog = false),
+
     // room
     ROOM_NOT_FOUND(status = 404, code = "R001", message = "해당하는 방이 존재하지 않습니다", shouldLog = false),
 

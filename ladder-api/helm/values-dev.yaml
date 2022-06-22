@@ -38,8 +38,8 @@ securityContext: { }
 
 service:
   type: ClusterIP
-  port: 8000
-  targetPort: 8000
+  port: 9000
+  targetPort: 9000
 
 livenessProbe:
   path: /api/health
