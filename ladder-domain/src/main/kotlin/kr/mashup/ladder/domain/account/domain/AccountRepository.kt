@@ -1,5 +1,11 @@
 package kr.mashup.ladder.domain.account.domain
 
-import org.springframework.data.jpa.repository.JpaRepository
+interface AccountRepository {
 
-interface AccountRepository : JpaRepository<Account, Long>
+    fun save(account: Account): Account
+
+    fun findById(accountId: Long): Account?
+
+    fun findAll(): List<Account>
+
+}

@@ -5,7 +5,6 @@ import kr.mashup.ladder.account.dto.response.AccountInfoResponse
 import kr.mashup.ladder.domain.account.domain.Account
 import kr.mashup.ladder.domain.account.domain.AccountNotFoundException
 import kr.mashup.ladder.domain.account.domain.AccountRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -27,7 +26,7 @@ class AccountService(
     }
 
     private fun findAccountById(accountId: Long): Account {
-        return accountRepository.findByIdOrNull(accountId)
+        return accountRepository.findById(accountId)
             ?: throw AccountNotFoundException("해당하는 계정(${accountId})은 존재하지 않습니다")
     }
 
