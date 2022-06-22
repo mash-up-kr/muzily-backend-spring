@@ -4,7 +4,9 @@ import kr.mashup.ladder.domain.common.domain.BaseEntity
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
+import javax.persistence.Table
 
+@Table(name = "account")
 @Entity
 class Account(
     @Embedded

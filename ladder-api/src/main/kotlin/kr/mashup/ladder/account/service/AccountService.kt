@@ -16,19 +16,19 @@ class AccountService(
 
     @Transactional(readOnly = true)
     fun retrieveAccountInfo(accountId: Long): AccountInfoResponse {
-        val account = findAccountById(accountRepository, accountId)
+        val account = findAccountById(accountId)
         return AccountInfoResponse.of(account)
     }
 
     @Transactional
     fun updateAccountInfo(request: UpdateAccountInfoRequest, accountId: Long) {
-        val account = findAccountById(accountRepository, accountId)
+        val account = findAccountById(accountId)
         account.update(request.nickname, request.profileUrl)
     }
 
-}
+    private fun findAccountById(accountId: Long): Account {
+        return accountRepository.findByIdOrNull(accountId)
+            ?: throw AccountNotFoundException("해당하는 계정(${accountId})은 존재하지 않습니다")
+    }
 
-fun findAccountById(accountRepository: AccountRepository, accountId: Long): Account {
-    return accountRepository.findByIdOrNull(accountId)
-        ?: throw AccountNotFoundException("해당하는 계정(${accountId})은 존재하지 않습니다")
 }

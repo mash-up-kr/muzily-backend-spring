@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-class AccountController(
+class AccountApiController(
     private val accountService: AccountService,
 ) {
 
     @Auth
-    @GetMapping("/api/v1/account")
+    @GetMapping("/api/v1/accounts")
     fun getMyAccountInfo(
         @AccountId accountId: Long,
     ): ApiResponse<AccountInfoResponse> {
@@ -26,7 +26,7 @@ class AccountController(
     }
 
     @Auth
-    @PutMapping("/api/v1/account")
+    @PutMapping("/api/v1/accounts")
     fun updateMyAccountInfo(
         @Valid @RequestBody request: UpdateAccountInfoRequest,
         @AccountId accountId: Long,
