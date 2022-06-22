@@ -28,7 +28,7 @@ class Account(
             socialType: SocialType,
             socialId: String,
             nickname: String,
-            profileUrl: String,
+            profileUrl: String? = null,
         ): Account {
             return Account(
                 socialInfo = AccountSocialInfo.of(

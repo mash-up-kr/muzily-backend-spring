@@ -1,2 +1,10 @@
 ### Health Check
 GET {{api}}/api/health
+
+
+### 테스트 세션 발급
+GET {{api}}/api/test/session
+
+> {%
+client.global.set("SESSION_ID", response.body["data"])
+%}
