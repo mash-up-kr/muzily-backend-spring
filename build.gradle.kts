@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.7.0"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("application")
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
@@ -20,6 +21,10 @@ val springMockkVersion = "3.1.1"
 val kotlinLoggingVersion = "2.1.20"
 val microMeterVersion = "1.9.0"
 
+application {
+    mainClass.set("kr.mashup.ladder.LadderApiApplicationKt")
+}
+
 subprojects {
     group = "kr.mashup.ladder"
 
@@ -35,6 +40,7 @@ subprojects {
     apply(plugin = "kotlin-spring")
     apply(plugin = "kotlin-kapt")
     apply(plugin = "com.google.cloud.tools.jib")
+    apply(plugin = "application")
 
     dependencies {
         // kotlin
