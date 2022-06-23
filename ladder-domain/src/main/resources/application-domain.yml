@@ -12,7 +12,9 @@ spring:
 ---
 spring.config:
   activate:
-    on-profile: local
+    on-profile:
+      - local
+      - dev
 
 spring:
   jpa:
@@ -64,12 +66,6 @@ spring:
 logging:
   level:
     org.hibernate.type.descriptor.sql: trace
-
-
----
-spring.config:
-  activate:
-    on-profile: dev
 
 
 ---
