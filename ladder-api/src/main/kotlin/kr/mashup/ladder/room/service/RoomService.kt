@@ -1,21 +1,19 @@
 package kr.mashup.ladder.room.service
 
-import kr.mashup.ladder.common.dto.response.WsResponse
-import kr.mashup.ladder.common.dto.response.WsResponseType
 import kr.mashup.ladder.domain.room.domain.Room
+import kr.mashup.ladder.domain.room.domain.RoomChat
+import kr.mashup.ladder.domain.room.domain.RoomChatPublisher
 import kr.mashup.ladder.domain.room.domain.RoomNotFoundException
 import kr.mashup.ladder.domain.room.domain.RoomRepository
 import kr.mashup.ladder.domain.room.dto.RoomDto
-import kr.mashup.ladder.room.dto.RoomChatResponse
-import kr.mashup.ladder.room.dto.RoomCreateRequest
-import org.springframework.messaging.simp.SimpMessagingTemplate
+import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class RoomService(
     private val roomRepository: RoomRepository,
-    private val simpMessagingTemplate: SimpMessagingTemplate,
+    private val roomChatPublisher: RoomChatPublisher,
 ) {
     @Transactional
     fun create(request: RoomCreateRequest): RoomDto {
@@ -31,7 +29,6 @@ class RoomService(
 
     fun publishChat(roomId: Long, chat: String) {
         roomRepository.findById(roomId) ?: throw RoomNotFoundException("$roomId")
-        val payload = WsResponse.ok(WsResponseType.CHAT, RoomChatResponse(chat))
-        simpMessagingTemplate.convertAndSend("/sub/v1/rooms/${roomId}", payload)
+        roomChatPublisher.publish(RoomChat(roomId, chat))
     }
 }

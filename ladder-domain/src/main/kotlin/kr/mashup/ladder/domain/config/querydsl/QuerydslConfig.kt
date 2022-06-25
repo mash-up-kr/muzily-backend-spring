@@ -1,4 +1,4 @@
-package kr.mashup.ladder.domain.config
+package kr.mashup.ladder.domain.config.querydsl
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.context.annotation.Bean

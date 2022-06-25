@@ -1,4 +1,4 @@
-package kr.mashup.ladder.domain.room.infra.repository
+package kr.mashup.ladder.domain.room.infra.jpa
 
 import kr.mashup.ladder.domain.room.domain.Room
 import kr.mashup.ladder.domain.room.domain.RoomRepository

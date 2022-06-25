@@ -30,6 +30,9 @@ spring:
     hikari:
       jdbc-url: jdbc:h2:mem:ladder;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;
       driver-class-name: org.h2.Driver
+  redis:
+    host: 127.0.0.1
+    port: 6379
 
   h2:
     console:
@@ -62,6 +65,9 @@ spring:
     hikari:
       jdbc-url: jdbc:h2:mem:ladder;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;
       driver-class-name: org.h2.Driver
+  redis:
+    host: 127.0.0.1
+    port: 6379
 
 logging:
   level:

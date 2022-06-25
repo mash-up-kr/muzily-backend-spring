@@ -1,6 +1,6 @@
 package kr.mashup.ladder.room.controller
 
-import kr.mashup.ladder.room.dto.RoomChatRequest
+import kr.mashup.ladder.room.dto.request.RoomChatRequest
 import kr.mashup.ladder.room.service.RoomService
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping

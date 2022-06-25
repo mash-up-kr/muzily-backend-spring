@@ -1,4 +1,4 @@
-package kr.mashup.ladder.domain.video.infra.repository
+package kr.mashup.ladder.domain.video.infra.querydsl
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import kr.mashup.ladder.domain.video.domain.QVideo
@@ -6,6 +6,7 @@ import kr.mashup.ladder.domain.video.domain.Video
 import kr.mashup.ladder.domain.video.domain.VideoQueryRepository
 import org.springframework.stereotype.Repository
 
+@Deprecated(message = "샘플 코드")
 @Repository
 class VideoQuerydslRepository(
     val jpaQueryFactory: JPAQueryFactory,
