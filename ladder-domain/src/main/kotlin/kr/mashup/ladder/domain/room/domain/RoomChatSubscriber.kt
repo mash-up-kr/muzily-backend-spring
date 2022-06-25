@@ -12,7 +12,7 @@ class RoomChatSubscriber(
 ) : MessageListener {
     override fun onMessage(message: Message, pattern: ByteArray?) {
         val roomChat = JsonUtil.fromByteArray(message.body, RoomChat::class.java)
-        val event = RoomChatReceiveEvent(this, roomChat.roomId, roomChat.chat)
+        val event = RoomChatReceiveEvent(roomChat.roomId, roomChat.chat)
         applicationEventPublisher.publishEvent(event)
     }
 }

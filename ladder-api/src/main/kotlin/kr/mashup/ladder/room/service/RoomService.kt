@@ -6,7 +6,7 @@ import kr.mashup.ladder.domain.room.domain.RoomChatPublisher
 import kr.mashup.ladder.domain.room.domain.RoomNotFoundException
 import kr.mashup.ladder.domain.room.domain.RoomRepository
 import kr.mashup.ladder.domain.room.dto.RoomDto
-import kr.mashup.ladder.room.dto.RoomCreateRequest
+import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

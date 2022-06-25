@@ -9,8 +9,8 @@ import kr.mashup.ladder.common.dto.response.WsResponse
 import kr.mashup.ladder.common.dto.response.WsResponseType
 import kr.mashup.ladder.domain.common.error.ErrorCode
 import kr.mashup.ladder.domain.room.dto.RoomDto
-import kr.mashup.ladder.room.dto.RoomChatRequest
-import kr.mashup.ladder.room.dto.RoomCreateRequest
+import kr.mashup.ladder.room.dto.request.RoomChatRequest
+import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.util.StompTestHelper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

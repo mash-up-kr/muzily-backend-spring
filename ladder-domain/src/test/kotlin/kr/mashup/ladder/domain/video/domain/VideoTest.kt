@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 
+@Deprecated(message = "샘플 코드")
 class VideoTest {
 
     @Test

@@ -5,6 +5,7 @@ import java.util.*
 import javax.persistence.Entity
 import javax.persistence.Id
 
+@Deprecated(message = "샘플 코드")
 @Entity
 class Video : BaseTimeEntity() {
 

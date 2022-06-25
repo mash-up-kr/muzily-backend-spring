@@ -25,5 +25,5 @@ dependencies {
 
     // redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation("it.ozimov:embedded-redis:0.7.3")
+    implementation("it.ozimov:embedded-redis:0.7.2")
 }

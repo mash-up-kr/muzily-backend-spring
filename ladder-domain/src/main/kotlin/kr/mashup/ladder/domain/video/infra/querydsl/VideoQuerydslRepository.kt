@@ -6,6 +6,7 @@ import kr.mashup.ladder.domain.video.domain.Video
 import kr.mashup.ladder.domain.video.domain.VideoQueryRepository
 import org.springframework.stereotype.Repository
 
+@Deprecated(message = "샘플 코드")
 @Repository
 class VideoQuerydslRepository(
     val jpaQueryFactory: JPAQueryFactory,
