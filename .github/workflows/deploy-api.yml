@@ -23,7 +23,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Execute Gradle Jib
-        run: ./gradlew :ladder-api:jib --Dimage=${IMAGE} -Dtag=${TAG}
+        run: ./gradlew :ladder-api:jib -Dimage=${IMAGE} -Dtag=${TAG}
         env:
           IMAGE: mashupladder/ladder-api
           TAG: ${{ github.event.inputs.version }}
