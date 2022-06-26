@@ -3,9 +3,8 @@ package kr.mashup.ladder.common.controller
 import kr.mashup.ladder.common.dto.response.ApiResponse
 import kr.mashup.ladder.config.resolver.ACCOUNT_ID
 import kr.mashup.ladder.domain.account.domain.Account
-import kr.mashup.ladder.domain.account.domain.AccountQueryRepository
-import kr.mashup.ladder.domain.account.domain.AccountRepository
 import kr.mashup.ladder.domain.account.domain.SocialType
+import kr.mashup.ladder.domain.account.infra.jpa.AccountRepository
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpSession
@@ -16,13 +15,12 @@ private val MOCK_SOCIAL_TYPE = SocialType.KAKAO
 @RestController
 class LocalTestController(
     private val accountRepository: AccountRepository,
-    private val accountQueryRepository: AccountQueryRepository, // TODO: QueryDSL 전용 쿼리들 어떻게 처리해야하지?
     private val httpSession: HttpSession,
 ) {
 
     @GetMapping("/api/test/session")
     fun getSession(): ApiResponse<String> {
-        val account = accountQueryRepository.findSocialIdAndSocialType(
+        val account = accountRepository.findBySocialIdAndSocialType(
             socialType = MOCK_SOCIAL_TYPE,
             socialId = MOCK_SOCIAL_ID
         ) ?: accountRepository.save(Account.of(socialId = MOCK_SOCIAL_ID,

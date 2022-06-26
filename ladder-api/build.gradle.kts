@@ -18,6 +18,8 @@ dependencies {
 
     // rest-assured
     testImplementation("io.rest-assured:rest-assured:4.4.0")
+
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
 }
 
 jib {

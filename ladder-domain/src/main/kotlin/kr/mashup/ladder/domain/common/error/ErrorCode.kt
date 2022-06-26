@@ -20,8 +20,12 @@ enum class ErrorCode(
     CONFLICT(status = 409, code = "C006", message = "중복된 리소스가 존재합니다", shouldLog = false),
     UNKNOWN_ERROR(status = 500, code = "C007", message = "서버에서 에러가 발생하였습니다 ㅠㅠ", shouldLog = true),
 
+    // auth
+    AUTH_TOKEN_INVALID(status = 400, code = "AT001", "잘못된 인증 토큰입니다", shouldLog = false),
+
     // account
     ACCOUNT_NOT_FOUND(status = 404, code = "A001", message = "해당하는 계정은 존재하지 않습니다", shouldLog = false),
+    ACCOUNT_NOT_CONFLICT(status = 409, code = "A002", message = "이미 가입한 계정입니다", shouldLog = false),
 
     // room
     ROOM_NOT_FOUND(status = 404, code = "R001", message = "해당하는 방이 존재하지 않습니다", shouldLog = false),

@@ -1,0 +1,8 @@
+kakao:
+  token:
+    url: https://kauth.kakao.com/oauth/token
+    client-id: ${secret.kakao.token.client-id:clientId}
+    client-secret: ${secret.kakao.token.client-secret:clientSecret}
+    grant_type: authorization_code
+  profile:
+    url: https://kapi.kakao.com/v2/user/me
