@@ -4,6 +4,6 @@ import kr.mashup.ladder.auth.dto.request.AuthRequest
 
 interface AuthService {
 
-    fun login(request: AuthRequest): Long
+    fun authentication(request: AuthRequest): Long
 
 }

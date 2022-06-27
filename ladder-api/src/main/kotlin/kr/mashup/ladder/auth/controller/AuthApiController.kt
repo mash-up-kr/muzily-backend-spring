@@ -22,7 +22,7 @@ class AuthApiController(
         @RequestBody request: AuthRequest,
     ): ApiResponse<LoginResponse> {
         val authService: AuthService = authServiceFinder.getService(request.socialType)
-        val accountId = authService.login(request)
+        val accountId = authService.authentication(request)
         httpSession.setAttribute(ACCOUNT_ID, accountId)
 
         return ApiResponse.ok(

@@ -19,7 +19,7 @@ class KaKaoAuthService(
     private val kaKaoAuthApiClient: KaKaoAuthApiClient,
 ) : AuthService {
 
-    override fun login(request: AuthRequest): Long {
+    override fun authentication(request: AuthRequest): Long {
         val kaKaoProfile: KaKaoInfoResponse =
             getKaKaoProfileInfo(code = request.code, redirectUri = request.redirectUri)
         accountRepository.findBySocialIdAndSocialType(socialId = kaKaoProfile.id, socialType = SOCIAL_TYPE)
