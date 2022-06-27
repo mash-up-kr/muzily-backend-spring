@@ -7,8 +7,6 @@ import org.springframework.messaging.converter.MappingJackson2MessageConverter
 import org.springframework.util.MimeTypeUtils
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.messaging.WebSocketStompClient
-import org.springframework.web.socket.sockjs.client.SockJsClient
-import org.springframework.web.socket.sockjs.client.WebSocketTransport
 
 class StompTestHelper {
 
@@ -23,8 +21,8 @@ class StompTestHelper {
         }
 
         fun newClient(): WebSocketStompClient {
-            val sockJsClient = SockJsClient(listOf(WebSocketTransport(StandardWebSocketClient())))
-            val stompClient = WebSocketStompClient(sockJsClient)
+            val webSocketClient = StandardWebSocketClient()
+            val stompClient = WebSocketStompClient(webSocketClient)
             stompClient.messageConverter = converter
             return stompClient
         }
