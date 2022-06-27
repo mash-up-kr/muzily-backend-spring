@@ -22,7 +22,7 @@ jib {
         image = "adoptopenjdk/openjdk11:alpine-jre"
     }
     to {
-        image = System.getProperty("image", "ghcr.io/seungh0/ladder-api")
+        image = System.getProperty("image", "mashupladder/ladder-api")
         tags = setOf(System.getProperty("tag", "latest"))
     }
     container {
