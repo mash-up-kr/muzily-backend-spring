@@ -9,9 +9,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 class WsConfig : WebSocketMessageBrokerConfigurer {
-    // TODO : set allowed origins
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
-        registry.addEndpoint("ws").withSockJS()
+        registry.addEndpoint("ws")
+            .setAllowedOriginPatterns("*")
     }
 
     override fun configureMessageBroker(config: MessageBrokerRegistry) {

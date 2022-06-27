@@ -12,8 +12,7 @@ function setConnected(connected) {
 }
 
 function connect() {
-    var socket = new SockJS('/ws');
-    stompClient = Stomp.over(socket);
+    stompClient = Stomp.client('ws://localhost:9000/ws');
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
