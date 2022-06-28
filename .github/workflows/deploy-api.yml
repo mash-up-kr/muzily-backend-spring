@@ -48,13 +48,13 @@ jobs:
           token: ${{ secrets.PAT }}
           path: ladder_backend_infra
       - name: Update Image Version
-          uses: fjogeleit/yaml-update-action@main
-          with:
-            valueFile: 'helm/ladder-api/values-${{ github.event.inputs.profile }}.yaml'
-            propertyPath: 'image.tag'
-            value: ${{ github.event.inputs.version }}
-            repository: mash-up-kr/ladder_backend_infra
-            branch: main
-            message: 'Update Image Version to ${{ github.event.inputs.version }}'
-            token: ${{ secrets.GITHUB_TOKEN }}
-            workDir: ladder_backend_infra
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'helm/ladder-api/values-${{ github.event.inputs.profile }}.yaml'
+          propertyPath: 'image.tag'
+          value: ${{ github.event.inputs.version }}
+          repository: mash-up-kr/ladder_backend_infra
+          branch: main
+          message: 'Update Image Version to ${{ github.event.inputs.version }}'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          workDir: ladder_backend_infra
