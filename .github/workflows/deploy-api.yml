@@ -3,15 +3,18 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        description: "브랜치 (ex. develop)"
+        description: "브랜치"
+        default: 'develop'
         required: true
       version:
-        description: "버전 (ex. 0.0.1)"
+        description: "버전"
+        default: '0.0.1'
         required: true
       profile:
-        description: "프로파일 (ex. dev)"
+        description: "프로파일"
         required: true
         default: 'dev'
+        type: choice
         options:
           - dev
           - prod
