@@ -1,25 +1,23 @@
 package kr.mashup.ladder.external.kakao
 
-import kr.mashup.ladder.domain.common.error.ErrorCode
-import kr.mashup.ladder.domain.common.error.model.InvalidRequestException
+import kr.mashup.ladder.domain.common.error.model.BadGatewayException
+import kr.mashup.ladder.domain.common.error.model.InvalidThirdPartyTokenException
 import kr.mashup.ladder.domain.common.error.model.UnknownErrorException
 import kr.mashup.ladder.external.kakao.dto.properties.KaKaoTokenProperties
 import kr.mashup.ladder.external.kakao.dto.properties.KaKaoUserProperties
 import kr.mashup.ladder.external.kakao.dto.response.KaKaoInfoResponse
 import kr.mashup.ladder.external.kakao.dto.response.KaKaoTokenResponse
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
-import reactor.core.publisher.Mono
-import java.rmi.activation.UnknownObjectException
+import reactor.util.retry.Retry
+import java.time.Duration
 import java.util.function.Consumer
 
-// TODO: 에러 헨들링 추가
 @Component
 class WebClientKaKaoAuthApiClientImpl(
     private val webClient: WebClient,
@@ -33,20 +31,14 @@ class WebClientKaKaoAuthApiClientImpl(
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .body(BodyInserters.fromFormData(createAccessTokenRequest(code, redirectUri)))
             .retrieve()
-            .onStatus(
-                { obj: HttpStatus -> obj.is4xxClientError },
-                {
-                    Mono.error {
-                        InvalidRequestException("잘못된 인증 토큰($code) redirectUri(${redirectUri}이 요청되었습니다",
-                            ErrorCode.AUTH_TOKEN_INVALID)
-                    }
-                })
-            .onStatus(
-                { obj: HttpStatus -> obj.is5xxServerError },
-                {
-                    Mono.error { UnknownErrorException("카카오 액세스 토큰 API 호출 중 에러가 발생하였습니다") }
-                })
+            .onStatus({ status -> status.is4xxClientError }, { response ->
+                response.bodyToMono(String::class.java).map { message -> InvalidThirdPartyTokenException(message) }
+            })
+            .onStatus({ status -> status.is5xxServerError }, { response ->
+                response.bodyToMono(String::class.java).map { message -> BadGatewayException(message) }
+            })
             .bodyToMono(KaKaoTokenResponse::class.java)
+            .retryWhen(Retry.backoff(3, Duration.ofSeconds(5)).filter { throwable -> throwable is BadGatewayException })
             .block()
 
         return kaKaoTokenResponse ?: throw UnknownErrorException("KaKaoTokenResponse can't be null")
@@ -63,26 +55,18 @@ class WebClientKaKaoAuthApiClientImpl(
     }
 
     override fun getProfileInfo(accessToken: String): KaKaoInfoResponse {
-        println(accessToken)
         val kaKaoProfileResponse: KaKaoInfoResponse? = webClient.get()
             .uri(kaKaoProfileProperties.url)
-            .headers(Consumer { headers ->
-                headers.setBearerAuth(accessToken)
-            })
+            .headers(Consumer { headers -> headers.setBearerAuth(accessToken) })
             .retrieve()
-            .onStatus(
-                { obj: HttpStatus -> obj.is4xxClientError },
-                {
-                    Mono.error {
-                        UnknownObjectException("잘못된 액세스 토큰($accessToken)이 요청되었습니다")
-                    }
-                })
-            .onStatus(
-                { obj: HttpStatus -> obj.is5xxServerError },
-                {
-                    Mono.error { UnknownErrorException("카카오 프로필 API 호출 중 에러가 발생하였습니다") }
-                })
+            .onStatus({ status -> status.is4xxClientError }, { response ->
+                response.bodyToMono(String::class.java).map { message -> UnknownErrorException(message) }
+            })
+            .onStatus({ status -> status.is5xxServerError }, { response ->
+                response.bodyToMono(String::class.java).map { message -> BadGatewayException(message) }
+            })
             .bodyToMono(KaKaoInfoResponse::class.java)
+            .retryWhen(Retry.backoff(3, Duration.ofSeconds(5)).filter { throwable -> throwable is BadGatewayException })
             .block()
         return kaKaoProfileResponse ?: throw UnknownErrorException("KaKaoInfoResponse can't be null")
     }

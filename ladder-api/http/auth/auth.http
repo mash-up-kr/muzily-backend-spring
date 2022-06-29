@@ -1,0 +1,9 @@
+### 카카오 로그인
+POST {{api}}/api/v1/auth
+Content-Type: application/json
+
+{
+    "code": "",
+    "redirectUri": "http://localhost:3000/auth/kakao/callback",
+    "socialType": "KAKAO"
+}
