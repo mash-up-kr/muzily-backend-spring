@@ -9,7 +9,7 @@ import kr.mashup.ladder.domain.account.domain.AccountSocialInfo
 import kr.mashup.ladder.domain.account.domain.SocialType
 import kr.mashup.ladder.domain.account.infra.jpa.AccountRepository
 import kr.mashup.ladder.external.kakao.KaKaoAuthApiClient
-import kr.mashup.ladder.external.kakao.dto.response.KaKaoAccoutResponse
+import kr.mashup.ladder.external.kakao.dto.response.KaKaoAccountResponse
 import kr.mashup.ladder.external.kakao.dto.response.KaKaoInfoResponse
 import kr.mashup.ladder.external.kakao.dto.response.KaKaoProfileResponse
 import kr.mashup.ladder.external.kakao.dto.response.KaKaoTokenResponse
@@ -95,7 +95,7 @@ internal class KaKaoAuthServiceTest(
 
         private val KAKAO_PROFILE_RESPONSE = KaKaoInfoResponse(
             id = SOCIAL_ID,
-            kakaoAccount = KaKaoAccoutResponse(
+            kakaoAccount = KaKaoAccountResponse(
                 email = "will.seungho@gmail.com",
                 profile = KaKaoProfileResponse(
                     nickname = NICKNAME,
