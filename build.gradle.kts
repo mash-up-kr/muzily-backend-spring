@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.7.0"
+    id("org.springframework.boot") version "2.7.1"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("application")
     kotlin("jvm") version "1.6.21"
@@ -43,26 +43,27 @@ subprojects {
     apply(plugin = "application")
 
     dependencies {
-        // kotlin
+        // Kotlin
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+        // Jackson
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
-        // kotlin logging
+        // Kotlin Logging
         implementation("io.github.microutils:kotlin-logging-jvm:${kotlinLoggingVersion}")
 
+        // Spring Actuator
         implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+        // Micrometer Registry prometheus
         implementation("io.micrometer:micrometer-registry-prometheus:${microMeterVersion}")
 
-        // Spring Test
+        // Test
         testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-        // Spring MockK
+        // SpringMockk
         testImplementation("com.ninja-squad:springmockk:${springMockkVersion}")
-    }
-
-    tasks.create("deploy") {
-        dependsOn("jib")
     }
 
     tasks.withType<KotlinCompile> {
