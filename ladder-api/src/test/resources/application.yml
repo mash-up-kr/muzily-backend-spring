@@ -2,9 +2,18 @@ spring.profiles.default: test
 spring.config:
   import:
     - classpath:/application-domain.yml
+    - classpath:/application-thirdparty.yml
 
 server:
   servlet:
     encoding:
       charset: UTF-8
       force: true
+
+
+secret:
+  kakao:
+    token:
+      client-id: clientId
+      client-secret: secret
+

@@ -4,9 +4,9 @@ import kr.mashup.ladder.IntegrationTest
 import kr.mashup.ladder.account.dto.request.UpdateAccountInfoRequest
 import kr.mashup.ladder.domain.account.domain.Account
 import kr.mashup.ladder.domain.account.domain.AccountNotFoundException
-import kr.mashup.ladder.domain.account.domain.AccountRepository
 import kr.mashup.ladder.domain.account.domain.AccountSocialInfo
 import kr.mashup.ladder.domain.account.domain.SocialType
+import kr.mashup.ladder.domain.account.infra.jpa.AccountRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test

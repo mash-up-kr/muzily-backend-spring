@@ -6,6 +6,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
 
+    // Spring Session Redis
+    implementation("org.springframework.session:spring-session-data-redis")
+
     // TODO : remove this
     implementation("org.webjars:webjars-locator-core")
     implementation("org.webjars:sockjs-client:1.0.2")
@@ -15,6 +18,8 @@ dependencies {
 
     // rest-assured
     testImplementation("io.rest-assured:rest-assured:4.4.0")
+
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
 }
 
 jib {

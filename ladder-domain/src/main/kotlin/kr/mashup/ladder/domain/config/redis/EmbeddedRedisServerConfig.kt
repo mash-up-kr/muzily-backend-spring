@@ -13,13 +13,14 @@ import javax.annotation.PreDestroy
 class EmbeddedRedisServerConfig(
     @Value("\${spring.redis.port}") private val port: Int,
 ) {
+
     companion object {
         private var redisServer: RedisServer? = null
     }
 
     @PostConstruct
     fun start() {
-        if (redisServer == null) {
+        if (redisServer == null || !redisServer?.isActive!!) {
             redisServer = RedisServer(port)
             redisServer!!.start()
         }
