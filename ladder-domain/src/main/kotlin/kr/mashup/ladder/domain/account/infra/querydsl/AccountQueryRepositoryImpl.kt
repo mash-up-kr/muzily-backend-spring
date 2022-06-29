@@ -8,8 +8,16 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class AccountQueryRepositoryImpl(
-    private val queryFactory: JPAQueryFactory
+    private val queryFactory: JPAQueryFactory,
 ) : AccountQueryRepository {
+
+    override fun existsAccountById(accountId: Long): Boolean {
+        return queryFactory.selectOne()
+            .from(account)
+            .where(
+                account.id.eq(accountId),
+            ).fetchFirst() != null
+    }
 
     override fun existsBySocialIdAndSocialType(socialId: String, socialType: SocialType): Boolean {
         return queryFactory.selectOne()

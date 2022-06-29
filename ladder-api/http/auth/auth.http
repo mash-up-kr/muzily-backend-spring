@@ -7,3 +7,9 @@ Content-Type: application/json
     "redirectUri": "http://localhost:3000/auth/kakao/callback",
     "socialType": "KAKAO"
 }
+
+
+### 로그아웃
+POST {{api}}/api/v1/logout
+Content-Type: application/json
+Authorization: Bearer {{SESSION_ID}}
