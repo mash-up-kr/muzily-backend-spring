@@ -1,4 +1,4 @@
-name: 배포 - API
+name: 배포 - Search PI
 on:
   workflow_dispatch:
     inputs:
@@ -34,16 +34,15 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Create secret properties # TODO: 변경 필요 - 임시로 프로퍼티를 생성하는 방식으로 대응 중
         env:
-          SECRET_KAKAO_TOKEN_CLIENT_ID: ${{secrets.SECRET_KAKAO_TOKEN_CLIENT_ID}}
-          SECRET_KAKAO_TOKEN_CLIENT_SECRET: ${{secrets.SECRET_KAKAO_TOKEN_CLIENT_SECRET}}
+          SECRET_YOUTUBE_VIDEO_KEY: ${{secrets.SECRET_YOUTUBE_VIDEO_KEY}}
 
-          RESOURCE_PWD: ladder-api/src/main/resources
+          RESOURCE_PWD: ladder-search/src/main/resources
         run: |
-          echo -e "secret.kakao.token.client-id=$SECRET_KAKAO_TOKEN_CLIENT_ID\nsecret.kakao.token.client-secret=$SECRET_KAKAO_TOKEN_CLIENT_SECRET" > $RESOURCE_PWD/application-secret.properties
+          echo -e "secret.youtube.video.key=$SECRET_YOUTUBE_VIDEO_KEY" > $RESOURCE_PWD/application-secret.properties
       - name: Execute Gradle Jib
-        run: ./gradlew :ladder-api:jib -Dimage=${IMAGE} -Dtag=${TAG}
+        run: ./gradlew :ladder-search:jib -Dimage=${IMAGE} -Dtag=${TAG}
         env:
-          IMAGE: mashupladder/ladder-api
+          IMAGE: mashupladder/ladder-search
           TAG: ${{ github.event.inputs.version }}
       - name: Checkout Infra Repository
         uses: actions/checkout@v3
@@ -55,7 +54,7 @@ jobs:
       - name: Update Image Version
         uses: fjogeleit/yaml-update-action@main
         with:
-          valueFile: 'helm/ladder-api/values-${{ github.event.inputs.profile }}.yaml'
+          valueFile: 'helm/ladder-search/values-${{ github.event.inputs.profile }}.yaml'
           propertyPath: 'image.tag'
           value: ${{ github.event.inputs.version }}
           repository: mash-up-kr/ladder_backend_infra
