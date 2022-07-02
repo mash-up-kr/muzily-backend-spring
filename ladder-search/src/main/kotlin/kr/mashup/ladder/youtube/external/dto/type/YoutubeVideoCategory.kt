@@ -8,6 +8,6 @@ enum class YoutubeVideoCategory(
     val categoryId: Int,
 ) {
 
-    MUSIC(description = "Music", categoryId = 10),
+    MUSIC(description = "음악", categoryId = 10),
 
 }

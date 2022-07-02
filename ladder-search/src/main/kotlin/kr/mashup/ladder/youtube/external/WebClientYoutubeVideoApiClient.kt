@@ -1,5 +1,7 @@
 package kr.mashup.ladder.youtube.external
 
+import kotlinx.coroutines.reactor.awaitSingle
+import kr.mashup.ladder.domain.common.error.model.BadGatewayException
 import kr.mashup.ladder.youtube.external.dto.error.YoutubeVideoNotFoundException
 import kr.mashup.ladder.youtube.external.dto.properties.YoutubeVideoApiProperties
 import kr.mashup.ladder.youtube.external.dto.response.YoutubeVideoListResponse
@@ -7,17 +9,23 @@ import kr.mashup.ladder.youtube.external.dto.response.YoutubeVideoResponse
 import kr.mashup.ladder.youtube.external.dto.type.YoutubeVideoCategory
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.awaitBody
 import org.springframework.web.util.UriComponentsBuilder
+import reactor.util.retry.Retry
+import java.time.Duration
 
+/**
+ * Youtube Videos list API
+ * https://developers.google.com/youtube/v3/docs/videos/list?hl=ko
+ */
 @Component
 class WebClientYoutubeVideoApiClient(
     private val webClient: WebClient,
     private val youtubeVideoApiProperties: YoutubeVideoApiProperties,
 ) : YoutubeVideoApiClient {
 
+    // TODO: Add Cache
     override suspend fun getVideoInfo(videoId: String): YoutubeVideoResponse {
-        val response: YoutubeVideoListResponse = webClient.get()
+        return webClient.get()
             .uri(UriComponentsBuilder.fromUriString(youtubeVideoApiProperties.url)
                 .queryParam("id", videoId)
                 .queryParam("key", youtubeVideoApiProperties.key)
@@ -27,12 +35,19 @@ class WebClientYoutubeVideoApiClient(
                 .toUriString()
             )
             .retrieve()
-            .awaitBody()
-
-        if (response.items.isEmpty()) {
-            throw YoutubeVideoNotFoundException("해당하는 Id(${videoId})를 가진 음악 영상은 존재하지 않습니다")
-        }
-        return response.items[0]
+            .onStatus({ status -> status.is5xxServerError }, { response ->
+                response.bodyToMono(String::class.java).map { message -> BadGatewayException(message) }
+            })
+            .bodyToMono(YoutubeVideoListResponse::class.java)
+            .map { videoListResponse -> videoListResponse.items }
+            .retryWhen(Retry.backoff(3, Duration.ofSeconds(5)).filter { throwable -> throwable is BadGatewayException })
+            .awaitSingle()
+            .let { matchedVideos ->
+                if (matchedVideos.isEmpty()) {
+                    throw YoutubeVideoNotFoundException("해당하는 음악 카테고리의 Youtube 영상(${videoId})은 존재하지 않습니다")
+                }
+                matchedVideos.first()
+            }
     }
 
 }

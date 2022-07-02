@@ -13,10 +13,10 @@ class YoutubeSearchApiController(
 ) {
 
     @GetMapping("/search/v1/youtube/video")
-    suspend fun getVideoInfo(
+    suspend fun getYoutubeVideoInfo(
         @RequestParam videoId: String,
     ): ApiResponse<YoutubeVideoResponse> {
-        return ApiResponse.ok(youtubeVideoApiClient.getVideoInfo(videoId))
+        return ApiResponse.ok(youtubeVideoApiClient.getVideoInfo(videoId = videoId))
     }
 
 }

@@ -12,6 +12,7 @@ import org.springframework.validation.BindException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.server.ServerWebInputException
 import java.util.stream.Collectors
 
 private val logger = KotlinLogging.logger {}
@@ -27,6 +28,12 @@ class ControllerExceptionAdvice {
             .collect(Collectors.joining("\n"))
         logger.warn(errorMessage, e)
         return ApiResponse.error(ErrorCode.INVALID_REQUEST, errorMessage)
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ServerWebInputException::class)
+    private fun handleServerWebInputException(e: ServerWebInputException): ApiResponse<Nothing> {
+        return ApiResponse.error(ErrorCode.INVALID_REQUEST, e.message)
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
