@@ -1,5 +1,9 @@
-### Health Check
-GET {{api}}/api/health
+### Liveness
+GET {{api}}/api/actuator/health/liveness
+
+
+### Readiness
+GET {{api}}/api/actuator/health/readiness
 
 
 ### 테스트 세션 발급

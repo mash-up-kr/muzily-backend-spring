@@ -20,6 +20,12 @@ dependencies {
     testImplementation("io.rest-assured:rest-assured:4.4.0")
 
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+    // Spring Actuator
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+    // Micrometer Registry prometheus
+    implementation("io.micrometer:micrometer-registry-prometheus:1.9.0")
 }
 
 jib {

@@ -5,6 +5,7 @@ import kr.mashup.ladder.config.resolver.ACCOUNT_ID
 import kr.mashup.ladder.domain.account.domain.Account
 import kr.mashup.ladder.domain.account.domain.SocialType
 import kr.mashup.ladder.domain.account.infra.jpa.AccountRepository
+import org.springframework.context.annotation.Profile
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpSession
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpSession
 private const val MOCK_SOCIAL_ID = "TEST_SOCIAL_ID"
 private val MOCK_SOCIAL_TYPE = SocialType.KAKAO
 
+@Profile("local", "test", "dev")
 @RestController
 class LocalTestController(
     private val accountRepository: AccountRepository,

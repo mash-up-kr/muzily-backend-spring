@@ -19,7 +19,6 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 /** Version */
 val springMockkVersion = "3.1.1"
 val kotlinLoggingVersion = "2.1.20"
-val microMeterVersion = "1.9.0"
 
 application {
     mainClass.set("kr.mashup.ladder.LadderApiApplicationKt")
@@ -52,12 +51,6 @@ subprojects {
 
         // Kotlin Logging
         implementation("io.github.microutils:kotlin-logging-jvm:${kotlinLoggingVersion}")
-
-        // Spring Actuator
-        implementation("org.springframework.boot:spring-boot-starter-actuator")
-
-        // Micrometer Registry prometheus
-        implementation("io.micrometer:micrometer-registry-prometheus:${microMeterVersion}")
 
         // Test
         testImplementation("org.springframework.boot:spring-boot-starter-test")
