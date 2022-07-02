@@ -1,12 +1,12 @@
-package kr.mashup.ladder.external.kakao
+package kr.mashup.ladder.auth.external
 
 import kr.mashup.ladder.domain.common.error.model.BadGatewayException
-import kr.mashup.ladder.domain.common.error.model.InvalidThirdPartyTokenException
+import kr.mashup.ladder.auth.external.dto.error.InvalidKaKaoTokenException
 import kr.mashup.ladder.domain.common.error.model.UnknownErrorException
-import kr.mashup.ladder.external.kakao.dto.properties.KaKaoTokenProperties
-import kr.mashup.ladder.external.kakao.dto.properties.KaKaoUserProperties
-import kr.mashup.ladder.external.kakao.dto.response.KaKaoInfoResponse
-import kr.mashup.ladder.external.kakao.dto.response.KaKaoTokenResponse
+import kr.mashup.ladder.auth.external.kakao.dto.properties.KaKaoTokenProperties
+import kr.mashup.ladder.auth.external.kakao.dto.properties.KaKaoUserProperties
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoTokenResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -32,7 +32,7 @@ class WebClientKaKaoAuthApiClientImpl(
             .body(BodyInserters.fromFormData(createAccessTokenRequest(code, redirectUri)))
             .retrieve()
             .onStatus({ status -> status.is4xxClientError }, { response ->
-                response.bodyToMono(String::class.java).map { message -> InvalidThirdPartyTokenException(message) }
+                response.bodyToMono(String::class.java).map { message -> InvalidKaKaoTokenException(message) }
             })
             .onStatus({ status -> status.is5xxServerError }, { response ->
                 response.bodyToMono(String::class.java).map { message -> BadGatewayException(message) }

@@ -8,11 +8,11 @@ import kr.mashup.ladder.domain.account.domain.Account
 import kr.mashup.ladder.domain.account.domain.AccountSocialInfo
 import kr.mashup.ladder.domain.account.domain.SocialType
 import kr.mashup.ladder.domain.account.infra.jpa.AccountRepository
-import kr.mashup.ladder.external.kakao.KaKaoAuthApiClient
-import kr.mashup.ladder.external.kakao.dto.response.KaKaoAccountResponse
-import kr.mashup.ladder.external.kakao.dto.response.KaKaoInfoResponse
-import kr.mashup.ladder.external.kakao.dto.response.KaKaoProfileResponse
-import kr.mashup.ladder.external.kakao.dto.response.KaKaoTokenResponse
+import kr.mashup.ladder.auth.external.KaKaoAuthApiClient
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoAccountResponse
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoProfileResponse
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoTokenResponse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
