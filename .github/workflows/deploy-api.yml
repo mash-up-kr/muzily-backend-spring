@@ -32,7 +32,14 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Create secret properties # TODO: 변경 필요 - 임시로 프로퍼티를 생성하는 방식으로 대응 중
+      - name: Setup Version
+        id: version
+        run: |
+          VERSION=${VERSIONING}-${{ github.run_id }}
+          echo "::set-output name=version::${VERSION}"
+        env:
+          VERSIONING: ${{ github.event.inputs.version }}
+      - name: Setup secret properties # TODO: 변경 필요 - 임시로 프로퍼티를 생성하는 방식으로 대응 중
         env:
           SECRET_KAKAO_TOKEN_CLIENT_ID: ${{secrets.SECRET_KAKAO_TOKEN_CLIENT_ID}}
           SECRET_KAKAO_TOKEN_CLIENT_SECRET: ${{secrets.SECRET_KAKAO_TOKEN_CLIENT_SECRET}}
@@ -44,7 +51,7 @@ jobs:
         run: ./gradlew :ladder-api:jib -Dimage=${IMAGE} -Dtag=${TAG}
         env:
           IMAGE: mashupladder/ladder-api
-          TAG: ${{ github.event.inputs.version }}
+          TAG: ${{ steps.version.outputs.version }}
       - name: Checkout Infra Repository
         uses: actions/checkout@v3
         with:
@@ -57,9 +64,9 @@ jobs:
         with:
           valueFile: 'helm/ladder-api/values-${{ github.event.inputs.profile }}.yaml'
           propertyPath: 'image.tag'
-          value: ${{ github.event.inputs.version }}
+          value: ${{ steps.version.outputs.version }}
           repository: mash-up-kr/ladder_backend_infra
           branch: main
-          message: 'Update Image Version to ${{ github.event.inputs.version }}'
+          message: 'Update Image Version to ${{ steps.version.outputs.version }}'
           token: ${{ secrets.PAT }}
           workDir: ladder_backend_infra
