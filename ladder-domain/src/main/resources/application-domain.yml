@@ -31,7 +31,7 @@ spring:
       driver-class-name: org.h2.Driver
   redis:
     host: 127.0.0.1
-    port: ${random.int(10000,20000)}
+    port: 6379
 
   h2:
     console:
