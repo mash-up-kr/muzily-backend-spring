@@ -5,9 +5,9 @@ import kr.mashup.ladder.account.service.AccountService
 import kr.mashup.ladder.auth.dto.request.AuthRequest
 import kr.mashup.ladder.domain.account.domain.SocialType
 import kr.mashup.ladder.domain.account.infra.jpa.AccountRepository
-import kr.mashup.ladder.external.kakao.KaKaoAuthApiClient
-import kr.mashup.ladder.external.kakao.dto.response.KaKaoTokenResponse
-import kr.mashup.ladder.external.kakao.dto.response.KaKaoInfoResponse
+import kr.mashup.ladder.auth.external.KaKaoAuthApiClient
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoTokenResponse
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
 import org.springframework.stereotype.Service
 
 private val SOCIAL_TYPE = SocialType.KAKAO

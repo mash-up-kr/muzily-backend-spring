@@ -20,7 +20,7 @@ class WebClientConfig {
 
     @Bean
     fun webClient(): WebClient {
-        val connectionProvider: ConnectionProvider = ConnectionProvider.builder("ladder-api-webclient")
+        val connectionProvider: ConnectionProvider = ConnectionProvider.builder("ladder-search-webclient")
             .build()
 
         return WebClient.builder()

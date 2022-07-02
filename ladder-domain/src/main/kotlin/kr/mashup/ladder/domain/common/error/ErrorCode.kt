@@ -21,7 +21,7 @@ enum class ErrorCode(
     UNKNOWN_ERROR(status = 500, code = "C007", message = "서버에서 에러가 발생하였습니다 ㅠㅠ", shouldLog = true),
 
     // auth
-    AUTH_TOKEN_INVALID(status = 400, code = "AT001", "잘못된 인증 토큰입니다", shouldLog = false),
+    KAKAO_INVALID_AUTHORIZATION_CODE(status = 400, code = "AT001", "잘못된 카카오 인가 코드입니다", shouldLog = false),
 
     // account
     ACCOUNT_NOT_FOUND(status = 404, code = "A001", message = "해당하는 계정은 존재하지 않습니다", shouldLog = false),
@@ -30,5 +30,6 @@ enum class ErrorCode(
     // room
     ROOM_NOT_FOUND(status = 404, code = "R001", message = "해당하는 방이 존재하지 않습니다", shouldLog = false),
 
-    // ...
+    // youtube
+    YOUTUBE_VIDEO_NOT_FOUND(status = 404, code = "Y001", "해당하는 유튜브 음악 영상은 존재하지 않습니다", shouldLog = false)
 }

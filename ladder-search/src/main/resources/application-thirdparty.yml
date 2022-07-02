@@ -1,0 +1,5 @@
+youtube:
+  video:
+    url: https://www.googleapis.com/youtube/v3/videos
+    key: ${secret.youtube.video.key}
+    part: id,snippet,contentDetails

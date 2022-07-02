@@ -7,7 +7,7 @@ spring.config:
     - optional:classpath:/application-secret.properties
 
 server:
-  port: 9000
+  port: 9001
   shutdown: graceful
   servlet:
     encoding:
@@ -24,7 +24,7 @@ spring:
 management:
   endpoints:
     web:
-      base-path: /api/actuator
+      base-path: /search/actuator
       exposure:
         include:
           - health

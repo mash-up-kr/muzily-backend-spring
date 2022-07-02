@@ -1,0 +1,64 @@
+name: 배포 - Search PI
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "버전"
+        default: '0.0.1'
+        required: true
+      profile:
+        description: "프로파일"
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - prod
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Application Repository
+        uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Create secret properties # TODO: 변경 필요 - 임시로 프로퍼티를 생성하는 방식으로 대응 중
+        env:
+          SECRET_YOUTUBE_VIDEO_KEY: ${{secrets.SECRET_YOUTUBE_VIDEO_KEY}}
+
+          RESOURCE_PWD: ladder-search/src/main/resources
+        run: |
+          echo -e "secret.youtube.video.key=$SECRET_YOUTUBE_VIDEO_KEY" > $RESOURCE_PWD/application-secret.properties
+      - name: Execute Gradle Jib
+        run: ./gradlew :ladder-search:jib -Dimage=${IMAGE} -Dtag=${TAG}
+        env:
+          IMAGE: mashupladder/ladder-search
+          TAG: ${{ github.event.inputs.version }}
+      - name: Checkout Infra Repository
+        uses: actions/checkout@v3
+        with:
+          repository: mash-up-kr/ladder_backend_infra
+          ref: main
+          token: ${{ secrets.PAT }}
+          path: ladder_backend_infra
+      - name: Update Image Version
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'helm/ladder-search/values-${{ github.event.inputs.profile }}.yaml'
+          propertyPath: 'image.tag'
+          value: ${{ github.event.inputs.version }}
+          repository: mash-up-kr/ladder_backend_infra
+          branch: main
+          message: 'Update Image Version to ${{ github.event.inputs.version }}'
+          token: ${{ secrets.PAT }}
+          workDir: ladder_backend_infra

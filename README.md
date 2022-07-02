@@ -9,4 +9,5 @@
 ## 모듈
 
 - ladder-api
+- ladder-search
 - ladder-domain
