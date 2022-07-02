@@ -36,10 +36,11 @@ jobs:
         env:
           SECRET_KAKAO_TOKEN_CLIENT_ID: ${{secrets.SECRET_KAKAO_TOKEN_CLIENT_ID}}
           SECRET_KAKAO_TOKEN_CLIENT_SECRET: ${{secrets.SECRET_KAKAO_TOKEN_CLIENT_SECRET}}
+          SECRET_YOUTUBE_VIDEO_KEY: ${{secrets.SECRET_YOUTUBE_VIDEO_KEY}}
 
           RESOURCE_PWD: ladder-api/src/main/resources
         run: |
-          echo -e "secret.kakao.token.client-id=$SECRET_KAKAO_TOKEN_CLIENT_ID\nsecret.kakao.token.client-secret=$SECRET_KAKAO_TOKEN_CLIENT_SECRET" > $RESOURCE_PWD/application-secret.properties
+          echo -e "secret.kakao.token.client-id=$SECRET_KAKAO_TOKEN_CLIENT_ID\nsecret.kakao.token.client-secret=$SECRET_KAKAO_TOKEN_CLIENT_SECRET\nsecret.youtube.video.key=$SECRET_YOUTUBE_VIDEO_KEY" > $RESOURCE_PWD/application-secret.properties
       - name: Execute Gradle Jib
         run: ./gradlew :ladder-api:jib -Dimage=${IMAGE} -Dtag=${TAG}
         env:

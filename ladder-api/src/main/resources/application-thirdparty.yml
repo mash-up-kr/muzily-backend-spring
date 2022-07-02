@@ -6,3 +6,8 @@ kakao:
     grant-type: authorization_code
   profile:
     url: https://kapi.kakao.com/v2/user/me
+youtube:
+  video:
+    url: https://www.googleapis.com/youtube/v3/videos
+    key: ${secret.youtube.video.key}
+    part: id,snippet,contentDetails

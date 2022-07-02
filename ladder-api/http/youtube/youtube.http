@@ -1,0 +1,2 @@
+### Get Youtube Video Info
+GET {{api}}/search/v1/youtube/video?videoId=RmiK7Lvh0Y0
