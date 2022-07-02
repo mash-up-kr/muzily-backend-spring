@@ -1,13 +1,22 @@
 # Ladder Server
 
----
+### 개발 스택
 
-## Wiki
+- Language: Kotlin
+- Framework: Spring Boot / Spring MVC / Spring Webflux
+- Data: JPA / QueryDSL / MySQL 8.0 / Redis
+- Test: Junit5 / Spring Test / RestAssured
+- Socket: STOMP
+- Infra: k8s
+- Operation: Grafana / Prometheus
+- CI/CD: Git / Github Actions / ArgoCD
 
-- https://github.com/mash-up-kr/ladder-server/wiki
-
-## 모듈
+### 모듈
 
 - ladder-api
 - ladder-search
 - ladder-domain
+
+### Wiki
+
+- https://github.com/mash-up-kr/ladder-server/wiki
