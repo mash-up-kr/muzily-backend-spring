@@ -1,4 +1,4 @@
-package kr.mashup.ladder.config.jackson
+package kr.mashup.ladder.domain.config.jackson
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
