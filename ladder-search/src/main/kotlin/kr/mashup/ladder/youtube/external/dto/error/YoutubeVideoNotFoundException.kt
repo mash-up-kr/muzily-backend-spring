@@ -1,4 +1,4 @@
-package kr.mashup.ladder.search.youtube.external.dto.error
+package kr.mashup.ladder.youtube.external.dto.error
 
 import kr.mashup.ladder.domain.common.error.ErrorCode
 import kr.mashup.ladder.domain.common.error.model.LadderBaseException

@@ -1,4 +1,4 @@
-package kr.mashup.ladder.search.youtube.external.dto.response
+package kr.mashup.ladder.youtube.external.dto.response
 
 import java.time.Duration
 import java.time.LocalDateTime
