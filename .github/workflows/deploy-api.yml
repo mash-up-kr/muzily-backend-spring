@@ -39,14 +39,6 @@ jobs:
           echo "::set-output name=version::${VERSION}"
         env:
           VERSIONING: ${{ github.event.inputs.version }}
-      - name: Setup secret properties # TODO: 변경 필요 - 임시로 프로퍼티를 생성하는 방식으로 대응 중
-        env:
-          SECRET_KAKAO_TOKEN_CLIENT_ID: ${{secrets.SECRET_KAKAO_TOKEN_CLIENT_ID}}
-          SECRET_KAKAO_TOKEN_CLIENT_SECRET: ${{secrets.SECRET_KAKAO_TOKEN_CLIENT_SECRET}}
-
-          RESOURCE_PWD: ladder-api/src/main/resources
-        run: |
-          echo -e "secret.kakao.token.client-id=$SECRET_KAKAO_TOKEN_CLIENT_ID\nsecret.kakao.token.client-secret=$SECRET_KAKAO_TOKEN_CLIENT_SECRET" > $RESOURCE_PWD/application-secret.properties
       - name: Execute Gradle Jib
         run: ./gradlew :ladder-api:jib -Dimage=${IMAGE} -Dtag=${TAG}
         env:

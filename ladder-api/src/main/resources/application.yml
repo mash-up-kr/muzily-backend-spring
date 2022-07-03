@@ -3,8 +3,6 @@ spring.config:
   import:
     - classpath:/application-domain.yml
     - classpath:/application-thirdparty.yml
-    - optional:classpath:/application-secret.yml
-    - optional:classpath:/application-secret.properties
 
 server:
   port: 9000
