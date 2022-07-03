@@ -54,6 +54,9 @@ subprojects {
         // Kotlin Logging
         implementation("io.github.microutils:kotlin-logging-jvm:${kotlinLoggingVersion}")
 
+        // Jasypt
+        implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4")
+
         // Test
         testImplementation("org.springframework.boot:spring-boot-starter-test")
 
