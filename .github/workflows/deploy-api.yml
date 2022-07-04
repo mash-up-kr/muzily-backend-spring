@@ -2,6 +2,10 @@ name: 배포 - API
 on:
   workflow_dispatch:
     inputs:
+      branch:
+        description: "브랜치"
+        default: 'develop'
+        required: true
       version:
         description: "버전"
         default: '0.0.1'
