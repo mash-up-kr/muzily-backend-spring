@@ -1,4 +1,4 @@
-name: 배포 - Search PI
+name: 배포 - Search API
 on:
   workflow_dispatch:
     inputs:
