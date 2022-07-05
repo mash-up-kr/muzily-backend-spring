@@ -9,7 +9,7 @@ class WebConfig : WebFluxConfigurer {
 
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins("**") // TODO: 도메인으로 변경
+            .allowedOrigins("http://localhost:3000") // TODO: 프론트에서 proxy 설정하면 localhost 제거
             .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD")
             .allowedHeaders("*")
             .allowCredentials(true)
