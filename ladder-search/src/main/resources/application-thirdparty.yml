@@ -1,5 +1,32 @@
 youtube:
   video:
     url: https://www.googleapis.com/youtube/v3/videos
-    key: ${secret.youtube.video.key}
     part: id,snippet,contentDetails
+---
+spring.config:
+  activate:
+    on-profile: local
+youtube:
+  video:
+    key: ENC(/rc0bdJ/q66tffolDHvEGiQ/KJnPyORnXNyUn6UbcCEfjkgiXIr4Yw/HQS/cwGOQyox781SLBiD26x9iiQ5tEYmXS6YEJCQOdTZOO/uSKik=)
+---
+spring.config:
+  activate:
+    on-profile: test
+youtube:
+  video:
+    key: undefined
+---
+spring.config:
+  activate:
+    on-profile: dev
+youtube:
+  video:
+    key: ENC(/rc0bdJ/q66tffolDHvEGiQ/KJnPyORnXNyUn6UbcCEfjkgiXIr4Yw/HQS/cwGOQyox781SLBiD26x9iiQ5tEYmXS6YEJCQOdTZOO/uSKik=)
+---
+spring.config:
+  activate:
+    on-profile: prod
+youtube:
+  video:
+    key: ENC(/rc0bdJ/q66tffolDHvEGiQ/KJnPyORnXNyUn6UbcCEfjkgiXIr4Yw/HQS/cwGOQyox781SLBiD26x9iiQ5tEYmXS6YEJCQOdTZOO/uSKik=)
