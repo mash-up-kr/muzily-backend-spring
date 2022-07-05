@@ -1,13 +1,38 @@
 kakao:
   token:
     url: https://kauth.kakao.com/oauth/token
-    client-id: ${secret.kakao.token.client-id}
-    client-secret: ${secret.kakao.token.client-secret}
     grant-type: authorization_code
   profile:
     url: https://kapi.kakao.com/v2/user/me
-youtube:
-  video:
-    url: https://www.googleapis.com/youtube/v3/videos
-    key: ${secret.youtube.video.key}
-    part: id,snippet,contentDetails
+---
+spring.config:
+  activate:
+    on-profile: local
+kakao:
+  token:
+    client-id: ENC(GyJMgOkFC2b1NcZQRiKCX9LHCj+Ee8KH0qYdaPSt04dE2D9Unb1/iuMskH/e1FUFGOUVeS+pfPLoCaLD/qv8UrTt2icDzjM7a2e8oepXwIk=)
+    client-secret: ENC(AyD+paTypSCBmNa1J58vPRR0LIHAb6Lu6HaNl52uOe3jbkjwMlyQXxF2iFyczwIMW2vJ3l0xLVNfoVbvONJ7sEWVLkgXG4lD1AA8uPgocfU=)
+---
+spring.config:
+  activate:
+    on-profile: test
+kakao:
+  token:
+    client-id: undefined
+    client-secret: undefined
+---
+spring.config:
+  activate:
+    on-profile: dev
+kakao:
+  token:
+    client-id: ENC(GyJMgOkFC2b1NcZQRiKCX9LHCj+Ee8KH0qYdaPSt04dE2D9Unb1/iuMskH/e1FUFGOUVeS+pfPLoCaLD/qv8UrTt2icDzjM7a2e8oepXwIk=)
+    client-secret: ENC(AyD+paTypSCBmNa1J58vPRR0LIHAb6Lu6HaNl52uOe3jbkjwMlyQXxF2iFyczwIMW2vJ3l0xLVNfoVbvONJ7sEWVLkgXG4lD1AA8uPgocfU=)
+---
+spring.config:
+  activate:
+    on-profile: prod
+kakao:
+  token:
+    client-id: ENC(GyJMgOkFC2b1NcZQRiKCX9LHCj+Ee8KH0qYdaPSt04dE2D9Unb1/iuMskH/e1FUFGOUVeS+pfPLoCaLD/qv8UrTt2icDzjM7a2e8oepXwIk=)
+    client-secret: ENC(AyD+paTypSCBmNa1J58vPRR0LIHAb6Lu6HaNl52uOe3jbkjwMlyQXxF2iFyczwIMW2vJ3l0xLVNfoVbvONJ7sEWVLkgXG4lD1AA8uPgocfU=)
