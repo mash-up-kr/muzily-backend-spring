@@ -39,13 +39,6 @@ jobs:
           echo "::set-output name=version::${VERSION}"
         env:
           VERSIONING: ${{ github.event.inputs.version }}
-      - name: Setup secret properties # TODO: 변경 필요 - 임시로 프로퍼티를 생성하는 방식으로 대응 중
-        env:
-          SECRET_YOUTUBE_VIDEO_KEY: ${{secrets.SECRET_YOUTUBE_VIDEO_KEY}}
-
-          RESOURCE_PWD: ladder-search/src/main/resources
-        run: |
-          echo -e "secret.youtube.video.key=$SECRET_YOUTUBE_VIDEO_KEY" > $RESOURCE_PWD/application-secret.properties
       - name: Execute Gradle Jib
         run: ./gradlew :ladder-search:jib -Dimage=${IMAGE} -Dtag=${TAG}
         env:
