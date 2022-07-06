@@ -10,5 +10,5 @@ GET {{api}}/api/actuator/health/readiness
 GET {{api}}/api/test/session
 
 > {%
-client.global.set("SESSION_ID", response.body["data"])
+client.global.set("SESSION_ID", response.body)
 %}
