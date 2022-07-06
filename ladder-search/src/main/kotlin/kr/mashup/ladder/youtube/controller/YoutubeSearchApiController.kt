@@ -1,6 +1,5 @@
 package kr.mashup.ladder.youtube.controller
 
-import kr.mashup.ladder.common.dto.response.ApiResponse
 import kr.mashup.ladder.youtube.external.YoutubeVideoApiClient
 import kr.mashup.ladder.youtube.external.dto.response.YoutubeVideoResponse
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,8 +14,8 @@ class YoutubeSearchApiController(
     @GetMapping("/search/v1/youtube/video")
     suspend fun getYoutubeVideoInfo(
         @RequestParam videoId: String,
-    ): ApiResponse<YoutubeVideoResponse> {
-        return ApiResponse.ok(youtubeVideoApiClient.getVideoInfo(videoId = videoId))
+    ): YoutubeVideoResponse {
+        return youtubeVideoApiClient.getVideoInfo(videoId = videoId)
     }
 
 }

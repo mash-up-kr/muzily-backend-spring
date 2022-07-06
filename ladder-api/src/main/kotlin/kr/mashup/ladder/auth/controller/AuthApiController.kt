@@ -4,7 +4,6 @@ import kr.mashup.ladder.auth.dto.request.AuthRequest
 import kr.mashup.ladder.auth.dto.response.LoginResponse
 import kr.mashup.ladder.auth.service.AuthService
 import kr.mashup.ladder.auth.service.AuthServiceFinder
-import kr.mashup.ladder.common.dto.response.ApiResponse
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.resolver.ACCOUNT_ID
 import org.springframework.web.bind.annotation.PostMapping
@@ -21,23 +20,18 @@ class AuthApiController(
     @PostMapping("/api/v1/auth")
     fun handleAuthentication(
         @RequestBody request: AuthRequest,
-    ): ApiResponse<LoginResponse> {
+    ): LoginResponse {
         val authService: AuthService = authServiceFinder.getService(request.socialType)
         val accountId = authService.authentication(request)
         httpSession.setAttribute(ACCOUNT_ID, accountId)
 
-        return ApiResponse.ok(
-            LoginResponse(
-                token = httpSession.id
-            )
-        )
+        return LoginResponse(token = httpSession.id)
     }
 
     @Auth
     @PostMapping("/api/v1/logout")
-    fun logout(): ApiResponse<String> {
+    fun logout() {
         httpSession.invalidate()
-        return ApiResponse.OK
     }
 
 }

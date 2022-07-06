@@ -3,7 +3,6 @@ package kr.mashup.ladder.account.controller
 import kr.mashup.ladder.account.dto.request.UpdateAccountInfoRequest
 import kr.mashup.ladder.account.dto.response.AccountInfoResponse
 import kr.mashup.ladder.account.service.AccountService
-import kr.mashup.ladder.common.dto.response.ApiResponse
 import kr.mashup.ladder.config.annotation.AccountId
 import kr.mashup.ladder.config.annotation.Auth
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,8 +20,8 @@ class AccountApiController(
     @GetMapping("/api/v1/accounts")
     fun getMyAccountInfo(
         @AccountId accountId: Long,
-    ): ApiResponse<AccountInfoResponse> {
-        return ApiResponse.ok(accountService.retrieveAccountInfo(accountId))
+    ): AccountInfoResponse {
+        return accountService.retrieveAccountInfo(accountId)
     }
 
     @Auth
@@ -30,9 +29,8 @@ class AccountApiController(
     fun updateMyAccountInfo(
         @Valid @RequestBody request: UpdateAccountInfoRequest,
         @AccountId accountId: Long,
-    ): ApiResponse<String> {
+    ) {
         accountService.updateAccountInfo(request, accountId)
-        return ApiResponse.OK
     }
 
 }

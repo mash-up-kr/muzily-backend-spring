@@ -1,7 +1,7 @@
 package kr.mashup.ladder.common.advice
 
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import kr.mashup.ladder.common.dto.response.ApiResponse
+import kr.mashup.ladder.common.dto.response.ErrorResponse
 import kr.mashup.ladder.domain.common.error.ErrorCode
 import kr.mashup.ladder.domain.common.error.model.LadderBaseException
 import mu.KotlinLogging
@@ -22,36 +22,36 @@ class ControllerExceptionAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BindException::class)
-    private fun handleBadRequest(e: BindException): ApiResponse<Nothing> {
+    private fun handleBadRequest(e: BindException): ErrorResponse<Nothing> {
         val errorMessage = e.bindingResult.fieldErrors.stream()
             .map { fieldError -> fieldError.defaultMessage + " [${fieldError.field}]" }
             .collect(Collectors.joining("\n"))
         logger.warn(errorMessage, e)
-        return ApiResponse.error(ErrorCode.INVALID_REQUEST, errorMessage)
+        return ErrorResponse.of(ErrorCode.INVALID_REQUEST, errorMessage)
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ServerWebInputException::class)
-    private fun handleServerWebInputException(e: ServerWebInputException): ApiResponse<Nothing> {
-        return ApiResponse.error(ErrorCode.INVALID_REQUEST, e.message)
+    private fun handleServerWebInputException(e: ServerWebInputException): ErrorResponse<Nothing> {
+        return ErrorResponse.of(ErrorCode.INVALID_REQUEST, e.message)
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException::class)
-    private fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ApiResponse<Nothing> {
+    private fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ErrorResponse<Nothing> {
         logger.warn(e.message)
         if (e.rootCause is MissingKotlinParameterException) {
             val parameterName = (e.rootCause as MissingKotlinParameterException).parameter.name
-            return ApiResponse.error(ErrorCode.INVALID_REQUEST, "파라미터 ($parameterName)을 입력해주세요")
+            return ErrorResponse.of(ErrorCode.INVALID_REQUEST, "파라미터 ($parameterName)을 입력해주세요")
         }
-        return ApiResponse.error(ErrorCode.INVALID_REQUEST)
+        return ErrorResponse.of(ErrorCode.INVALID_REQUEST)
     }
 
     @ExceptionHandler(LadderBaseException::class)
-    private fun handleBaseException(exception: LadderBaseException): ResponseEntity<ApiResponse<Nothing>> {
+    private fun handleBaseException(exception: LadderBaseException): ResponseEntity<ErrorResponse<Nothing>> {
         logging(exception)
         return ResponseEntity.status(exception.errorCode.status)
-            .body(ApiResponse.error(exception.errorCode))
+            .body(ErrorResponse.of(exception.errorCode))
     }
 
     private fun logging(exception: LadderBaseException) {
@@ -64,9 +64,9 @@ class ControllerExceptionAdvice {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception::class)
-    private fun handleInternalServerException(exception: Exception): ApiResponse<Nothing> {
+    private fun handleInternalServerException(exception: Exception): ErrorResponse<Nothing> {
         logger.error(exception.message, exception)
-        return ApiResponse.error(ErrorCode.UNKNOWN_ERROR)
+        return ErrorResponse.of(ErrorCode.UNKNOWN_ERROR)
     }
 
 }

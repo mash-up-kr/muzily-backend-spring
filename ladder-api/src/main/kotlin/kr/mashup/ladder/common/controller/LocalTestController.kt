@@ -1,6 +1,5 @@
 package kr.mashup.ladder.common.controller
 
-import kr.mashup.ladder.common.dto.response.ApiResponse
 import kr.mashup.ladder.config.resolver.ACCOUNT_ID
 import kr.mashup.ladder.domain.account.domain.Account
 import kr.mashup.ladder.domain.account.domain.SocialType
@@ -21,7 +20,7 @@ class LocalTestController(
 ) {
 
     @GetMapping("/api/test/session")
-    fun getSession(): ApiResponse<String> {
+    fun getSession(): String {
         val account = accountRepository.findBySocialIdAndSocialType(
             socialType = MOCK_SOCIAL_TYPE,
             socialId = MOCK_SOCIAL_ID
@@ -31,7 +30,7 @@ class LocalTestController(
         ))
 
         httpSession.setAttribute(ACCOUNT_ID, account.id)
-        return ApiResponse.ok(httpSession.id)
+        return httpSession.id
     }
 
 }
