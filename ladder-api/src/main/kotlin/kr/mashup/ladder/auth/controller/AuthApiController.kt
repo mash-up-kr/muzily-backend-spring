@@ -1,5 +1,6 @@
 package kr.mashup.ladder.auth.controller
 
+import io.swagger.annotations.ApiOperation
 import kr.mashup.ladder.auth.dto.request.AuthRequest
 import kr.mashup.ladder.auth.dto.response.LoginResponse
 import kr.mashup.ladder.auth.service.AuthService
@@ -21,6 +22,7 @@ class AuthApiController(
     private val httpSession: HttpSession,
 ) {
 
+    @ApiOperation("로그인/회원가입 API")
     @PostMapping("/api/v1/auth")
     fun handleAuthentication(
         @Valid @RequestBody request: AuthRequest,
@@ -31,6 +33,7 @@ class AuthApiController(
         return LoginResponse(token = httpSession.id)
     }
 
+    @ApiOperation("익명 회원가입 API")
     @PostMapping("/api/v1/auth/anonymous")
     fun createAnonymousMember(): LoginResponse {
         val memberId = guestAuthService.createAnonymousMember()
@@ -38,6 +41,7 @@ class AuthApiController(
         return LoginResponse(token = httpSession.id)
     }
 
+    @ApiOperation("로그아웃 API")
     @Auth
     @PostMapping("/api/v1/logout")
     fun logout(): String {
