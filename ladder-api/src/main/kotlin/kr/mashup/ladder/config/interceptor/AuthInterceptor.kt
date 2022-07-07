@@ -8,7 +8,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.session.Session
 import org.springframework.session.SessionRepository
 import org.springframework.stereotype.Component
-import org.springframework.util.StringUtils
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.HandlerInterceptor
 import javax.servlet.http.HttpServletRequest
@@ -29,8 +28,8 @@ class AuthInterceptor(
         }
         handler.getMethodAnnotation(Auth::class.java) ?: return true
 
-        val header = request.getHeader(HttpHeaders.AUTHORIZATION)
-        if (!StringUtils.hasText(header) && !header.startsWith(HEADER_TOKEN_PREFIX)) {
+        val header: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
+        if (header.isNullOrBlank() || !header.startsWith(HEADER_TOKEN_PREFIX)) {
             throw UnAuthorizedException("Bearer 형식이 아닌 헤더 (${header})입니다.")
         }
 
