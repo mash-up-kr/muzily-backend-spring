@@ -39,4 +39,14 @@ class MemberQueryRepositoryImpl(
             ).fetchOne()
     }
 
+    override fun existsMemberHasAccountById(memberId: Long): Boolean {
+        return queryFactory.selectOne()
+            .from(member)
+            .innerJoin(account).on(account.member.id.eq(member.id))
+            .where(
+                member.id.eq(memberId)
+            )
+            .fetchFirst() != null
+    }
+
 }
