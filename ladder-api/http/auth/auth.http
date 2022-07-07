@@ -1,5 +1,5 @@
 ### 익명 회원가입
-POST {{api}}/api/v1/auth/guest
+POST {{api}}/api/v1/auth/anonymous
 Content-Type: application/json
 
 > {%
@@ -12,7 +12,7 @@ POST {{api}}/api/v1/auth
 Content-Type: application/json
 
 {
-    "code": "I6EyffT6wZqvbuQ8KduOAyMQJo01-eAhM3gQKrHoO3JT_tpyMmi_AIJgCSZMEu3ddDp7lAo9dBEAAAGB2bSjaQ",
+    "code": "UaFyE0cvTGb0dzduCmQMRMUz30GoAh9VDCfy_0zYhJQv9qZqL_SYLq2mNU9rugy7QWgAyQorDKgAAAGB2gRSfQ",
     "redirectUri": "http://localhost:3000/auth/kakao/callback",
     "socialType": "KAKAO"
 }
