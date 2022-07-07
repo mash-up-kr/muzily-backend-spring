@@ -23,9 +23,8 @@ enum class ErrorCode(
     // auth
     KAKAO_INVALID_AUTHORIZATION_CODE(status = 400, code = "AT001", "잘못된 카카오 인가 코드입니다", shouldLog = false),
 
-    // account
-    ACCOUNT_NOT_FOUND(status = 404, code = "A001", message = "해당하는 계정은 존재하지 않습니다", shouldLog = false),
-    ACCOUNT_NOT_CONFLICT(status = 409, code = "A002", message = "이미 가입한 계정입니다", shouldLog = false),
+    // member
+    MEMBER_NOT_FOUND(status = 404, code = "A001", message = "해당하는 계정은 존재하지 않습니다", shouldLog = false),
 
     // room
     ROOM_NOT_FOUND(status = 404, code = "R001", message = "해당하는 방이 존재하지 않습니다", shouldLog = false),

@@ -1,12 +1,12 @@
 package kr.mashup.ladder.auth.external
 
-import kr.mashup.ladder.auth.external.dto.error.InvalidKaKaoTokenException
-import kr.mashup.ladder.auth.external.kakao.dto.properties.KaKaoTokenProperties
-import kr.mashup.ladder.auth.external.kakao.dto.properties.KaKaoUserProperties
-import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
-import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoTokenResponse
 import kr.mashup.ladder.domain.common.error.model.BadGatewayException
+import kr.mashup.ladder.auth.external.dto.error.InvalidKaKaoTokenException
 import kr.mashup.ladder.domain.common.error.model.UnknownErrorException
+import kr.mashup.ladder.auth.external.dto.properties.KaKaoTokenProperties
+import kr.mashup.ladder.auth.external.dto.properties.KaKaoUserProperties
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
+import kr.mashup.ladder.auth.external.dto.response.KaKaoTokenResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -58,7 +58,7 @@ class WebClientKaKaoAuthApiClientImpl(
     override fun getProfileInfo(accessToken: String): KaKaoInfoResponse {
         val kaKaoProfileResponse: KaKaoInfoResponse? = webClient.get()
             .uri(kaKaoProfileProperties.url)
-            .headers(Consumer { headers -> headers.setBearerAuth(accessToken) })
+            .headers { headers -> headers.setBearerAuth(accessToken) }
             .retrieve()
             .onStatus({ status -> status.is4xxClientError }, { response ->
                 response.bodyToMono(String::class.java).map { message -> UnknownErrorException(message) }

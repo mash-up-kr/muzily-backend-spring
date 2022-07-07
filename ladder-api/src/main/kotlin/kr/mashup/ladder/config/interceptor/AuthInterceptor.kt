@@ -1,9 +1,9 @@
 package kr.mashup.ladder.config.interceptor
 
 import kr.mashup.ladder.config.annotation.Auth
-import kr.mashup.ladder.config.resolver.ACCOUNT_ID
-import kr.mashup.ladder.domain.account.infra.jpa.AccountRepository
+import kr.mashup.ladder.config.resolver.MEMBER_ID
 import kr.mashup.ladder.domain.common.error.model.UnAuthorizedException
+import kr.mashup.ladder.domain.member.infra.jpa.MemberRepository
 import org.springframework.http.HttpHeaders
 import org.springframework.session.Session
 import org.springframework.session.SessionRepository
@@ -18,7 +18,7 @@ private const val HEADER_TOKEN_PREFIX = "Bearer "
 
 @Component
 class AuthInterceptor(
-    private val accountRepository: AccountRepository,
+    private val memberRepository: MemberRepository,
     private val sessionRepository: SessionRepository<out Session>,
 ) : HandlerInterceptor {
 
@@ -34,12 +34,12 @@ class AuthInterceptor(
         }
 
         val sessionId = header.split(HEADER_TOKEN_PREFIX)[1]
-        val accountId: Long? = findSessionBySessionId(sessionId).getAttribute(ACCOUNT_ID)
-        if (accountId != null && accountRepository.existsAccountById(accountId)) {
-            request.setAttribute(ACCOUNT_ID, accountId)
+        val memberId: Long? = findSessionBySessionId(sessionId).getAttribute(MEMBER_ID)
+        if (memberId != null && memberRepository.existsMemberById(memberId)) {
+            request.setAttribute(MEMBER_ID, memberId)
             return true
         }
-        throw UnAuthorizedException("유효하지 않은 세션($sessionId)의 계정(${accountId}) 입니다.")
+        throw UnAuthorizedException("유효하지 않은 세션($sessionId)의 멤버(${memberId}) 입니다.")
     }
 
     private fun findSessionBySessionId(sessionId: String): Session {

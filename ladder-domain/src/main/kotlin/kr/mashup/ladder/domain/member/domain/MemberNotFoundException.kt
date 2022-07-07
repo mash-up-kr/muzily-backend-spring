@@ -1,9 +1,9 @@
-package kr.mashup.ladder.domain.account.domain
+package kr.mashup.ladder.domain.member.domain
 
 import kr.mashup.ladder.domain.common.error.ErrorCode
 import kr.mashup.ladder.domain.common.error.model.LadderBaseException
 
-data class AccountNotFoundException(
+data class MemberNotFoundException(
     override val message: String,
-    override val errorCode: ErrorCode = ErrorCode.ACCOUNT_NOT_FOUND,
+    override val errorCode: ErrorCode = ErrorCode.MEMBER_NOT_FOUND,
 ) : LadderBaseException(message, errorCode)

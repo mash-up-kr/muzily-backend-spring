@@ -1,4 +1,4 @@
-package kr.mashup.ladder.domain.account.domain
+package kr.mashup.ladder.domain.member.domain
 
 enum class SocialType(
     private val description: String,
