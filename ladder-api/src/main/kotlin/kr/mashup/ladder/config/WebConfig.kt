@@ -1,7 +1,7 @@
 package kr.mashup.ladder.config
 
 import kr.mashup.ladder.config.interceptor.AuthInterceptor
-import kr.mashup.ladder.config.resolver.AccountIdResolver
+import kr.mashup.ladder.config.resolver.MemberIdResolver
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.servlet.config.annotation.CorsRegistry
@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class WebConfig(
     private val authInterceptor: AuthInterceptor,
-    private val accountIdResolver: AccountIdResolver,
+    private val memberIdResolver: MemberIdResolver,
 ) : WebMvcConfigurer {
 
     override fun addInterceptors(registry: InterceptorRegistry) {
@@ -19,7 +19,7 @@ class WebConfig(
     }
 
     override fun addArgumentResolvers(argumentResolvers: MutableList<HandlerMethodArgumentResolver>) {
-        argumentResolvers.add(accountIdResolver)
+        argumentResolvers.add(memberIdResolver)
     }
 
     override fun addCorsMappings(registry: CorsRegistry) {

@@ -1,4 +1,4 @@
-package kr.mashup.ladder.auth.external.kakao.dto.response
+package kr.mashup.ladder.auth.external.dto.response
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming

@@ -1,8 +1,8 @@
-package kr.mashup.ladder.account.dto.request
+package kr.mashup.ladder.member.dto.request
 
 import javax.validation.constraints.NotBlank
 
-data class UpdateAccountInfoRequest(
+data class UpdateMemberInfoRequest(
     @field:NotBlank(message = "닉네임을 입력해주세요")
     val nickname: String = "",
 

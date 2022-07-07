@@ -4,11 +4,3 @@ GET {{api}}/api/actuator/health/liveness
 
 ### Readiness
 GET {{api}}/api/actuator/health/readiness
-
-
-### 테스트 세션 발급
-GET {{api}}/api/test/session
-
-> {%
-client.global.set("SESSION_ID", response.body)
-%}

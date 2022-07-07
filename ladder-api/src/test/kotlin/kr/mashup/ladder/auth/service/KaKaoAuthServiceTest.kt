@@ -4,15 +4,15 @@ import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import kr.mashup.ladder.IntegrationTest
 import kr.mashup.ladder.auth.dto.request.AuthRequest
-import kr.mashup.ladder.domain.account.domain.Account
-import kr.mashup.ladder.domain.account.domain.AccountSocialInfo
-import kr.mashup.ladder.domain.account.domain.SocialType
-import kr.mashup.ladder.domain.account.infra.jpa.AccountRepository
 import kr.mashup.ladder.auth.external.KaKaoAuthApiClient
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoAccountResponse
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoProfileResponse
-import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoTokenResponse
+import kr.mashup.ladder.auth.external.dto.response.KaKaoTokenResponse
+import kr.mashup.ladder.domain.member.domain.Member
+import kr.mashup.ladder.domain.member.domain.SocialType
+import kr.mashup.ladder.domain.member.infra.jpa.AccountRepository
+import kr.mashup.ladder.domain.member.infra.jpa.MemberRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test
 internal class KaKaoAuthServiceTest(
     private val kaKaoAuthService: KaKaoAuthService,
     private val accountRepository: AccountRepository,
+    private val memberRepository: MemberRepository,
 ) : IntegrationTest() {
 
     @MockkBean
@@ -44,25 +45,44 @@ internal class KaKaoAuthServiceTest(
         kaKaoAuthService.authentication(request)
 
         // then
-        val accounts = accountRepository.findAll()
-        assertThat(accounts).hasSize(1)
-        accounts[0].also {
-            assertThat(it.socialInfo.socialId).isEqualTo(SOCIAL_ID)
-            assertThat(it.socialInfo.socialType).isEqualTo(SocialType.KAKAO)
+        val members = memberRepository.findAll()
+        assertThat(members).hasSize(1)
+        members[0].also {
             assertThat(it.nickname).isEqualTo(NICKNAME)
             assertThat(it.profileUrl).isEqualTo(PROFILE_IMAGE)
         }
     }
 
     @Test
+    fun `카카오 인증시 해당하는 계정이 없어 회원가입시, 카카오 계정의 정보로 멤버에 연결된 계정이 추가된다`() {
+        // given
+        val request = AuthRequest(
+            code = "code",
+            redirectUri = "https://redirect.com",
+            socialType = SocialType.KAKAO
+        )
+
+        // when
+        kaKaoAuthService.authentication(request)
+
+        // then
+        val accounts = accountRepository.findAll()
+        assertThat(accounts).hasSize(1)
+        accounts[0].also {
+            assertThat(it.socialInfo.socialId).isEqualTo(SOCIAL_ID)
+            assertThat(it.socialInfo.socialType).isEqualTo(SocialType.KAKAO)
+        }
+    }
+
+    @Test
     fun `카카오 인증시 이미 해당 계정이 존재하는 경우 로그인된다`() {
         // given
-        val account = Account(
-            socialInfo = AccountSocialInfo(socialId = SOCIAL_ID, socialType = SocialType.KAKAO),
+        val member = Member(
             nickname = "닉네임",
-            profileUrl = "http://profile.png"
+            profileUrl = "https://profile-url.png"
         )
-        accountRepository.save(account)
+        member.addAccount(SOCIAL_ID, SocialType.KAKAO)
+        memberRepository.save(member)
 
         val request = AuthRequest(
             code = "code",
@@ -79,8 +99,13 @@ internal class KaKaoAuthServiceTest(
         accounts[0].also {
             assertThat(it.socialInfo.socialId).isEqualTo(SOCIAL_ID)
             assertThat(it.socialInfo.socialType).isEqualTo(SocialType.KAKAO)
-            assertThat(it.nickname).isEqualTo(account.nickname)
-            assertThat(it.profileUrl).isEqualTo(account.profileUrl)
+        }
+
+        val members = memberRepository.findAll()
+        assertThat(members).hasSize(1)
+        members[0].also {
+            assertThat(it.nickname).isEqualTo(member.nickname)
+            assertThat(it.profileUrl).isEqualTo(member.profileUrl)
         }
     }
 

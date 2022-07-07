@@ -1,10 +1,10 @@
-### 나의 회원 정보를 조회합니다
-GET {{api}}/api/v1/accounts
+### 나의 멤버 정보를 조회합니다
+GET {{api}}/api/v1/members
 Authorization: Bearer {{SESSION_ID}}
 
 
-### 나의 회원 정보를 조회합니다
-PUT {{api}}/api/v1/accounts
+### 나의 멤버 정보를 수정 합니다
+PUT {{api}}/api/v1/members
 Content-Type: application/json
 Authorization: Bearer {{SESSION_ID}}
 

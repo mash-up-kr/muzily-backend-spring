@@ -1,12 +1,25 @@
+### 익명 회원가입
+POST {{api}}/api/v1/auth/guest
+Content-Type: application/json
+
+> {%
+client.global.set("SESSION_ID", response.body["token"])
+%}
+
+
 ### 카카오 로그인
 POST {{api}}/api/v1/auth
 Content-Type: application/json
 
 {
-    "code": "",
+    "code": "I6EyffT6wZqvbuQ8KduOAyMQJo01-eAhM3gQKrHoO3JT_tpyMmi_AIJgCSZMEu3ddDp7lAo9dBEAAAGB2bSjaQ",
     "redirectUri": "http://localhost:3000/auth/kakao/callback",
     "socialType": "KAKAO"
 }
+
+> {%
+client.global.set("SESSION_ID", response.body["token"])
+%}
 
 
 ### 로그아웃
