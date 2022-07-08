@@ -1,12 +1,12 @@
 package kr.mashup.ladder.auth.external
 
-import kr.mashup.ladder.domain.common.error.model.BadGatewayException
 import kr.mashup.ladder.auth.external.dto.error.InvalidKaKaoTokenException
-import kr.mashup.ladder.domain.common.error.model.UnknownErrorException
 import kr.mashup.ladder.auth.external.kakao.dto.properties.KaKaoTokenProperties
 import kr.mashup.ladder.auth.external.kakao.dto.properties.KaKaoUserProperties
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoTokenResponse
+import kr.mashup.ladder.domain.common.error.model.BadGatewayException
+import kr.mashup.ladder.domain.common.error.model.UnknownErrorException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -38,6 +38,7 @@ class WebClientKaKaoAuthApiClientImpl(
                 response.bodyToMono(String::class.java).map { message -> BadGatewayException(message) }
             })
             .bodyToMono(KaKaoTokenResponse::class.java)
+            .timeout(Duration.ofSeconds(3))
             .retryWhen(Retry.backoff(3, Duration.ofSeconds(5)).filter { throwable -> throwable is BadGatewayException })
             .block()
 
@@ -66,6 +67,7 @@ class WebClientKaKaoAuthApiClientImpl(
                 response.bodyToMono(String::class.java).map { message -> BadGatewayException(message) }
             })
             .bodyToMono(KaKaoInfoResponse::class.java)
+            .timeout(Duration.ofSeconds(3))
             .retryWhen(Retry.backoff(3, Duration.ofSeconds(5)).filter { throwable -> throwable is BadGatewayException })
             .block()
         return kaKaoProfileResponse ?: throw UnknownErrorException("KaKaoInfoResponse can't be null")

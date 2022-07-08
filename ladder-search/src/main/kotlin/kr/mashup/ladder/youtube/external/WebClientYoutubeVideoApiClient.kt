@@ -39,7 +39,9 @@ class WebClientYoutubeVideoApiClient(
                 response.bodyToMono(String::class.java).map { message -> BadGatewayException(message) }
             })
             .bodyToMono(YoutubeVideoListResponse::class.java)
+            .cache(Duration.ofMinutes(1))
             .map { videoListResponse -> videoListResponse.items }
+            .timeout(Duration.ofSeconds(3))
             .retryWhen(Retry.backoff(3, Duration.ofSeconds(5)).filter { throwable -> throwable is BadGatewayException })
             .awaitSingle()
             .let { matchedVideos ->
