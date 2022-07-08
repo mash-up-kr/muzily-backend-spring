@@ -1,6 +1,6 @@
 package kr.mashup.ladder.domain.room.domain
 
-data class RoomChat(
+class RoomMessageChatReceiveEvent(
     val roomId: Long,
-    val chat: String
+    val chat: String,
 )
