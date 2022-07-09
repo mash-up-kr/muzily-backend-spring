@@ -54,7 +54,7 @@ jobs:
       - name: Update Image Version
         uses: fjogeleit/yaml-update-action@main
         with:
-          valueFile: 'helm/ladder-api/values-${{ github.event.inputs.profile }}.yaml'
+          valueFile: 'ladder-api/values-${{ github.event.inputs.profile }}.yaml'
           propertyPath: 'image.tag'
           value: ${{ steps.version.outputs.version }}
           repository: mash-up-kr/ladder_backend_infra
