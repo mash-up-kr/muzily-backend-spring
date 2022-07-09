@@ -12,7 +12,7 @@ POST {{api}}/api/v1/auth
 Content-Type: application/json
 
 {
-    "code": "37n3jQ3IhW99Owvwq-ASfr4xmwamqNPVgHLGoL-YIS47jp9NSaki68r6ZRFs9pk7FzRt9Ao9cpcAAAGB4h7vkw",
+    "code": "PD-L6o3NZO-1SyVUCi0m6dS8h5Aefeq6UYpdw2xpxw2BVg-03feG7DCaSMYwC-FntdOBwQo9dZsAAAGB45qcow",
     "redirectUri": "http://localhost:3000/auth/kakao/callback",
     "socialType": "KAKAO"
 }

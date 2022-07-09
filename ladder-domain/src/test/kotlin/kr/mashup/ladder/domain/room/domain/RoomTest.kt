@@ -11,7 +11,7 @@ internal class RoomTest {
         val description = "코딩할때 듣기 좋은 노래"
 
         // when
-        val room = Room(description = description)
+        val room = Room.newInstance(description = description, memberId = 1L)
 
         // then
         assertAll(

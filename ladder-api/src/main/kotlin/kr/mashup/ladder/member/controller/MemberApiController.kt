@@ -3,7 +3,6 @@ package kr.mashup.ladder.member.controller
 import io.swagger.annotations.ApiOperation
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.annotation.MemberId
-import kr.mashup.ladder.domain.common.constants.ApiResponseConstants
 import kr.mashup.ladder.member.dto.request.UpdateMemberInfoRequest
 import kr.mashup.ladder.member.dto.response.MemberInfoResponse
 import kr.mashup.ladder.member.service.MemberService
@@ -33,9 +32,8 @@ class MemberApiController(
     fun updateMyMemberInfo(
         @Valid @RequestBody request: UpdateMemberInfoRequest,
         @MemberId memberId: Long,
-    ): String {
-        memberService.updateMemberInfo(request, memberId)
-        return ApiResponseConstants.SUCCESS
+    ): MemberInfoResponse {
+        return memberService.updateMemberInfo(request, memberId)
     }
 
 }
