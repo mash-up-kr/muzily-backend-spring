@@ -21,7 +21,7 @@ class RoomApiController(
     private val roomService: RoomService,
 ) {
 
-    @ApiOperation("방을 생성합니다")
+    @ApiOperation("방을 생성합니다 (계정에 연결된 사용자만 가능)")
     @Auth(allowedAnonymous = false)
     @PostMapping("/api/v1/rooms")
     fun createRoom(
@@ -42,7 +42,7 @@ class RoomApiController(
         return roomService.update(roomId = roomId, request = request, memberId = memberId)
     }
 
-    @ApiOperation("내가 생성한 방을 조회합니다")
+    @ApiOperation("내가 생성한 방을 조회합니다 (계정에 연결된 사용자만 가능)")
     @Auth(allowedAnonymous = false)
     @GetMapping("/api/v1/rooms")
     fun getMyRooms(

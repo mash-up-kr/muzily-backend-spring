@@ -1,12 +1,12 @@
 package kr.mashup.ladder.auth.external
 
-import kr.mashup.ladder.domain.common.error.model.BadGatewayException
 import kr.mashup.ladder.auth.external.dto.error.InvalidKaKaoTokenException
-import kr.mashup.ladder.domain.common.error.model.UnknownErrorException
 import kr.mashup.ladder.auth.external.dto.properties.KaKaoTokenProperties
 import kr.mashup.ladder.auth.external.dto.properties.KaKaoUserProperties
-import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
 import kr.mashup.ladder.auth.external.dto.response.KaKaoTokenResponse
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
+import kr.mashup.ladder.domain.common.error.model.BadGatewayException
+import kr.mashup.ladder.domain.common.error.model.UnknownErrorException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -16,7 +16,6 @@ import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.util.retry.Retry
 import java.time.Duration
-import java.util.function.Consumer
 
 @Component
 class WebClientKaKaoAuthApiClientImpl(

@@ -12,7 +12,7 @@ class RoomQueryRepositoryImpl(
         return queryFactory.selectFrom(room)
             .where(
                 room.invitationKey.invitationKey.eq(invitationKey)
-            ).fetchOne();
+            ).fetchOne()
     }
 
     override fun existsRoomByMemberId(memberId: Long): Boolean {

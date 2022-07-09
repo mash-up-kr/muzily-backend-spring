@@ -16,7 +16,7 @@ class InvitationKey(
 
         fun newInstance(): InvitationKey {
             return InvitationKey(
-                invitationKey = "${INVITATION_PREFIX}-${UUID.randomUUID().toString()}"
+                invitationKey = "${INVITATION_PREFIX}-${UUID.randomUUID()}"
             )
         }
     }

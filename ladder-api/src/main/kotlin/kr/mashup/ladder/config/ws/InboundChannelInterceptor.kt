@@ -52,7 +52,7 @@ class InboundChannelInterceptor(
     }
 
     private fun isSubRoom(destination: String?): Boolean {
-        return destination?.matches(Regex("^/sub/v1/rooms/[0-9]+$")) ?: false
+        return destination?.matches(Regex("^/sub/v1/rooms/\\d+$")) ?: false
     }
 
     private fun getRoomId(destination: String?): Long {

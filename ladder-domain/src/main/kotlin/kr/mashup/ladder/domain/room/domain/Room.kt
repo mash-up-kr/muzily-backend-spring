@@ -20,7 +20,7 @@ class Room(
 ) : BaseEntity() {
 
     fun isCreator(memberId: Long): Boolean {
-        return this.memberId == memberId;
+        return this.memberId == memberId
     }
 
     fun update(description: String) {
