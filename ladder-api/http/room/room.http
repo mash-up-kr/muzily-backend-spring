@@ -1,0 +1,27 @@
+### 방을 생성합니다
+POST {{api}}/api/v1/rooms
+Content-Type: application/json
+Authorization: Bearer {{SESSION_ID}}
+
+{
+    "description": "메쇼~쉬는탐"
+}
+
+> {%
+client.global.set("ROOM_ID", response.body["roomId"])
+%}
+
+
+
+### 내가 생성한 방을 조회합니다
+GET {{api}}/api/v1/rooms
+Authorization: Bearer {{SESSION_ID}}
+
+
+> {%
+client.global.set("INVITATION_KEY", response.body["invitationKey"])
+%}
+
+
+### 방 초대장 정보를 조회합니다
+GET {{api}}/api/v1/rooms/invitation/{{INVITATION_KEY}}

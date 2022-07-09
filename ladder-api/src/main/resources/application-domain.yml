@@ -6,6 +6,7 @@ spring:
       hibernate:
         default_batch_fetch_size: 1000
         query.in_clause_parameter_padding: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
 
 
@@ -24,7 +25,6 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
-        dialect: org.hibernate.dialect.MySQL8Dialect
   datasource:
     hikari:
       jdbc-url: jdbc:h2:mem:ladder;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;
@@ -59,7 +59,6 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
-        dialect: org.hibernate.dialect.MySQL8Dialect
   datasource:
     hikari:
       jdbc-url: jdbc:h2:mem:ladder;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;

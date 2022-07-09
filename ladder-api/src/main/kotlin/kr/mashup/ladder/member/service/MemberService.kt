@@ -21,9 +21,10 @@ class MemberService(
     }
 
     @Transactional
-    fun updateMemberInfo(request: UpdateMemberInfoRequest, memberId: Long) {
+    fun updateMemberInfo(request: UpdateMemberInfoRequest, memberId: Long): MemberInfoResponse {
         val member = findMemberById(memberId)
         member.update(request.nickname, request.profileUrl)
+        return MemberInfoResponse.of(member)
     }
 
     private fun findMemberById(memberId: Long): Member {

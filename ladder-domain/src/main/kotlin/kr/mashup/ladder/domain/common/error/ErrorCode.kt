@@ -33,6 +33,12 @@ enum class ErrorCode(
 
     // room
     ROOM_NOT_FOUND(status = 404, code = "R001", message = "해당하는 방이 존재하지 않습니다", shouldLog = false),
+    ROOM_CONFLICT_AS_ADMIN(
+        status = 409,
+        code = "R002",
+        message = "이미 생성한 방이 존재합니다. 1개의 방만 생성할 수 있습니다",
+        shouldLog = false
+    ),
 
     // youtube
     YOUTUBE_VIDEO_NOT_FOUND(status = 404, code = "Y001", "해당하는 유튜브 음악 영상은 존재하지 않습니다", shouldLog = false)
