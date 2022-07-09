@@ -21,7 +21,10 @@ class EmbeddedRedisServerConfig(
     @PostConstruct
     fun start() {
         if (redisServer == null || !redisServer?.isActive!!) {
-            redisServer = RedisServer(port)
+            redisServer = RedisServer.builder()
+                .port(port)
+                .setting("maxmemory 128M")  // window redis 오류 해결
+                .build()
             redisServer!!.start()
         }
     }
