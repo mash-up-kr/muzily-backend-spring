@@ -1,6 +1,8 @@
 package kr.mashup.ladder.domain.room.domain
 
 import com.fasterxml.jackson.core.type.TypeReference
+import kr.mashup.ladder.domain.room.domain.chat.RoomChatMessage
+import kr.mashup.ladder.domain.room.domain.chat.RoomChatMessageReceiveEvent
 import kr.mashup.ladder.domain.room.domain.emoji.RoomEmojiMessage
 import kr.mashup.ladder.domain.room.domain.emoji.RoomEmojiMessageRecieveEvent
 import kr.mashup.ladder.domain.util.JsonUtil
@@ -18,18 +20,24 @@ class RoomMessageSubscriber(
             RoomMessageType.CHAT -> {
                 val roomMessage = JsonUtil.fromByteArray(
                     message.body,
-                    object : TypeReference<RoomMessage<RoomMessageChat>>() {})
-                applicationEventPublisher.publishEvent(RoomMessageChatReceiveEvent(
-                    roomMessage.data.roomId,
-                    roomMessage.data.chat))
+                    object : TypeReference<RoomMessage<RoomChatMessage>>() {})
+                applicationEventPublisher.publishEvent(
+                    RoomChatMessageReceiveEvent(
+                        roomMessage.data.roomId,
+                        roomMessage.data.chat
+                    )
+                )
             }
             RoomMessageType.EMOJI -> {
                 val roomMessage = JsonUtil.fromByteArray(
                     message.body,
                     object : TypeReference<RoomMessage<RoomEmojiMessage>>() {})
-                applicationEventPublisher.publishEvent(RoomEmojiMessageRecieveEvent(
-                    roomMessage.data.roomId,
-                    roomMessage.data.emojiType))
+                applicationEventPublisher.publishEvent(
+                    RoomEmojiMessageRecieveEvent(
+                        roomMessage.data.roomId,
+                        roomMessage.data.emojiType
+                    )
+                )
             }
         }
     }

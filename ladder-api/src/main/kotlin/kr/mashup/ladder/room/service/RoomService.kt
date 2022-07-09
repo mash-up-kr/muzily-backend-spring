@@ -1,6 +1,7 @@
 package kr.mashup.ladder.room.service
 
 import kr.mashup.ladder.domain.room.domain.*
+import kr.mashup.ladder.domain.room.domain.chat.RoomChatMessage
 import kr.mashup.ladder.domain.room.dto.RoomDto
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
@@ -27,7 +28,7 @@ class RoomService(
     fun publishChat(roomId: Long, chat: String) {
         roomMessagePublisher.publish(
             RoomTopic(roomId),
-            RoomMessage(RoomMessageType.CHAT, RoomMessageChat(roomId, chat))
+            RoomMessage(RoomMessageType.CHAT, RoomChatMessage(roomId, chat))
         )
     }
 

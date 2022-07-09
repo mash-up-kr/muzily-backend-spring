@@ -1,6 +1,6 @@
 package kr.mashup.ladder.room.controller
 
-import kr.mashup.ladder.room.dto.request.RoomChatRequest
+import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
 import kr.mashup.ladder.room.service.RoomService
 import org.springframework.messaging.handler.annotation.DestinationVariable
@@ -12,7 +12,7 @@ class RoomWsController(
     private val roomService: RoomService,
 ) {
     @MessageMapping("/pub/v1/rooms/{roomId}/chats")
-    fun publishChat(@DestinationVariable roomId: Long, request: RoomChatRequest) {
+    fun publishChat(@DestinationVariable roomId: Long, request: RoomSendChatRequest) {
         roomService.publishChat(roomId, request.chat)
     }
 
