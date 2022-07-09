@@ -161,7 +161,7 @@ class RoomIntegrationTest : IntegrationTest() {
     }
 
     fun `방에 채팅 보내기 요청`(session: StompSession, roomId: Long, chat: String) {
-        session.send("/pub/v1/rooms/${roomId}/chats", RoomSendChatRequest(chat))
+        session.send("/pub/v1/rooms/${roomId}/send-chat", RoomSendChatRequest(chat))
     }
 
     fun `채팅 받음`(future: CompletableFuture<WsResponse<*>>) {

@@ -4,6 +4,7 @@ import kr.mashup.ladder.domain.room.domain.*
 import kr.mashup.ladder.domain.room.domain.chat.RoomChatMessage
 import kr.mashup.ladder.domain.room.dto.RoomDto
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
+import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -25,10 +26,10 @@ class RoomService(
         return RoomDto.from(room)
     }
 
-    fun publishChat(roomId: Long, chat: String) {
+    fun sendChat(roomId: Long, request: RoomSendChatRequest) {
         roomMessagePublisher.publish(
             RoomTopic(roomId),
-            RoomMessage(RoomMessageType.CHAT, RoomChatMessage(roomId, chat))
+            RoomMessage(RoomMessageType.CHAT, request.toMessage(roomId))
         )
     }
 

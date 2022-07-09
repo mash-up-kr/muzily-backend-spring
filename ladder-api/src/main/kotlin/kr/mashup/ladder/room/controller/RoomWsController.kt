@@ -11,12 +11,12 @@ import org.springframework.stereotype.Controller
 class RoomWsController(
     private val roomService: RoomService,
 ) {
-    @MessageMapping("/pub/v1/rooms/{roomId}/chats")
-    fun publishChat(@DestinationVariable roomId: Long, request: RoomSendChatRequest) {
-        roomService.publishChat(roomId, request.chat)
+    @MessageMapping("/pub/v1/rooms/{roomId}/send-chat")
+    fun sendChat(@DestinationVariable roomId: Long, request: RoomSendChatRequest) {
+        roomService.sendChat(roomId, request)
     }
 
-    @MessageMapping("/pub/v1/rooms/{roomId}/emojis")
+    @MessageMapping("/pub/v1/rooms/{roomId}/send-emoji")
     fun sendEmoji(@DestinationVariable roomId: Long, request: RoomSendEmojiRequest) {
         roomService.sendEmoji(roomId, request)
     }
