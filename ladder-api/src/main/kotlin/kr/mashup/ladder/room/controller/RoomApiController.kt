@@ -42,12 +42,12 @@ class RoomApiController(
         return roomService.update(roomId = roomId, request = request, memberId = memberId)
     }
 
-    @ApiOperation("내가 생성한 방을 조회합니다 (계정에 연결된 사용자만 가능)")
+    @ApiOperation("내가 생성한 방을 조회합니다 (계정에 연결된 사용자만 가능) (현재 기획상 리스트 1개를 반환)")
     @Auth(allowedAnonymous = false)
     @GetMapping("/api/v1/rooms")
     fun getMyRooms(
         @MemberId memberId: Long,
-    ): RoomDetailInfoResponse {
+    ): List<RoomDetailInfoResponse> {
         return roomService.getMyRooms(memberId = memberId)
     }
 

@@ -8,6 +8,8 @@ interface RoomQueryRepository {
 
     fun existsRoomByMemberId(memberId: Long): Boolean
 
-    fun findRoomByMemberId(memberId: Long): Room?
+    fun findRoomsByMemberId(memberId: Long): List<Room>
+
+    fun findRoomById(roomId: Long): Room?
 
 }
