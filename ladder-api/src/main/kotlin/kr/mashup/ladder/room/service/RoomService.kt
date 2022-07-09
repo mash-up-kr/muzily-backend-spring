@@ -66,6 +66,13 @@ class RoomService(
         return RoomInfoResponse.from(room)
     }
 
+    @Transactional
+    fun deleteRoom(roomId: Long, memberId: Long) {
+        val room = findRoomById(roomId)
+        validateIsRoomCreator(room = room, memberId = memberId)
+        room.delete()
+    }
+
     private fun findRoomById(roomId: Long): Room {
         return roomRepository.findRoomById(roomId)
             ?: throw RoomNotFoundException("해당하는 방(${roomId})이 존재하지 않습니다")
