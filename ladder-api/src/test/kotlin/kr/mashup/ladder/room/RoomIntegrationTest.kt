@@ -169,25 +169,4 @@ class RoomIntegrationTest : IntegrationTest() {
 
         assertThat(response.type).isEqualTo(WsResponseType.CHAT)
     }
-
-    @Test
-    fun `방이 없으면 채팅을 보낼 수 없다`() {
-        // given
-        val future: CompletableFuture<WsResponse<*>> = CompletableFuture()
-        val session = `웹소켓 연결됨`(StompTestHelper.newClient())
-        `방에 접속함`(session, `존재하지 않는 방 ID`, errorFuture = future)
-
-        // when
-        `방에 채팅 보내기 요청`(session, `존재하지 않는 방 ID`, "Hello, World!")
-
-        // then
-        `방을 찾을 수 없다는 오류 응답을 받음`(future)
-    }
-
-    fun `방을 찾을 수 없다는 오류 응답을 받음`(future: CompletableFuture<WsResponse<*>>) {
-        val response = future.get(10, TimeUnit.SECONDS)
-
-        assertThat(response.type).isEqualTo(WsResponseType.ERROR)
-        assertThat(response.code).isEqualTo(ErrorCode.ROOM_NOT_FOUND.code)
-    }
 }

@@ -1,5 +1,6 @@
 package kr.mashup.ladder.domain.util
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 
@@ -12,6 +13,10 @@ object JsonUtil {
 
     fun <T> fromByteArray(src: ByteArray, valueType: Class<T>): T {
         return objectMapper.readValue(src, valueType)
+    }
+
+    fun <T> fromByteArray(src: ByteArray, valueTypeRef: TypeReference<T>): T {
+        return objectMapper.readValue(src, valueTypeRef)
     }
 
     fun <T> fromJson(content: String, valueType: Class<T>): T {
