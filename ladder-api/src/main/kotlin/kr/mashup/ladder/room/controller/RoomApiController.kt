@@ -45,6 +45,7 @@ class RoomApiController(
     }
 
     @ApiOperation("방을 삭제합니다")
+    @Auth
     @DeleteMapping("/api/v1/rooms/{roomId}")
     fun deleteRoom(
         @PathVariable roomId: Long,

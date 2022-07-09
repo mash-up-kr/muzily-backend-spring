@@ -26,6 +26,12 @@ Authorization: Bearer {{SESSION_ID}}
     ]
 }
 
+
+### 방을 삭제한다
+DELETE {{api}}/api/v1/rooms/{{ROOM_ID}}
+Authorization: Bearer {{SESSION_ID}}
+
+
 ### 내가 생성한 방을 조회합니다
 GET {{api}}/api/v1/rooms
 Authorization: Bearer {{SESSION_ID}}
