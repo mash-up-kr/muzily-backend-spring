@@ -12,24 +12,6 @@ class MemberQueryRepositoryImpl(
     private val queryFactory: JPAQueryFactory,
 ) : MemberQueryRepository {
 
-    override fun existsMemberById(accountId: Long): Boolean {
-        return queryFactory.selectOne()
-            .from(member)
-            .where(
-                member.id.eq(accountId),
-            ).fetchFirst() != null
-    }
-
-    override fun existsMemberBySocialIdAndSocialType(socialId: String, socialType: SocialType): Boolean {
-        return queryFactory.selectOne()
-            .from(member)
-            .innerJoin(account).on(account.member.id.eq(member.id))
-            .where(
-                account.socialInfo.socialId.eq(socialId),
-                account.socialInfo.socialType.eq(socialType)
-            ).fetchFirst() != null
-    }
-
     override fun findMemberBySocialIdAndSocialType(socialId: String, socialType: SocialType): Member? {
         return queryFactory.selectFrom(member)
             .innerJoin(member.accounts, account)
@@ -37,16 +19,6 @@ class MemberQueryRepositoryImpl(
                 account.socialInfo.socialId.eq(socialId),
                 account.socialInfo.socialType.eq(socialType)
             ).fetchOne()
-    }
-
-    override fun existsMemberHasAccountById(memberId: Long): Boolean {
-        return queryFactory.selectOne()
-            .from(member)
-            .innerJoin(account).on(account.member.id.eq(member.id))
-            .where(
-                member.id.eq(memberId)
-            )
-            .fetchFirst() != null
     }
 
 }

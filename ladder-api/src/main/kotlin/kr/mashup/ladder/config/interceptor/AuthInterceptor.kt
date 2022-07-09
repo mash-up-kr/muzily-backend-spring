@@ -2,9 +2,10 @@ package kr.mashup.ladder.config.interceptor
 
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.resolver.MEMBER_ID
-import kr.mashup.ladder.domain.common.error.model.NeedAccountForbiddenException
 import kr.mashup.ladder.domain.common.error.model.UnAuthorizedException
+import kr.mashup.ladder.domain.member.domain.AccountConnectType
 import kr.mashup.ladder.domain.member.infra.jpa.MemberRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpHeaders
 import org.springframework.session.Session
 import org.springframework.session.SessionRepository
@@ -45,22 +46,11 @@ class AuthInterceptor(
     }
 
     private fun passCheckAuth(auth: Auth, memberId: Long): Boolean {
-        when (auth.allowedAnonymous) {
-            true -> {
-                if (memberRepository.existsMemberById(memberId)) {
-                    return true
-                }
-            }
-            false -> {
-                if (memberRepository.existsMemberHasAccountById(memberId)) {
-                    return true
-                }
-                if (memberRepository.existsMemberById(memberId)) {
-                    throw NeedAccountForbiddenException("멤버(${memberId})는 계정에 연결되지 않은 계정입니다. 계정에 연결된 멤버만이 접근할 수 있습니다")
-                }
-            }
+        val member = memberRepository.findByIdOrNull(memberId) ?: return false
+        if (!auth.allowedAnonymous) {
+            return AccountConnectType.CONNECTED == member.accountConnectType
         }
-        return false
+        return true
     }
 
     private fun findSessionBySessionId(sessionId: String): Session {

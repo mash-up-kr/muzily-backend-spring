@@ -5,12 +5,6 @@ import kr.mashup.ladder.domain.member.domain.SocialType
 
 interface MemberQueryRepository {
 
-    fun existsMemberById(accountId: Long): Boolean
-
-    fun existsMemberBySocialIdAndSocialType(socialId: String, socialType: SocialType): Boolean
-
     fun findMemberBySocialIdAndSocialType(socialId: String, socialType: SocialType): Member?
-
-    fun existsMemberHasAccountById(memberId: Long): Boolean
 
 }

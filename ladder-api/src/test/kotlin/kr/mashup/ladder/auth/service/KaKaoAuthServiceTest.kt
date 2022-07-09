@@ -5,10 +5,10 @@ import io.mockk.every
 import kr.mashup.ladder.IntegrationTest
 import kr.mashup.ladder.auth.dto.request.AuthRequest
 import kr.mashup.ladder.auth.external.KaKaoAuthApiClient
+import kr.mashup.ladder.auth.external.dto.response.KaKaoTokenResponse
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoAccountResponse
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoProfileResponse
-import kr.mashup.ladder.auth.external.dto.response.KaKaoTokenResponse
 import kr.mashup.ladder.domain.member.domain.Member
 import kr.mashup.ladder.domain.member.domain.SocialType
 import kr.mashup.ladder.domain.member.infra.jpa.AccountRepository
@@ -79,7 +79,7 @@ internal class KaKaoAuthServiceTest(
         // given
         val member = Member(
             nickname = "닉네임",
-            profileUrl = "https://profile-url.png"
+            profileUrl = "https://profile-url.png",
         )
         member.addAccount(SOCIAL_ID, SocialType.KAKAO)
         memberRepository.save(member)
