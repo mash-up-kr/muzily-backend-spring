@@ -21,4 +21,12 @@ class MemberQueryRepositoryImpl(
             ).fetchOne()
     }
 
+    override fun existsMemberById(memberId: Long): Boolean {
+        return queryFactory.selectOne()
+            .from(member)
+            .where(
+                member.id.eq(memberId)
+            ).fetchFirst() != null
+    }
+
 }

@@ -6,6 +6,7 @@ import kr.mashup.ladder.domain.room.domain.RoomMessage
 import kr.mashup.ladder.domain.room.domain.RoomMessagePublisher
 import kr.mashup.ladder.domain.room.domain.RoomMessageType
 import kr.mashup.ladder.domain.room.domain.RoomNotFoundException
+import kr.mashup.ladder.domain.room.domain.RoomSubscribe
 import kr.mashup.ladder.domain.room.domain.RoomTopic
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
@@ -70,6 +71,20 @@ class RoomService(
     private fun findRoomById(roomId: Long): Room {
         return roomRepository.findByIdOrNull(roomId)
             ?: throw RoomNotFoundException("해당하는 방(${roomId})이 존재하지 않습니다")
+    }
+
+    fun enterRoom(roomId: Long, memberId: Long) {
+        roomMessagePublisher.publish(
+            RoomTopic(roomId = roomId),
+            RoomMessage(RoomMessageType.SUBSCRIBE, RoomSubscribe(roomId = roomId, memberId = memberId))
+        )
+    }
+
+    fun leave(roomId: Long, memberId: Long) {
+        roomMessagePublisher.publish(
+            RoomTopic(roomId = roomId),
+            RoomMessage(RoomMessageType.UNSUBSCRIBE, RoomSubscribe(roomId = roomId, memberId = memberId))
+        )
     }
 
     fun sendChat(roomId: Long, request: RoomSendChatRequest) {

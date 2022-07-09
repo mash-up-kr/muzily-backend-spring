@@ -7,4 +7,6 @@ interface MemberQueryRepository {
 
     fun findMemberBySocialIdAndSocialType(socialId: String, socialType: SocialType): Member?
 
+    fun existsMemberById(memberId: Long): Boolean
+
 }

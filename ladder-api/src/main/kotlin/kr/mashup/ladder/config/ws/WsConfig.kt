@@ -10,7 +10,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 class WsConfig(
-    private val inboundChannelInterceptor: InboundChannelInterceptor
+    private val inboundChannelInterceptor: InboundChannelInterceptor,
+    private val wsAuthCheckInterceptor: WsAuthCheckInterceptor,
 ) : WebSocketMessageBrokerConfigurer {
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
         registry.addEndpoint("ws")
@@ -18,7 +19,7 @@ class WsConfig(
     }
 
     override fun configureClientInboundChannel(registration: ChannelRegistration) {
-        registration.interceptors(inboundChannelInterceptor)
+        registration.interceptors(wsAuthCheckInterceptor, inboundChannelInterceptor)
     }
 
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
