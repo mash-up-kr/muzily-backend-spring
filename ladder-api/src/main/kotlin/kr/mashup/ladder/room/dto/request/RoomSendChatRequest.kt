@@ -1,5 +1,5 @@
 package kr.mashup.ladder.room.dto.request
 
-data class RoomChatRequest(
+data class RoomSendChatRequest(
     val chat: String,
 )

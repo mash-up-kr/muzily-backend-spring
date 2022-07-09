@@ -9,7 +9,7 @@ import kr.mashup.ladder.common.dto.response.WsResponse
 import kr.mashup.ladder.common.dto.response.WsResponseType
 import kr.mashup.ladder.domain.common.error.ErrorCode
 import kr.mashup.ladder.domain.room.dto.RoomDto
-import kr.mashup.ladder.room.dto.request.RoomChatRequest
+import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.util.StompTestHelper
 import org.assertj.core.api.Assertions.assertThat
@@ -161,7 +161,7 @@ class RoomIntegrationTest : IntegrationTest() {
     }
 
     fun `방에 채팅 보내기 요청`(session: StompSession, roomId: Long, chat: String) {
-        session.send("/pub/v1/rooms/${roomId}/chats", RoomChatRequest(chat))
+        session.send("/pub/v1/rooms/${roomId}/chats", RoomSendChatRequest(chat))
     }
 
     fun `채팅 받음`(future: CompletableFuture<WsResponse<*>>) {
