@@ -1,6 +1,8 @@
 package kr.mashup.ladder.domain.room.domain
 
 import com.fasterxml.jackson.core.type.TypeReference
+import kr.mashup.ladder.domain.room.domain.emoji.RoomEmojiMessage
+import kr.mashup.ladder.domain.room.domain.emoji.RoomEmojiMessageRecieveEvent
 import kr.mashup.ladder.domain.util.JsonUtil
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.redis.connection.Message
@@ -21,7 +23,14 @@ class RoomMessageSubscriber(
                     roomMessage.data.roomId,
                     roomMessage.data.chat))
             }
-            // TODO : add more room message type (ex. add playlist item, delete playlist item, ...)
+            RoomMessageType.EMOJI -> {
+                val roomMessage = JsonUtil.fromByteArray(
+                    message.body,
+                    object : TypeReference<RoomMessage<RoomEmojiMessage>>() {})
+                applicationEventPublisher.publishEvent(RoomEmojiMessageRecieveEvent(
+                    roomMessage.data.roomId,
+                    roomMessage.data.emojiType))
+            }
         }
     }
 }
