@@ -39,6 +39,15 @@ jobs:
           echo "::set-output name=version::${VERSION}"
         env:
           VERSIONING: ${{ github.event.inputs.version }}
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
       - name: Execute Gradle Jib
         run: ./gradlew :ladder-api:jib -Dimage=${IMAGE} -Dtag=${TAG}
         env:
