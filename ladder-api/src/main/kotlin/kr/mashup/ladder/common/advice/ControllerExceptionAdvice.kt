@@ -14,6 +14,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import java.util.stream.Collectors
 
 private val logger = KotlinLogging.logger {}
@@ -39,6 +40,13 @@ class ControllerExceptionAdvice {
             val parameterName = (e.rootCause as MissingKotlinParameterException).parameter.name
             return ErrorResponse.of(ErrorCode.INVALID_REQUEST, "파라미터 ($parameterName)을 입력해주세요")
         }
+        return ErrorResponse.of(ErrorCode.INVALID_REQUEST)
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentTypeMismatchException::class)
+    private fun handleMethodArgumentTypeMismatchException(e: MethodArgumentTypeMismatchException): ErrorResponse<Nothing> {
+        logger.warn(e.message)
         return ErrorResponse.of(ErrorCode.INVALID_REQUEST)
     }
 

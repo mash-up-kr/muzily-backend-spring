@@ -15,7 +15,6 @@ import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
 import kr.mashup.ladder.room.dto.response.RoomDetailInfoResponse
 import kr.mashup.ladder.room.dto.response.RoomInfoResponse
 import kr.mashup.ladder.room.service.RoomAuthorizeCheckServiceHelper.validateIsRoomCreator
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -43,14 +42,14 @@ class RoomService(
         val room = findRoomById(roomId)
         validateIsRoomCreator(room = room, memberId = memberId)
         room.update(request.description)
+        room.updateMoods(request.moods)
         return RoomDetailInfoResponse.from(room)
     }
 
     @Transactional(readOnly = true)
-    fun getMyRooms(memberId: Long): RoomDetailInfoResponse {
-        val room = roomRepository.findRoomByMemberId(memberId)
-            ?: throw RoomNotFoundException("멤버($memberId)가 생성한 방이 없습니다")
-        return RoomDetailInfoResponse.from(room)
+    fun getMyRooms(memberId: Long): List<RoomDetailInfoResponse> {
+        val rooms: List<Room> = roomRepository.findRoomsByMemberId(memberId)
+        return rooms.map { room -> RoomDetailInfoResponse.from(room) }
     }
 
     @Transactional(readOnly = true)
@@ -67,8 +66,15 @@ class RoomService(
         return RoomInfoResponse.from(room)
     }
 
+    @Transactional
+    fun deleteRoom(roomId: Long, memberId: Long) {
+        val room = findRoomById(roomId)
+        validateIsRoomCreator(room = room, memberId = memberId)
+        room.delete()
+    }
+
     private fun findRoomById(roomId: Long): Room {
-        return roomRepository.findByIdOrNull(roomId)
+        return roomRepository.findRoomById(roomId)
             ?: throw RoomNotFoundException("해당하는 방(${roomId})이 존재하지 않습니다")
     }
 

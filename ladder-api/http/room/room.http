@@ -12,6 +12,25 @@ client.global.set("ROOM_ID", response.body["roomId"])
 %}
 
 
+### 방에 대한 정보를 수정합니다
+PUT {{api}}/api/v1/rooms/{{ROOM_ID}}
+Content-Type: application/json
+Authorization: Bearer {{SESSION_ID}}
+
+{
+    "description": "메쇼~쉬는탐",
+    "moods": [
+        "분위기 좋은",
+        "신나는3",
+        "여행3"
+    ]
+}
+
+
+### 방을 삭제한다
+DELETE {{api}}/api/v1/rooms/{{ROOM_ID}}
+Authorization: Bearer {{SESSION_ID}}
+
 
 ### 내가 생성한 방을 조회합니다
 GET {{api}}/api/v1/rooms
@@ -19,7 +38,7 @@ Authorization: Bearer {{SESSION_ID}}
 
 
 > {%
-client.global.set("INVITATION_KEY", response.body["invitationKey"])
+client.global.set("INVITATION_KEY", response.body[0]["invitationKey"])
 %}
 
 
