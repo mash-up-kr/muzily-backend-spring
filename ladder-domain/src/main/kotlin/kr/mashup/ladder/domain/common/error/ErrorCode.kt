@@ -40,6 +40,9 @@ enum class ErrorCode(
         shouldLog = false
     ),
 
+    // playlist
+    PLAYLIST_NOT_FOUND(status = 404, code = "P001", message = "해당하는 재생목록이 존재하지 않습니다", shouldLog = false),
+
     // youtube
     YOUTUBE_VIDEO_NOT_FOUND(status = 404, code = "Y001", "해당하는 유튜브 음악 영상은 존재하지 않습니다", shouldLog = false)
 }

@@ -3,5 +3,6 @@ package kr.mashup.ladder.common.dto.response
 enum class WsResponseType {
     ERROR,
     CHAT,
-    EMOJI
+    EMOJI,
+    PLAYLIST_ITEM_REQUEST
 }

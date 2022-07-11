@@ -1,5 +1,8 @@
 package kr.mashup.ladder.room.service
 
+import kr.mashup.ladder.domain.playlist.domain.Playlist
+import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
+import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemRepository
 import kr.mashup.ladder.domain.room.domain.Room
 import kr.mashup.ladder.domain.room.domain.RoomConflictException
 import kr.mashup.ladder.domain.room.domain.RoomMessage
@@ -11,6 +14,7 @@ import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
+import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
 import kr.mashup.ladder.room.dto.response.RoomDetailInfoResponse
 import kr.mashup.ladder.room.dto.response.RoomInfoResponse
@@ -22,12 +26,15 @@ import org.springframework.transaction.annotation.Transactional
 class RoomService(
     private val roomRepository: RoomRepository,
     private val roomMessagePublisher: RoomMessagePublisher,
+    private val playlistRepository: PlaylistRepository,
+    private val playlistItemRepository: PlaylistItemRepository
 ) {
 
     @Transactional
     fun create(request: RoomCreateRequest, memberId: Long): RoomDetailInfoResponse {
         validateNotExistsCreatedRoom(memberId)
         val room = roomRepository.save(request.toEntity(accountId = memberId))
+        playlistRepository.save(Playlist(room.id))
         return RoomDetailInfoResponse.from(room)
     }
 
@@ -73,7 +80,7 @@ class RoomService(
         room.delete()
     }
 
-    private fun findRoomById(roomId: Long): Room {
+    fun findRoomById(roomId: Long): Room {
         return roomRepository.findRoomById(roomId)
             ?: throw RoomNotFoundException("해당하는 방(${roomId})이 존재하지 않습니다")
     }
@@ -89,6 +96,14 @@ class RoomService(
         roomMessagePublisher.publish(
             RoomTopic(roomId),
             RoomMessage(RoomMessageType.EMOJI, request.toMessage(roomId))
+        )
+    }
+
+    fun sendPlaylistItemRequest(roomId: Long, request: RoomSendPlaylistItemRequest) {
+        val item = playlistItemRepository.save(request.toEntity())
+        roomMessagePublisher.publish(
+            RoomTopic(roomId),
+            RoomMessage(RoomMessageType.PLAYLIST_ITEM_REQUEST, request.toMessage(roomId, item.id))
         )
     }
 }

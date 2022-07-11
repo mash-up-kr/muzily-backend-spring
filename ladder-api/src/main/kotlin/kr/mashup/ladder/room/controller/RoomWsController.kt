@@ -2,6 +2,7 @@ package kr.mashup.ladder.room.controller
 
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
+import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequest
 import kr.mashup.ladder.room.service.RoomService
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
@@ -19,5 +20,10 @@ class RoomWsController(
     @MessageMapping("/pub/v1/rooms/{roomId}/send-emoji")
     fun sendEmoji(@DestinationVariable roomId: Long, request: RoomSendEmojiRequest) {
         roomService.sendEmoji(roomId, request)
+    }
+
+    @MessageMapping("/pub/v1/rooms/{roomId}/send-playlist-item-request")
+    fun sendPlaylistItemRequest(@DestinationVariable roomId: Long, request: RoomSendPlaylistItemRequest) {
+        roomService.sendPlaylistItemRequest(roomId, request)
     }
 }
