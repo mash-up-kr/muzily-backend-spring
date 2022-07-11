@@ -20,10 +20,10 @@ class RoomPlaylistItemRequestMessageReceiveEventListener(
     // TODO : 방 생성자에게 메시지 보내기
     @EventListener
     fun handle(event: RoomPlaylistItemRequestMessageReceiveEvent) {
-        val destination = "/sub/v1/rooms/${event.roomId}"
+        val destination = "/queue/todo"
         val room = roomService.findRoomById(event.roomId)
         val item = playlistItemRepository.findByIdOrNull(event.playlistItemId) ?: throw IllegalStateException()
         val payload = WsResponse.ok(WsResponseType.PLAYLIST_ITEM_REQUEST, RoomPlaylistItemRequestResponse.of(item))
-        simpMessagingTemplate.convertAndSend(destination, payload)
+//        simpMessagingTemplate.convertAndSendToUser( , destination, payload)
     }
 }

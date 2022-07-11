@@ -11,7 +11,7 @@ import org.springframework.messaging.support.ChannelInterceptor
 import org.springframework.stereotype.Component
 
 @Component
-class InboundChannelInterceptor(
+class WsRedisMessageListenerManageInterceptor(
     private val redisMessageListenerContainer: RedisMessageListenerContainer,
     private val roomMessageSubscriber: RoomMessageSubscriber,
 ) : ChannelInterceptor {
