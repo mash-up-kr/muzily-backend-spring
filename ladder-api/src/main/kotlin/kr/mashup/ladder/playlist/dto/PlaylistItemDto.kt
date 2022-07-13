@@ -1,4 +1,4 @@
-package kr.mashup.ladder.playlistitem.dto
+package kr.mashup.ladder.playlist.dto
 
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItem
 

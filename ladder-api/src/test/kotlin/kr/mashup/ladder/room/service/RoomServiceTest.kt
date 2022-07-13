@@ -2,6 +2,8 @@ package kr.mashup.ladder.room.service
 
 import kr.mashup.ladder.SetupMemberIntegrationTest
 import kr.mashup.ladder.domain.common.error.model.ForbiddenException
+import kr.mashup.ladder.domain.playlist.domain.Playlist
+import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
 import kr.mashup.ladder.domain.room.domain.InvitationKey
 import kr.mashup.ladder.domain.room.domain.Room
 import kr.mashup.ladder.domain.room.domain.RoomConflictException
@@ -20,6 +22,7 @@ internal class RoomServiceTest(
     private val roomService: RoomService,
     private val roomRepository: RoomRepository,
     private val roomMoodRepository: RoomMoodRepository,
+    private val playlistRepository: PlaylistRepository,
 ) : SetupMemberIntegrationTest() {
 
     @Test
@@ -76,7 +79,8 @@ internal class RoomServiceTest(
             invitationKey = InvitationKey.newInstance(),
         )
         room.updateMoods(setOf("분위기 좋은 노래", "잔잔한"))
-        roomRepository.save(room)
+        val savedRoom = roomRepository.save(room)
+        playlistRepository.save(Playlist(savedRoom.id))
 
         val request = RoomUpdateRequest(
             description = "변경 된 방에 대한 설명",

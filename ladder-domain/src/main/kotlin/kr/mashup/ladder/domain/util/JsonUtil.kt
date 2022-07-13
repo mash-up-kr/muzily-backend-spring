@@ -22,4 +22,8 @@ object JsonUtil {
     fun <T> fromJson(content: String, valueType: Class<T>): T {
         return objectMapper.readValue(content, valueType)
     }
+
+    fun <T> fromJson(content: String, valueTypeRef: TypeReference<T>): T {
+        return objectMapper.readValue(content, valueTypeRef)
+    }
 }

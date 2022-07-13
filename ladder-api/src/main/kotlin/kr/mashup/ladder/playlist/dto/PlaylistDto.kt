@@ -1,7 +1,6 @@
 package kr.mashup.ladder.playlist.dto
 
 import kr.mashup.ladder.domain.playlist.domain.Playlist
-import kr.mashup.ladder.playlistitem.dto.PlaylistItemDto
 
 data class PlaylistDto(
     val playlistId: Long,

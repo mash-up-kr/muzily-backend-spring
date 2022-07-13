@@ -11,7 +11,7 @@ data class KaKaoInfoResponse(
 
 
 data class KaKaoAccountResponse(
-    val email: String,
+    val email: String?,
     val profile: KaKaoProfileResponse,
 )
 

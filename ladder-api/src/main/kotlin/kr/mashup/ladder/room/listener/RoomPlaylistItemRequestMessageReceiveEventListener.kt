@@ -2,6 +2,8 @@ package kr.mashup.ladder.room.listener
 
 import kr.mashup.ladder.common.dto.response.WsResponse
 import kr.mashup.ladder.common.dto.response.WsResponseType
+import kr.mashup.ladder.config.context.WsMemberPrincipalContext
+import kr.mashup.ladder.config.ws.WS_DESTINATION_PREFIX_QUEUE
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemRepository
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRequestMessageReceiveEvent
 import kr.mashup.ladder.room.dto.response.RoomPlaylistItemRequestResponse
@@ -17,13 +19,12 @@ class RoomPlaylistItemRequestMessageReceiveEventListener(
     private val roomService: RoomService,
     private val playlistItemRepository: PlaylistItemRepository,
 ) {
-    // TODO : 방 생성자에게 메시지 보내기
     @EventListener
     fun handle(event: RoomPlaylistItemRequestMessageReceiveEvent) {
-        val destination = "/queue/todo"
         val room = roomService.findRoomById(event.roomId)
         val item = playlistItemRepository.findByIdOrNull(event.playlistItemId) ?: throw IllegalStateException()
+        val principal = WsMemberPrincipalContext.get(room.memberId)
         val payload = WsResponse.ok(WsResponseType.PLAYLIST_ITEM_REQUEST, RoomPlaylistItemRequestResponse.of(item))
-//        simpMessagingTemplate.convertAndSendToUser( , destination, payload)
+        simpMessagingTemplate.convertAndSendToUser(principal!!.name, "$WS_DESTINATION_PREFIX_QUEUE", payload)
     }
 }

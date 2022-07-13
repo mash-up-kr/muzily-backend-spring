@@ -14,7 +14,7 @@ import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
-import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequest
+import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
 import kr.mashup.ladder.room.dto.response.RoomDetailInfoResponse
 import kr.mashup.ladder.room.dto.response.RoomInfoResponse
@@ -27,15 +27,15 @@ class RoomService(
     private val roomRepository: RoomRepository,
     private val roomMessagePublisher: RoomMessagePublisher,
     private val playlistRepository: PlaylistRepository,
-    private val playlistItemRepository: PlaylistItemRepository
+    private val playlistItemRepository: PlaylistItemRepository,
 ) {
 
     @Transactional
     fun create(request: RoomCreateRequest, memberId: Long): RoomDetailInfoResponse {
         validateNotExistsCreatedRoom(memberId)
         val room = roomRepository.save(request.toEntity(accountId = memberId))
-        playlistRepository.save(Playlist(room.id))
-        return RoomDetailInfoResponse.from(room)
+        val playlist = playlistRepository.save(Playlist(room.id))
+        return RoomDetailInfoResponse.of(room, playlist.id)
     }
 
     private fun validateNotExistsCreatedRoom(accountId: Long) {
@@ -50,20 +50,23 @@ class RoomService(
         validateIsRoomCreator(room = room, memberId = memberId)
         room.update(request.description)
         room.updateMoods(request.moods)
-        return RoomDetailInfoResponse.from(room)
+        val playlist = playlistRepository.findByRoomId(room.id)
+        return RoomDetailInfoResponse.of(room, playlist.id)
     }
 
     @Transactional(readOnly = true)
     fun getMyRooms(memberId: Long): List<RoomDetailInfoResponse> {
         val rooms: List<Room> = roomRepository.findRoomsByMemberId(memberId)
-        return rooms.map { room -> RoomDetailInfoResponse.from(room) }
+        val playlists = playlistRepository.findByRoomIdIn(rooms.map { it.id })
+        return RoomDetailInfoResponse.of(rooms, playlists)
     }
 
     @Transactional(readOnly = true)
     fun getRoom(roomId: Long): RoomDetailInfoResponse {
         val room = findRoomById(roomId)
         // TODO: 방에 참여중인 멤버인지 권한 체크 추가
-        return RoomDetailInfoResponse.from(room)
+        val playlist = playlistRepository.findByRoomId(room.id)
+        return RoomDetailInfoResponse.of(room, playlist.id)
     }
 
     @Transactional(readOnly = true)
@@ -99,7 +102,7 @@ class RoomService(
         )
     }
 
-    fun sendPlaylistItemRequest(roomId: Long, request: RoomSendPlaylistItemRequest) {
+    fun sendPlaylistItemRequest(roomId: Long, request: RoomSendPlaylistItemRequestRequest) {
         val item = playlistItemRepository.save(request.toEntity())
         roomMessagePublisher.publish(
             RoomTopic(roomId),
