@@ -5,6 +5,8 @@ import kr.mashup.ladder.domain.room.domain.chat.RoomChatMessage
 import kr.mashup.ladder.domain.room.domain.chat.RoomChatMessageReceiveEvent
 import kr.mashup.ladder.domain.room.domain.emoji.RoomEmojiMessage
 import kr.mashup.ladder.domain.room.domain.emoji.RoomEmojiMessageRecieveEvent
+import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRequestMessage
+import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRequestMessageReceiveEvent
 import kr.mashup.ladder.domain.util.JsonUtil
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.redis.connection.Message
@@ -39,6 +41,13 @@ class RoomMessageSubscriber(
                     )
                 )
             }
+            RoomMessageType.PLAYLIST_ITEM_REQUEST -> {
+                val roomMessage = JsonUtil.fromByteArray(
+                    message.body,
+                    object : TypeReference<RoomMessage<RoomPlaylistItemRequestMessage>>() {})
+                applicationEventPublisher.publishEvent(roomMessage.data.toEvent())
+            }
+            else -> {}
         }
     }
 }

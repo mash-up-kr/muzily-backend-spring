@@ -1,6 +1,7 @@
 package kr.mashup.ladder.common.advice
 
 import kr.mashup.ladder.common.dto.response.WsResponse
+import kr.mashup.ladder.config.ws.WS_DESTINATION_PREFIX_QUEUE
 import kr.mashup.ladder.domain.common.error.ErrorCode
 import kr.mashup.ladder.domain.common.error.model.LadderBaseException
 import mu.KotlinLogging
@@ -13,7 +14,7 @@ private val logger = KotlinLogging.logger {}
 @ControllerAdvice
 class WsControllerExceptionAdvice {
     @MessageExceptionHandler(LadderBaseException::class)
-    @SendToUser(destinations = ["/queue/errors"])
+    @SendToUser(destinations = [WS_DESTINATION_PREFIX_QUEUE])
     private fun handleBaseException(exception: LadderBaseException): WsResponse<Nothing> {
         logging(exception)
         return WsResponse.error(exception.errorCode)
@@ -28,7 +29,7 @@ class WsControllerExceptionAdvice {
     }
 
     @MessageExceptionHandler(Exception::class)
-    @SendToUser(destinations = ["/queue/errors"])
+    @SendToUser(destinations = [WS_DESTINATION_PREFIX_QUEUE])
     private fun handleInternalServerException(exception: Exception): WsResponse<Nothing> {
         logger.error(exception.message, exception)
         return WsResponse.error(ErrorCode.UNKNOWN_ERROR)

@@ -52,6 +52,14 @@ class Member(
             return member
         }
 
+        fun newKaKao(
+            socialId: String,
+            nickname: String,
+            profileUrl: String? = null,
+        ): Member {
+            return newInstance(SocialType.KAKAO, socialId, nickname, profileUrl)
+        }
+
         fun newAnonymous(): Member {
             return Member(
                 nickname = ANONYMOUS_DEFAULT_NICKNAME

@@ -1,0 +1,9 @@
+### 재생목록을 조회합니다
+GET {{api}}/api/v1/playlists/1
+Authorization: Bearer {{SESSION_ID}}
+
+
+### 계류중인 재생목록 항목들을 조회합니다
+GET {{api}}/api/v1/playlists/1/pending-items
+Authorization: Bearer {{SESSION_ID}}
+
