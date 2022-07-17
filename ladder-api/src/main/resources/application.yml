@@ -30,7 +30,6 @@ management:
         include:
           - health
           - prometheus
-          - info
           - metrics
   metrics:
     distribution:
