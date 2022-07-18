@@ -24,10 +24,17 @@ spring:
 management:
   endpoints:
     web:
-      base-path: /search/actuator
+      base-path: /search
       exposure:
         include:
           - health
           - prometheus
-          - info
-          - metrics
+      path-mapping:
+        health: /health
+        prometheus: /actuator/prometheus
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      percentiles:
+        http.server.requests: 0.5,0.9,0.95,0.99
