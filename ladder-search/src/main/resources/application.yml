@@ -32,6 +32,11 @@ management:
       path-mapping:
         health: /health
         prometheus: /actuator/prometheus
+  health:
+    defaults:
+      enabled: false
+    ping:
+      enabled: true
   metrics:
     distribution:
       percentiles-histogram:
