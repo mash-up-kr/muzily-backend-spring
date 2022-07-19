@@ -73,10 +73,8 @@ class RoomAcceptanceTest : AcceptanceTest() {
         val 방 = `방 생성되어 있음`(`방 생성 요청값`(), `SNS 계정 인증`.token)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 인증`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 회원가입 인증`.token)
-        val `SNS 계정 future`: CompletableFuture<WsResponse<*>> = CompletableFuture()
-        val `익명 future`: CompletableFuture<WsResponse<*>> = CompletableFuture()
-        `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId, `SNS 계정 future`)
-        `방 구독되어 있음`(`익명 세션`, 방.roomId, `익명 future`)
+        val `SNS 계정 future` = `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
+        val `익명 future` = `방 구독되어 있음`(`익명 세션`, 방.roomId)
 
         // when
         `이모지 보내기 요청`(`익명 세션`, 방.roomId, EmojiType.HEART)
@@ -95,8 +93,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 회원가입 인증`.token)
         `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
         `방 구독되어 있음`(`익명 세션`, 방.roomId)
-        val `SNS 계정 future`: CompletableFuture<WsResponse<*>> = CompletableFuture()
-        `개인 큐 구독되어 있음`(`SNS 계정 세션`, `SNS 계정 future`)
+        val `SNS 계정 future` = `개인 큐 구독되어 있음`(`SNS 계정 세션`)
         val `방 재생목록 항목 신청 요청값` = `방 재생목록 항목 신청 요청값`(방.playlistId!!)
 
         // when
@@ -152,11 +149,9 @@ class RoomAcceptanceTest : AcceptanceTest() {
                 .get(5, TimeUnit.SECONDS)
         }
 
-        fun `방 구독되어 있음`(
-            session: StompSession,
-            roomId: Long,
-            future: CompletableFuture<WsResponse<*>>? = null,
-        ) {
+        fun `방 구독되어 있음`(session: StompSession, roomId: Long): CompletableFuture<WsResponse<*>> {
+            val future: CompletableFuture<WsResponse<*>> = CompletableFuture()
+
             session.subscribe(
                 "${WS_DESTINATION_PREFIX_TOPIC}/v1/rooms/${roomId}",
                 object : StompFrameHandler {
@@ -165,9 +160,11 @@ class RoomAcceptanceTest : AcceptanceTest() {
                     }
 
                     override fun handleFrame(headers: StompHeaders, payload: Any?) {
-                        future?.complete(payload as WsResponse<*>)
+                        future.complete(payload as WsResponse<*>)
                     }
                 })
+
+            return future
         }
 
         fun `이모지 보내기 요청`(session: StompSession, roomId: Long, emojiType: EmojiType) {
@@ -185,7 +182,9 @@ class RoomAcceptanceTest : AcceptanceTest() {
             assertThat(emojiTypes).allMatch { it == emojiType }
         }
 
-        fun `개인 큐 구독되어 있음`(session: StompSession, future: CompletableFuture<WsResponse<*>>) {
+        fun `개인 큐 구독되어 있음`(session: StompSession): CompletableFuture<WsResponse<*>> {
+            val future: CompletableFuture<WsResponse<*>> = CompletableFuture()
+
             session.subscribe(
                 "${WS_USER_DESTINATION_PREFIX}${WS_DESTINATION_PREFIX_QUEUE}",
                 object : StompFrameHandler {
@@ -197,6 +196,8 @@ class RoomAcceptanceTest : AcceptanceTest() {
                         future.complete(payload as WsResponse<*>)
                     }
                 })
+
+            return future
         }
 
         fun `재생목록 항목 신청 요청`(session: StompSession, roomId: Long, request: RoomSendPlaylistItemRequestRequest) {
