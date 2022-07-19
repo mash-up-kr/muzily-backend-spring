@@ -1,6 +1,5 @@
 package kr.mashup.ladder.room.controller
 
-import kr.mashup.ladder.config.annotation.MemberId
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
@@ -18,7 +17,6 @@ class RoomWsController(
     fun sendChat(
         @DestinationVariable roomId: Long,
         @Payload request: RoomSendChatRequest,
-        @MemberId memberId: Long,
     ) {
         roomService.sendChat(roomId, request)
     }
@@ -27,7 +25,6 @@ class RoomWsController(
     fun sendEmoji(
         @DestinationVariable roomId: Long,
         @Payload request: RoomSendEmojiRequest,
-        @MemberId memberId: Long,
     ) {
         roomService.sendEmoji(roomId, request)
     }
@@ -36,7 +33,6 @@ class RoomWsController(
     fun sendPlaylistItemRequest(
         @DestinationVariable roomId: Long,
         @Payload request: RoomSendPlaylistItemRequestRequest,
-        @MemberId memberId: Long,
     ) {
         roomService.sendPlaylistItemRequest(roomId, request)
     }

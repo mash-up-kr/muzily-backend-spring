@@ -11,14 +11,14 @@ data class RoomPlaylistItemRequestResponse(
     val duration: Int,
 ) {
     companion object {
-        fun of(playlistItem: PlaylistItem): RoomPlaylistItemRequestResponse {
+        fun of(item: PlaylistItem): RoomPlaylistItemRequestResponse {
             return RoomPlaylistItemRequestResponse(
-                playlistItemId = playlistItem.id,
-                playlistId = playlistItem.playlistId,
-                videoId = playlistItem.videoId,
-                title = playlistItem.title,
-                thumbnail = playlistItem.thumbnail,
-                duration = playlistItem.duration,
+                playlistItemId = item.id,
+                playlistId = item.playlist.id,
+                videoId = item.videoId,
+                title = item.title,
+                thumbnail = item.thumbnail,
+                duration = item.duration,
             )
         }
     }

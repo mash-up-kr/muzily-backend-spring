@@ -1,5 +1,6 @@
 package kr.mashup.ladder.room.dto.request
 
+import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItem
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRequestMessage
 
@@ -10,9 +11,9 @@ data class RoomSendPlaylistItemRequestRequest(
     val thumbnail: String,
     val duration: Int,
 ) {
-    fun toEntity(): PlaylistItem {
+    fun toEntity(playlist: Playlist): PlaylistItem {
         return PlaylistItem(
-            playlistId = playlistId,
+            playlist = playlist,
             videoId = videoId,
             title = title,
             thumbnail = thumbnail,

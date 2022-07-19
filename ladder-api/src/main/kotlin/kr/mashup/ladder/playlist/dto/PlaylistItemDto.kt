@@ -3,7 +3,7 @@ package kr.mashup.ladder.playlist.dto
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItem
 
 data class PlaylistItemDto(
-    val playlistItemId: Long,
+    val id: Long,
     val playlistId: Long,
     val videoId: String,
     val title: String,
@@ -11,14 +11,14 @@ data class PlaylistItemDto(
     val duration: Int,
 ) {
     companion object {
-        fun of(playlistItem: PlaylistItem): PlaylistItemDto {
+        fun of(item: PlaylistItem): PlaylistItemDto {
             return PlaylistItemDto(
-                playlistItemId = playlistItem.id,
-                playlistId = playlistItem.playlistId,
-                videoId = playlistItem.videoId,
-                title = playlistItem.title,
-                thumbnail = playlistItem.thumbnail,
-                duration = playlistItem.duration,
+                id = item.id,
+                playlistId = item.playlist.id,
+                videoId = item.videoId,
+                title = item.title,
+                thumbnail = item.thumbnail,
+                duration = item.duration,
             )
         }
     }

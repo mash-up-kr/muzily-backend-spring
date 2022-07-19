@@ -18,7 +18,7 @@ class PlaylistApiController(
     @Auth
     @GetMapping("/api/v1/playlists/{playlistId}")
     fun findById(@PathVariable playlistId: Long): PlaylistDto {
-        return playlistService.getPlaylist(playlistId)
+        return playlistService.findById(playlistId)
     }
 
     @ApiOperation("계류중인 재생목록 항목들을 조회합니다")

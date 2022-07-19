@@ -2,7 +2,6 @@ package kr.mashup.ladder.room.service
 
 import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
-import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemRepository
 import kr.mashup.ladder.domain.room.domain.Room
 import kr.mashup.ladder.domain.room.domain.RoomConflictException
 import kr.mashup.ladder.domain.room.domain.RoomMessage
@@ -11,6 +10,7 @@ import kr.mashup.ladder.domain.room.domain.RoomMessageType
 import kr.mashup.ladder.domain.room.domain.RoomNotFoundException
 import kr.mashup.ladder.domain.room.domain.RoomTopic
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
+import kr.mashup.ladder.playlist.service.PlaylistService
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
@@ -27,7 +27,7 @@ class RoomService(
     private val roomRepository: RoomRepository,
     private val roomMessagePublisher: RoomMessagePublisher,
     private val playlistRepository: PlaylistRepository,
-    private val playlistItemRepository: PlaylistItemRepository,
+    private val playlistService: PlaylistService,
 ) {
 
     @Transactional
@@ -103,7 +103,7 @@ class RoomService(
     }
 
     fun sendPlaylistItemRequest(roomId: Long, request: RoomSendPlaylistItemRequestRequest) {
-        val item = playlistItemRepository.save(request.toEntity())
+        val item = playlistService.addItemRequest(request)
         roomMessagePublisher.publish(
             RoomTopic(roomId),
             RoomMessage(RoomMessageType.PLAYLIST_ITEM_REQUEST, request.toMessage(roomId, item.id))
