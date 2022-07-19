@@ -4,5 +4,6 @@ enum class RoomMessageType {
     CHAT,
     EMOJI,
     SUBSCRIBE,
-    PLAYLIST_ITEM_REQUEST
+    PLAYLIST_ITEM_REQUEST,
+    PLAYLIST_ITEM_ADD
 }

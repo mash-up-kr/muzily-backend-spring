@@ -27,4 +27,8 @@ class PlaylistItem(
     @Enumerated(value = EnumType.STRING)
     var status: PlaylistItemStatus = PlaylistItemStatus.PENDING
         protected set
+
+    fun accept() {
+        status = PlaylistItemStatus.ACCEPTED
+    }
 }
