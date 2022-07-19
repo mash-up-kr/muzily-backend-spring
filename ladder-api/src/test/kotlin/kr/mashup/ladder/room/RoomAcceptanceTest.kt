@@ -19,11 +19,14 @@ import kr.mashup.ladder.domain.room.domain.emoji.EmojiType
 import kr.mashup.ladder.domain.util.JsonUtil
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 생성 요청값`
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 재생목록 항목 신청 요청값`
+import kr.mashup.ladder.room.RoomFixture.Companion.`방 재생목록 항목 추가 요청값`
+import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.response.RoomDetailInfoResponse
 import kr.mashup.ladder.room.dto.response.RoomEmojiResponse
+import kr.mashup.ladder.room.dto.response.RoomPlaylistItemAddResponse
 import kr.mashup.ladder.room.dto.response.RoomPlaylistItemRequestResponse
 import kr.mashup.ladder.util.StompTestHelper
 import org.assertj.core.api.Assertions.assertThat
@@ -102,6 +105,30 @@ class RoomAcceptanceTest : AcceptanceTest() {
         // then
         `재생목록 항목 신청 요청 받음`(`SNS 계정 future`, `방 재생목록 항목 신청 요청값`)
     }
+
+    // 방 생성자가 재생목록 항목 신청을 승인한다
+    // 방 생성자가 아닐 경우 재생목록 항목 신청을 승인할 수 없다
+
+    @Test
+    fun `방 생성자가 재생목록 항목을 추가한다`() {
+        // given
+        val `SNS 계정 인증` = `SNS 계정으로 인증되어 있음`(`인증 요청값`())
+        val `익명 회원가입 인증` = `익명 회원가입되어 있음`()
+        val 방 = `방 생성되어 있음`(`방 생성 요청값`(), `SNS 계정 인증`.token)
+        val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 인증`.token)
+        val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 회원가입 인증`.token)
+        val `SNS 계정 future` = `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
+        val `익명 future` = `방 구독되어 있음`(`익명 세션`, 방.roomId)
+        val `방 재생목록 항목 추가 요청값` = `방 재생목록 항목 추가 요청값`(방.playlistId!!)
+
+        // when
+        `재생목록 항목 추가 요청`(`SNS 계정 세션`, 방.roomId, `방 재생목록 항목 추가 요청값`)
+
+        // then
+        `재생목록 항목 추가됨`(listOf(`SNS 계정 future`, `익명 future`), `방 재생목록 항목 추가 요청값`)
+    }
+
+    // 방 생성자가 아닐 경우 재생목록 항목을 추가할 수 없다
 
     companion object {
         fun `방 생성 요청`(request: RoomCreateRequest, token: String): ExtractableResponse<Response> {
@@ -222,6 +249,28 @@ class RoomAcceptanceTest : AcceptanceTest() {
 
         fun `재생목록 항목 신청되어 있음`(session: StompSession, roomId: Long, request: RoomSendPlaylistItemRequestRequest) {
             `재생목록 항목 신청 요청`(session, roomId, request)
+        }
+
+        fun `재생목록 항목 추가 요청`(session: StompSession, roomId: Long, request: RoomAddPlaylistItemRequest) {
+            session.send("${WS_APP_DESTINATION_PREFIX}/v1/rooms/${roomId}/add-playlist-item", request)
+        }
+
+        fun `재생목록 항목 추가됨`(
+            futures: List<CompletableFuture<WsResponse<*>>>, request: RoomAddPlaylistItemRequest,
+        ) {
+            val responses = futures
+                .map { it.get(5, TimeUnit.SECONDS) }
+                .map { it.data }
+                .map { JsonUtil.toJson(it!!) } // TODO : 개선
+                .map { JsonUtil.fromJson(it, object : TypeReference<RoomPlaylistItemAddResponse>() {}) } // TODO : 개선
+
+            assertAll(
+                { assertThat(responses.map { it.playlistId }).allMatch { it == request.playlistId } },
+                { assertThat(responses.map { it.videoId }).allMatch { it == request.videoId } },
+                { assertThat(responses.map { it.title }).allMatch { it == request.title } },
+                { assertThat(responses.map { it.thumbnail }).allMatch { it == request.thumbnail } },
+                { assertThat(responses.map { it.duration }).allMatch { it == request.duration } },
+            )
         }
     }
 }
