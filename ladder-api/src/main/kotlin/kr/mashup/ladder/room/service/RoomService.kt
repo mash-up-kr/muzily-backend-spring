@@ -12,6 +12,7 @@ import kr.mashup.ladder.domain.room.domain.RoomTopic
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.playlist.service.PlaylistService
 import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
+import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
@@ -116,6 +117,14 @@ class RoomService(
         roomMessagePublisher.publish(
             RoomTopic(roomId),
             RoomMessage(RoomMessageType.PLAYLIST_ITEM_ADD, request.toMessage(roomId))
+        )
+    }
+
+    fun addPlaylistItem(roomId: Long, memberId: Long, request: RoomAddPlaylistItemRequest) {
+        val item = playlistService.addItem(memberId, request)
+        roomMessagePublisher.publish(
+            RoomTopic(roomId),
+            RoomMessage(RoomMessageType.PLAYLIST_ITEM_ADD, request.toMessage(roomId, item.id))
         )
     }
 }

@@ -9,6 +9,7 @@ import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.playlist.dto.PlaylistDto
 import kr.mashup.ladder.playlist.dto.PlaylistItemDto
 import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
+import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -53,6 +54,17 @@ class PlaylistService(
         val item = playlistItemRepository.findByIdOrNull(request.playlistItemId)
             ?: throw PlaylistItemNotFoundException("${request.playlistItemId}")
         item.accept()
+        return PlaylistItemDto.of(item)
+    }
+
+    @Transactional
+    fun addItem(memberId: Long, request: RoomAddPlaylistItemRequest): PlaylistItemDto {
+        val playlist = playlistRepository.findByIdOrNull(request.playlistId)
+            ?: throw PlaylistNotFoundException("${request.playlistId}")
+        val room = roomRepository.findByIdOrNull(playlist.roomId)
+            ?: throw RoomNotFoundException("${playlist.roomId}")
+        room.validateCreator(memberId)
+        val item = playlistItemRepository.save(request.toEntity(playlist))
         return PlaylistItemDto.of(item)
     }
 }

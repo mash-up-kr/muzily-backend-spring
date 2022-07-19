@@ -2,6 +2,7 @@ package kr.mashup.ladder.room.controller
 
 import kr.mashup.ladder.config.annotation.MemberId
 import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
+import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
@@ -46,5 +47,14 @@ class RoomWsController(
         @Payload request: RoomAcceptPlaylistItemRequestRequest,
     ) {
         roomService.acceptPlaylistItemRequest(roomId, memberId, request)
+    }
+
+    @MessageMapping("/v1/rooms/{roomId}/add-playlist-item")
+    fun addPlaylistItem(
+        @DestinationVariable roomId: Long,
+        @MemberId memberId: Long,
+        @Payload request: RoomAddPlaylistItemRequest,
+    ) {
+        roomService.addPlaylistItem(roomId, memberId, request)
     }
 }
