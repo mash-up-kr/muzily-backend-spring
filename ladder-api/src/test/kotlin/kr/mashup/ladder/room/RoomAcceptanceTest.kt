@@ -6,20 +6,24 @@ import io.restassured.http.Header
 import io.restassured.response.ExtractableResponse
 import io.restassured.response.Response
 import kr.mashup.ladder.AcceptanceTest
-import kr.mashup.ladder.auth.AuthAcceptanceTest.Companion.`SNS 계정으로 인증되어 있음`
-import kr.mashup.ladder.auth.AuthAcceptanceTest.Companion.`익명 회원가입되어 있음`
+import kr.mashup.ladder.auth.AuthAcceptanceTest.Companion.`SNS 계정 로그인되어 있음`
+import kr.mashup.ladder.auth.AuthAcceptanceTest.Companion.`익명 로그인되어 있음`
 import kr.mashup.ladder.auth.AuthFixture.Companion.`인증 요청값`
 import kr.mashup.ladder.common.dto.response.WsResponse
+import kr.mashup.ladder.common.dto.response.WsResponseType
 import kr.mashup.ladder.config.ws.WS_APP_DESTINATION_PREFIX
 import kr.mashup.ladder.config.ws.WS_DESTINATION_PREFIX_QUEUE
 import kr.mashup.ladder.config.ws.WS_DESTINATION_PREFIX_TOPIC
 import kr.mashup.ladder.config.ws.WS_ENDPOINT
 import kr.mashup.ladder.config.ws.WS_USER_DESTINATION_PREFIX
+import kr.mashup.ladder.domain.common.error.ErrorCode
 import kr.mashup.ladder.domain.room.domain.emoji.EmojiType
 import kr.mashup.ladder.domain.util.JsonUtil
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 생성 요청값`
+import kr.mashup.ladder.room.RoomFixture.Companion.`방 재생목록 항목 신청 승인 요청값`
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 재생목록 항목 신청 요청값`
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 재생목록 항목 추가 요청값`
+import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
@@ -45,12 +49,12 @@ import java.util.concurrent.TimeUnit
 
 class RoomAcceptanceTest : AcceptanceTest() {
     @Test
-    fun `방을 생성한다`() {
+    fun `SNS 계정 회원이 방을 생성한다`() {
         // given
-        val `SNS 계정 인증` = `SNS 계정으로 인증되어 있음`(`인증 요청값`())
+        val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
 
         // when
-        val response = `방 생성 요청`(`방 생성 요청값`(), `SNS 계정 인증`.token)
+        val response = `방 생성 요청`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
 
         // then
         `방 생성됨`(response, `방 생성 요청값`())
@@ -59,10 +63,10 @@ class RoomAcceptanceTest : AcceptanceTest() {
     @Test
     fun `익명 회원은 방을 생성할 수 없다`() {
         // given
-        val `익명 회원가입 인증` = `익명 회원가입되어 있음`()
+        val `익명 로그인 응답` = `익명 로그인되어 있음`()
 
         // when
-        val response = `방 생성 요청`(`방 생성 요청값`(), `익명 회원가입 인증`.token)
+        val response = `방 생성 요청`(`익명 로그인 응답`.token, `방 생성 요청값`())
 
         // then
         `방 생성되지 않음`(response)
@@ -71,67 +75,144 @@ class RoomAcceptanceTest : AcceptanceTest() {
     @Test
     fun `방에 이모지를 보낸다`() {
         // given
-        val `SNS 계정 인증` = `SNS 계정으로 인증되어 있음`(`인증 요청값`())
-        val `익명 회원가입 인증` = `익명 회원가입되어 있음`()
-        val 방 = `방 생성되어 있음`(`방 생성 요청값`(), `SNS 계정 인증`.token)
-        val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 인증`.token)
-        val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 회원가입 인증`.token)
-        val `SNS 계정 future` = `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
-        val `익명 future` = `방 구독되어 있음`(`익명 세션`, 방.roomId)
+        val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
+        val `익명 로그인 응답` = `익명 로그인되어 있음`()
+        val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
+        val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
+        val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
+        val futures = listOf(
+            `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId),
+            `방 구독되어 있음`(`익명 세션`, 방.roomId))
 
         // when
         `이모지 보내기 요청`(`익명 세션`, 방.roomId, EmojiType.HEART)
 
         // then
-        `이모지 받음`(listOf(`SNS 계정 future`, `익명 future`), EmojiType.HEART)
+        `이모지 받음`(futures, EmojiType.HEART)
     }
 
     @Test
-    fun `방 생성자에게 재생목록 항목 신청을 한다`() {
+    fun `익명 회원이 방 생성자에게 재생목록 항목 신청을 한다`() {
         // given
-        val `SNS 계정 인증` = `SNS 계정으로 인증되어 있음`(`인증 요청값`())
-        val `익명 회원가입 인증` = `익명 회원가입되어 있음`()
-        val 방 = `방 생성되어 있음`(`방 생성 요청값`(), `SNS 계정 인증`.token)
-        val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 인증`.token)
-        val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 회원가입 인증`.token)
+        val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
+        val `익명 로그인 응답` = `익명 로그인되어 있음`()
+        val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
+        val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
+        val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
         `방 구독되어 있음`(`익명 세션`, 방.roomId)
-        val `SNS 계정 future` = `개인 큐 구독되어 있음`(`SNS 계정 세션`)
+        val future = `개인 큐 구독되어 있음`(`SNS 계정 세션`)
         val `방 재생목록 항목 신청 요청값` = `방 재생목록 항목 신청 요청값`(방.playlistId!!)
 
         // when
         `재생목록 항목 신청 요청`(`익명 세션`, 방.roomId, `방 재생목록 항목 신청 요청값`)
 
         // then
-        `재생목록 항목 신청 요청 받음`(`SNS 계정 future`, `방 재생목록 항목 신청 요청값`)
+        `재생목록 항목 신청 요청 받음`(future, `방 재생목록 항목 신청 요청값`)
     }
 
-    // 방 생성자가 재생목록 항목 신청을 승인한다
-    // 방 생성자가 아닐 경우 재생목록 항목 신청을 승인할 수 없다
+    @Test
+    fun `방 생성자가 재생목록 항목 신청을 승인한다`() {
+        // given
+        val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
+        val `익명 로그인 응답` = `익명 로그인되어 있음`()
+        val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
+        val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
+        val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
+        val futures = listOf(
+            `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId),
+            `방 구독되어 있음`(`익명 세션`, 방.roomId))
+        val `신청된 재생목록 항목` = `재생목록 항목 신청되어 있음`(
+            `익명 세션`,
+            `SNS 계정 세션`,
+            방.roomId,
+            `방 재생목록 항목 신청 요청값`(방.playlistId!!))
+        val `방 재생목록 항목 신청 승인 요청값` = `방 재생목록 항목 신청 승인 요청값`(
+            `신청된 재생목록 항목`.playlistId,
+            `신청된 재생목록 항목`.playlistItemId)
+
+        // when
+        `재생목록 항목 신청 승인 요청`(
+            `SNS 계정 세션`,
+            방.roomId,
+            `방 재생목록 항목 신청 승인 요청값`)
+
+        // then
+        `재생목록 항목 신청 승인됨`(futures, `방 재생목록 항목 신청 승인 요청값`)
+    }
+
+    @Test
+    fun `방 생성자가 아닐 경우 재생목록 항목 신청을 승인할 수 없다`() {
+        // given
+        val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
+        val `익명 로그인 응답` = `익명 로그인되어 있음`()
+        val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
+        val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
+        val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
+        `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
+        `방 구독되어 있음`(`익명 세션`, 방.roomId)
+        val future = `개인 큐 구독되어 있음`(`익명 세션`)
+        val `신청된 재생목록 항목` = `재생목록 항목 신청되어 있음`(
+            `익명 세션`,
+            `SNS 계정 세션`,
+            방.roomId,
+            `방 재생목록 항목 신청 요청값`(방.playlistId!!))
+        val `방 재생목록 항목 신청 승인 요청값` = `방 재생목록 항목 신청 승인 요청값`(
+            `신청된 재생목록 항목`.playlistId,
+            `신청된 재생목록 항목`.playlistItemId)
+
+        // when
+        `재생목록 항목 신청 승인 요청`(
+            `익명 세션`,
+            방.roomId,
+            `방 재생목록 항목 신청 승인 요청값`)
+
+        // then
+        `재생목록 항목 신청 승인되지 않음`(future)
+    }
 
     @Test
     fun `방 생성자가 재생목록 항목을 추가한다`() {
         // given
-        val `SNS 계정 인증` = `SNS 계정으로 인증되어 있음`(`인증 요청값`())
-        val `익명 회원가입 인증` = `익명 회원가입되어 있음`()
-        val 방 = `방 생성되어 있음`(`방 생성 요청값`(), `SNS 계정 인증`.token)
-        val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 인증`.token)
-        val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 회원가입 인증`.token)
-        val `SNS 계정 future` = `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
-        val `익명 future` = `방 구독되어 있음`(`익명 세션`, 방.roomId)
+        val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
+        val `익명 로그인 응답` = `익명 로그인되어 있음`()
+        val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
+        val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
+        val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
+        val futures = listOf(
+            `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId),
+            `방 구독되어 있음`(`익명 세션`, 방.roomId))
         val `방 재생목록 항목 추가 요청값` = `방 재생목록 항목 추가 요청값`(방.playlistId!!)
 
         // when
         `재생목록 항목 추가 요청`(`SNS 계정 세션`, 방.roomId, `방 재생목록 항목 추가 요청값`)
 
         // then
-        `재생목록 항목 추가됨`(listOf(`SNS 계정 future`, `익명 future`), `방 재생목록 항목 추가 요청값`)
+        `재생목록 항목 추가됨`(futures, `방 재생목록 항목 추가 요청값`)
     }
 
-    // 방 생성자가 아닐 경우 재생목록 항목을 추가할 수 없다
+    @Test
+    fun `방 생성자가 아닐 경우 재생목록 항목을 추가할 수 없다`() {
+        // given
+        val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
+        val `익명 로그인 응답` = `익명 로그인되어 있음`()
+        val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
+        val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
+        val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
+        `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
+        `방 구독되어 있음`(`익명 세션`, 방.roomId)
+        val future = `개인 큐 구독되어 있음`(`익명 세션`)
+        val `방 재생목록 항목 추가 요청값` = `방 재생목록 항목 추가 요청값`(방.playlistId!!)
+
+        // when
+        `재생목록 항목 추가 요청`(`익명 세션`, 방.roomId, `방 재생목록 항목 추가 요청값`)
+
+        // then
+        `재생목록 항목 추가되지 않음`(future)
+    }
 
     companion object {
-        fun `방 생성 요청`(request: RoomCreateRequest, token: String): ExtractableResponse<Response> {
+        fun `방 생성 요청`(token: String, request: RoomCreateRequest): ExtractableResponse<Response> {
             return RestAssured
                 .given().log().all()
                 .header(Header("Authorization", "Bearer $token"))
@@ -160,8 +241,8 @@ class RoomAcceptanceTest : AcceptanceTest() {
             assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
         }
 
-        fun `방 생성되어 있음`(request: RoomCreateRequest, token: String): RoomDetailInfoResponse {
-            return `방 생성 요청`(request, token).`as`(RoomDetailInfoResponse::class.java)
+        fun `방 생성되어 있음`(token: String, request: RoomCreateRequest): RoomDetailInfoResponse {
+            return `방 생성 요청`(token, request).`as`(RoomDetailInfoResponse::class.java)
         }
 
         fun `웹소켓 연결되어 있음`(port: Int, token: String): StompSession {
@@ -199,14 +280,14 @@ class RoomAcceptanceTest : AcceptanceTest() {
         }
 
         fun `이모지 받음`(futures: List<CompletableFuture<WsResponse<*>>>, emojiType: EmojiType) {
-            val emojiTypes = futures
+            val responses = futures
                 .map { it.get(5, TimeUnit.SECONDS) }
-                .map { it.data }
-                .map { JsonUtil.toJson(it!!) } // TODO : 개선
-                .map { JsonUtil.fromJson(it, object : TypeReference<RoomEmojiResponse>() {}) } // TODO : 개선
-                .map { it.emojiType }
+                .map { JsonUtil.reDeserialize(it, object : TypeReference<WsResponse<RoomEmojiResponse>>() {}) }
 
-            assertThat(emojiTypes).allMatch { it == emojiType }
+            assertAll(
+                { assertThat(responses.map { it.type }).allMatch { it == WsResponseType.EMOJI } },
+                { assertThat(responses.map { it.data!!.emojiType }).allMatch { it == emojiType } },
+            )
         }
 
         fun `개인 큐 구독되어 있음`(session: StompSession): CompletableFuture<WsResponse<*>> {
@@ -231,46 +312,98 @@ class RoomAcceptanceTest : AcceptanceTest() {
             session.send("${WS_APP_DESTINATION_PREFIX}/v1/rooms/${roomId}/send-playlist-item-request", request)
         }
 
-        fun `재생목록 항목 신청 요청 받음`(future: CompletableFuture<WsResponse<*>>, request: RoomSendPlaylistItemRequestRequest) {
-            val data = future.get(5, TimeUnit.SECONDS).data
-            val response = JsonUtil.fromJson(
-                JsonUtil.toJson(data!!),
-                object : TypeReference<RoomPlaylistItemRequestResponse>() {}) // TODO : 개선
+        fun `재생목록 항목 신청 요청 받음`(
+            future: CompletableFuture<WsResponse<*>>,
+            request: RoomSendPlaylistItemRequestRequest,
+        ): RoomPlaylistItemRequestResponse {
+            val response = JsonUtil.reDeserialize(
+                future.get(5, TimeUnit.SECONDS),
+                object : TypeReference<WsResponse<RoomPlaylistItemRequestResponse>>() {})
 
             assertAll(
-                { assertThat(response.playlistItemId).isNotNull() },
-                { assertThat(response.playlistId).isEqualTo(request.playlistId) },
-                { assertThat(response.videoId).isEqualTo(request.videoId) },
-                { assertThat(response.title).isEqualTo(request.title) },
-                { assertThat(response.thumbnail).isEqualTo(request.thumbnail) },
-                { assertThat(response.duration).isEqualTo(request.duration) },
+                { assertThat(response.type).isEqualTo(WsResponseType.PLAYLIST_ITEM_REQUEST) },
+                { assertThat(response.data!!.playlistItemId).isNotNull() },
+                { assertThat(response.data!!.playlistId).isEqualTo(request.playlistId) },
+                { assertThat(response.data!!.videoId).isEqualTo(request.videoId) },
+                { assertThat(response.data!!.title).isEqualTo(request.title) },
+                { assertThat(response.data!!.thumbnail).isEqualTo(request.thumbnail) },
+                { assertThat(response.data!!.duration).isEqualTo(request.duration) },
+            )
+
+            return response.data!!
+        }
+
+        fun `재생목록 항목 신청되어 있음`(
+            itemRequestSession: StompSession,
+            roomCreatorSession: StompSession,
+            roomId: Long,
+            request: RoomSendPlaylistItemRequestRequest,
+        ): RoomPlaylistItemRequestResponse {
+            `재생목록 항목 신청 요청`(itemRequestSession, roomId, request)
+            return `재생목록 항목 신청 요청 받음`(`개인 큐 구독되어 있음`(roomCreatorSession), request)
+        }
+
+        fun `재생목록 항목 신청 승인 요청`(session: StompSession, roomId: Long, request: RoomAcceptPlaylistItemRequestRequest) {
+            session.send("${WS_APP_DESTINATION_PREFIX}/v1/rooms/${roomId}/accept-playlist-item-request", request)
+        }
+
+        fun `재생목록 항목 신청 승인됨`(
+            futures: List<CompletableFuture<WsResponse<*>>>, request: RoomAcceptPlaylistItemRequestRequest,
+        ) {
+            val responses = futures
+                .map { it.get(5, TimeUnit.SECONDS) }
+                .map {
+                    JsonUtil.reDeserialize(it,
+                        object : TypeReference<WsResponse<RoomPlaylistItemAddResponse>>() {})
+                }
+
+            assertAll(
+                { assertThat(responses.map { it.type }).allMatch { it == WsResponseType.PLAYLIST_ITEM_ADD } },
+                { assertThat(responses.map { it.data!!.playlistId }).allMatch { it == request.playlistId } },
+                { assertThat(responses.map { it.data!!.playlistItemId }).allMatch { it == request.playlistItemId } },
             )
         }
 
-        fun `재생목록 항목 신청되어 있음`(session: StompSession, roomId: Long, request: RoomSendPlaylistItemRequestRequest) {
-            `재생목록 항목 신청 요청`(session, roomId, request)
+        fun `재생목록 항목 신청 승인되지 않음`(futures: CompletableFuture<WsResponse<*>>) {
+            val response = futures.get(5, TimeUnit.SECONDS)
+
+            assertAll(
+                { assertThat(response.type).isEqualTo(WsResponseType.ERROR) },
+                { assertThat(response.code).isEqualTo(ErrorCode.FORBIDDEN.code) },
+                { assertThat(response.message).isEqualTo(ErrorCode.FORBIDDEN.message) },
+            )
         }
 
         fun `재생목록 항목 추가 요청`(session: StompSession, roomId: Long, request: RoomAddPlaylistItemRequest) {
             session.send("${WS_APP_DESTINATION_PREFIX}/v1/rooms/${roomId}/add-playlist-item", request)
         }
 
-        fun `재생목록 항목 추가됨`(
-            futures: List<CompletableFuture<WsResponse<*>>>, request: RoomAddPlaylistItemRequest,
-        ) {
+        fun `재생목록 항목 추가됨`(futures: List<CompletableFuture<WsResponse<*>>>, request: RoomAddPlaylistItemRequest) {
             val responses = futures
                 .map { it.get(5, TimeUnit.SECONDS) }
-                .map { it.data }
-                .map { JsonUtil.toJson(it!!) } // TODO : 개선
-                .map { JsonUtil.fromJson(it, object : TypeReference<RoomPlaylistItemAddResponse>() {}) } // TODO : 개선
+                .map {
+                    JsonUtil.reDeserialize(it,
+                        object : TypeReference<WsResponse<RoomPlaylistItemAddResponse>>() {})
+                }
 
             assertAll(
-                { assertThat(responses.map { it.playlistId }).allMatch { it == request.playlistId } },
-                { assertThat(responses.map { it.videoId }).allMatch { it == request.videoId } },
-                { assertThat(responses.map { it.title }).allMatch { it == request.title } },
-                { assertThat(responses.map { it.thumbnail }).allMatch { it == request.thumbnail } },
-                { assertThat(responses.map { it.duration }).allMatch { it == request.duration } },
+                { assertThat(responses.map { it.type }).allMatch { it == WsResponseType.PLAYLIST_ITEM_ADD } },
+                { assertThat(responses.map { it.data!!.playlistId }).allMatch { it == request.playlistId } },
+                { assertThat(responses.map { it.data!!.videoId }).allMatch { it == request.videoId } },
+                { assertThat(responses.map { it.data!!.title }).allMatch { it == request.title } },
+                { assertThat(responses.map { it.data!!.thumbnail }).allMatch { it == request.thumbnail } },
+                { assertThat(responses.map { it.data!!.duration }).allMatch { it == request.duration } },
             )
         }
+    }
+
+    fun `재생목록 항목 추가되지 않음`(futures: CompletableFuture<WsResponse<*>>) {
+        val response = futures.get(5, TimeUnit.SECONDS)
+
+        assertAll(
+            { assertThat(response.type).isEqualTo(WsResponseType.ERROR) },
+            { assertThat(response.code).isEqualTo(ErrorCode.FORBIDDEN.code) },
+            { assertThat(response.message).isEqualTo(ErrorCode.FORBIDDEN.message) },
+        )
     }
 }

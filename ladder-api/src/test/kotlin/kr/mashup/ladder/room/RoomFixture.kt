@@ -1,5 +1,6 @@
 package kr.mashup.ladder.room
 
+import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
@@ -29,6 +30,13 @@ class RoomFixture {
                 title = "라일락",
                 duration = 229,
                 thumbnail = "https://i.ytimg.com/vi/LqfimuFAFJ8/maxresdefault.jpg"
+            )
+        }
+
+        fun `방 재생목록 항목 신청 승인 요청값`(playlistId: Long, playlistItemId: Long): RoomAcceptPlaylistItemRequestRequest {
+            return RoomAcceptPlaylistItemRequestRequest(
+                playlistId = playlistId,
+                playlistItemId = playlistItemId,
             )
         }
     }
