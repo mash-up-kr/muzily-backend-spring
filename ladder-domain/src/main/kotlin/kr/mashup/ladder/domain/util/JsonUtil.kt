@@ -26,4 +26,10 @@ object JsonUtil {
     fun <T> fromJson(content: String, valueTypeRef: TypeReference<T>): T {
         return objectMapper.readValue(content, valueTypeRef)
     }
+
+    // TODO : 개선
+    fun <T> reDeserialize(value: Any, valueTypeRef: TypeReference<T>): T {
+        val content = objectMapper.writeValueAsString(value)
+        return objectMapper.readValue(content, valueTypeRef)
+    }
 }

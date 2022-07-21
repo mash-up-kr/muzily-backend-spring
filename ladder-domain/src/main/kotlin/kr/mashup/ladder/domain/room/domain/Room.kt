@@ -1,6 +1,7 @@
 package kr.mashup.ladder.domain.room.domain
 
 import kr.mashup.ladder.domain.common.domain.BaseEntity
+import kr.mashup.ladder.domain.common.error.model.ForbiddenException
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Embedded
@@ -32,6 +33,12 @@ class Room(
 
     fun isCreator(memberId: Long): Boolean {
         return this.memberId == memberId
+    }
+
+    fun validateCreator(memberId: Long) {
+        if (!isCreator(memberId)) {
+            throw ForbiddenException("멤버($memberId)는 방($id)의 방장이 아닙니다")
+        }
     }
 
     fun update(description: String) {

@@ -3,14 +3,14 @@ package kr.mashup.ladder.playlist.dto
 import kr.mashup.ladder.domain.playlist.domain.Playlist
 
 data class PlaylistDto(
-    val playlistId: Long,
+    val id: Long,
     val roomId: Long,
     val playlistItems: List<PlaylistItemDto>,
 ) {
     companion object {
         fun of(playlist: Playlist): PlaylistDto {
             return PlaylistDto(
-                playlistId = playlist.id,
+                id = playlist.id,
                 roomId = playlist.roomId,
                 playlistItems = playlist.getAcceptedItems().map { PlaylistItemDto.of(it) }
             )

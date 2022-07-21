@@ -1,14 +1,16 @@
 package kr.mashup.ladder.playlist.service
 
-import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlist.domain.PlaylistNotFoundException
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
+import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemNotFoundException
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemRepository
-import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemStatus
+import kr.mashup.ladder.domain.room.domain.RoomNotFoundException
+import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.playlist.dto.PlaylistDto
 import kr.mashup.ladder.playlist.dto.PlaylistItemDto
-import kr.mashup.ladder.room.service.RoomAuthorizeCheckServiceHelper
-import kr.mashup.ladder.room.service.RoomService
+import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
+import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
+import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -17,27 +19,52 @@ import org.springframework.transaction.annotation.Transactional
 class PlaylistService(
     private val playlistRepository: PlaylistRepository,
     private val playlistItemRepository: PlaylistItemRepository,
-    private val roomService: RoomService,
+    private val roomRepository: RoomRepository,
 ) {
     @Transactional(readOnly = true)
-    fun getPlaylist(playlistId: Long): PlaylistDto {
-        val playlist = findPlaylistById(playlistId)
+    fun findById(playlistId: Long): PlaylistDto {
+        val playlist = playlistRepository.findByIdOrNull(playlistId) ?: throw PlaylistNotFoundException("$playlistId")
         return PlaylistDto.of(playlist)
     }
 
     @Transactional(readOnly = true)
     fun findPendingItems(playlistId: Long, memberId: Long): List<PlaylistItemDto> {
-        val playlist = findPlaylistById(playlistId)
-        val room = roomService.findRoomById(playlist.roomId)
-        RoomAuthorizeCheckServiceHelper.validateIsRoomCreator(room, memberId)
-        val items = playlistItemRepository.findAllByPlaylistIdAndStatusIs(
-            playlist.id,
-            PlaylistItemStatus.PENDING)
-        return items.map { PlaylistItemDto.of(it) }
+        val playlist = playlistRepository.findByIdOrNull(playlistId) ?: throw PlaylistNotFoundException("$playlistId")
+        val room = roomRepository.findByIdOrNull(playlist.roomId) ?: throw RoomNotFoundException("${playlist.roomId}")
+        room.validateCreator(memberId)
+        val pendingItems = playlist.getPendingItems()
+        return pendingItems.map { PlaylistItemDto.of(it) }
     }
 
-    private fun findPlaylistById(playlistId: Long): Playlist {
-        return playlistRepository.findByIdOrNull(playlistId)
-            ?: throw PlaylistNotFoundException("해당하는 재생목록(${playlistId})이 존재하지 않습니다")
+    @Transactional
+    fun addItemRequest(request: RoomSendPlaylistItemRequestRequest): PlaylistItemDto {
+        val playlist = playlistRepository.findByIdOrNull(request.playlistId)
+            ?: throw PlaylistNotFoundException("${request.playlistId}")
+        val item = playlistItemRepository.save(request.toEntity(playlist))
+        return PlaylistItemDto.of(item)
+    }
+
+    @Transactional
+    fun acceptItemRequest(memberId: Long, request: RoomAcceptPlaylistItemRequestRequest): PlaylistItemDto {
+        val playlist = playlistRepository.findByIdOrNull(request.playlistId)
+            ?: throw PlaylistNotFoundException("${request.playlistId}")
+        val room = roomRepository.findByIdOrNull(playlist.roomId)
+            ?: throw RoomNotFoundException("${playlist.roomId}")
+        room.validateCreator(memberId)
+        val item = playlistItemRepository.findByIdOrNull(request.playlistItemId)
+            ?: throw PlaylistItemNotFoundException("${request.playlistItemId}")
+        item.accept()
+        return PlaylistItemDto.of(item)
+    }
+
+    @Transactional
+    fun addItem(memberId: Long, request: RoomAddPlaylistItemRequest): PlaylistItemDto {
+        val playlist = playlistRepository.findByIdOrNull(request.playlistId)
+            ?: throw PlaylistNotFoundException("${request.playlistId}")
+        val room = roomRepository.findByIdOrNull(playlist.roomId)
+            ?: throw RoomNotFoundException("${playlist.roomId}")
+        room.validateCreator(memberId)
+        val item = playlistItemRepository.save(request.toEntity(playlist))
+        return PlaylistItemDto.of(item)
     }
 }
