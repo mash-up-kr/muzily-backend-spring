@@ -23,7 +23,7 @@ class RoomPlaylistItemRequestMessageReceiveEventListener(
     fun handle(event: RoomPlaylistItemRequestMessageReceiveEvent) {
         val room = roomService.findRoomById(event.roomId)
         val item = playlistItemRepository.findByIdOrNull(event.playlistItemId) ?: throw IllegalStateException()
-        val principal = WsMemberPrincipalContext.get(room.memberId)
+        val principal = WsMemberPrincipalContext.get(room.getCreator())
         val payload = WsResponse.ok(WsResponseType.PLAYLIST_ITEM_REQUEST, RoomPlaylistItemRequestResponse.of(item))
         simpMessagingTemplate.convertAndSendToUser(principal!!.name, "$WS_DESTINATION_PREFIX_QUEUE", payload)
     }

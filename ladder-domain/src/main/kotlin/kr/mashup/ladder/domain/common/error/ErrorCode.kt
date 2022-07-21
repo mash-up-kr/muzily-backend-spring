@@ -39,6 +39,7 @@ enum class ErrorCode(
         message = "이미 생성한 방이 존재합니다. 1개의 방만 생성할 수 있습니다",
         shouldLog = false
     ),
+    ROOM_MEMBER_CONFLICT(status = 409, code = "R003", message = "해당 방에 이미 참여하고 있습니다", shouldLog = false),
 
     // playlist
     PLAYLIST_NOT_FOUND(status = 404, code = "P001", message = "해당하는 재생목록이 존재하지 않습니다", shouldLog = false),

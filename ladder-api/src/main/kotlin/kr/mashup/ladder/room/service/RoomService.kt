@@ -4,84 +4,59 @@ import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
 import kr.mashup.ladder.domain.room.domain.Room
 import kr.mashup.ladder.domain.room.domain.RoomConflictException
-import kr.mashup.ladder.domain.room.domain.RoomMessage
-import kr.mashup.ladder.domain.room.domain.RoomMessagePublisher
-import kr.mashup.ladder.domain.room.domain.RoomMessageType
 import kr.mashup.ladder.domain.room.domain.RoomNotFoundException
-import kr.mashup.ladder.domain.room.domain.RoomTopic
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
-import kr.mashup.ladder.playlist.service.PlaylistService
-import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
-import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
-import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
-import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
-import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
 import kr.mashup.ladder.room.dto.response.RoomDetailInfoResponse
-import kr.mashup.ladder.room.dto.response.RoomInfoResponse
-import kr.mashup.ladder.room.service.RoomAuthorizeCheckServiceHelper.validateIsRoomCreator
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class RoomService(
     private val roomRepository: RoomRepository,
-    private val roomMessagePublisher: RoomMessagePublisher,
     private val playlistRepository: PlaylistRepository,
-    private val playlistService: PlaylistService,
 ) {
 
     @Transactional
     fun create(request: RoomCreateRequest, memberId: Long): RoomDetailInfoResponse {
-        validateNotExistsCreatedRoom(memberId)
-        val room = roomRepository.save(request.toEntity(accountId = memberId))
-        val playlist = playlistRepository.save(Playlist(room.id))
-        return RoomDetailInfoResponse.of(room, playlist.id)
-    }
-
-    private fun validateNotExistsCreatedRoom(accountId: Long) {
-        if (roomRepository.existsRoomByMemberId(accountId)) {
-            throw RoomConflictException("계정($accountId)은 이미 등록한 방이 있습니다")
+        if (roomRepository.existsRoomByMemberId(memberId)) {
+            throw RoomConflictException("멤버($memberId)은 이미 등록한 방이 있습니다 멤버 당 1개의 방만 생성할 수 있습니다")
         }
+        val room = roomRepository.save(request.toEntity(memberId = memberId))
+        val playlist = playlistRepository.save(Playlist(room.id))
+        return RoomDetailInfoResponse.of(room = room, playlistId = playlist.id, memberId = memberId)
     }
 
     @Transactional
     fun update(roomId: Long, request: RoomUpdateRequest, memberId: Long): RoomDetailInfoResponse {
         val room = findRoomById(roomId)
-        validateIsRoomCreator(room = room, memberId = memberId)
+        room.validateCreator(memberId)
         room.update(request.description)
         room.updateMoods(request.moods)
         val playlist = playlistRepository.findByRoomId(room.id)
-        return RoomDetailInfoResponse.of(room, playlist.id)
+        return RoomDetailInfoResponse.of(room = room, playlistId = playlist.id, memberId = memberId)
     }
 
     @Transactional(readOnly = true)
     fun getMyRooms(memberId: Long): List<RoomDetailInfoResponse> {
         val rooms: List<Room> = roomRepository.findRoomsByMemberId(memberId)
         val playlists = playlistRepository.findByRoomIdIn(rooms.map { it.id })
-        return RoomDetailInfoResponse.of(rooms, playlists)
+        return RoomDetailInfoResponse.of(rooms = rooms, playlists = playlists, memberId = memberId)
     }
 
     @Transactional(readOnly = true)
-    fun getRoom(roomId: Long): RoomDetailInfoResponse {
+    fun getRoom(roomId: Long, memberId: Long): RoomDetailInfoResponse {
         val room = findRoomById(roomId)
-        // TODO: 방에 참여중인 멤버인지 권한 체크 추가
+        room.validateParticipant(memberId = memberId)
         val playlist = playlistRepository.findByRoomId(room.id)
-        return RoomDetailInfoResponse.of(room, playlist.id)
-    }
-
-    @Transactional(readOnly = true)
-    fun getByInvitationKey(invitationKey: String): RoomInfoResponse {
-        val room = roomRepository.findRoomByInvitationKey(invitationKey)
-            ?: throw RoomNotFoundException("해당하는 초대장(${invitationKey})에 해당하는 방은 존재하지 않습니다")
-        return RoomInfoResponse.from(room)
+        return RoomDetailInfoResponse.of(room, playlist.id, memberId)
     }
 
     @Transactional
     fun deleteRoom(roomId: Long, memberId: Long) {
         val room = findRoomById(roomId)
-        validateIsRoomCreator(room = room, memberId = memberId)
+        room.validateCreator(memberId)
         room.delete()
     }
 
@@ -90,41 +65,4 @@ class RoomService(
             ?: throw RoomNotFoundException("해당하는 방(${roomId})이 존재하지 않습니다")
     }
 
-    fun sendChat(roomId: Long, request: RoomSendChatRequest) {
-        roomMessagePublisher.publish(
-            RoomTopic(roomId),
-            RoomMessage(RoomMessageType.CHAT, request.toMessage(roomId))
-        )
-    }
-
-    fun sendEmoji(roomId: Long, request: RoomSendEmojiRequest) {
-        roomMessagePublisher.publish(
-            RoomTopic(roomId),
-            RoomMessage(RoomMessageType.EMOJI, request.toMessage(roomId))
-        )
-    }
-
-    fun sendPlaylistItemRequest(roomId: Long, request: RoomSendPlaylistItemRequestRequest) {
-        val item = playlistService.addItemRequest(request)
-        roomMessagePublisher.publish(
-            RoomTopic(roomId),
-            RoomMessage(RoomMessageType.PLAYLIST_ITEM_REQUEST, request.toMessage(roomId, item.id))
-        )
-    }
-
-    fun acceptPlaylistItemRequest(roomId: Long, memberId: Long, request: RoomAcceptPlaylistItemRequestRequest) {
-        playlistService.acceptItemRequest(memberId, request)
-        roomMessagePublisher.publish(
-            RoomTopic(roomId),
-            RoomMessage(RoomMessageType.PLAYLIST_ITEM_ADD, request.toMessage(roomId))
-        )
-    }
-
-    fun addPlaylistItem(roomId: Long, memberId: Long, request: RoomAddPlaylistItemRequest) {
-        val item = playlistService.addItem(memberId, request)
-        roomMessagePublisher.publish(
-            RoomTopic(roomId),
-            RoomMessage(RoomMessageType.PLAYLIST_ITEM_ADD, request.toMessage(roomId, item.id))
-        )
-    }
 }

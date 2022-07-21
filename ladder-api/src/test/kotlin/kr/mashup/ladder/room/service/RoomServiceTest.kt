@@ -8,9 +8,11 @@ import kr.mashup.ladder.domain.room.domain.InvitationKey
 import kr.mashup.ladder.domain.room.domain.Room
 import kr.mashup.ladder.domain.room.domain.RoomConflictException
 import kr.mashup.ladder.domain.room.domain.RoomMood
-import kr.mashup.ladder.domain.room.domain.RoomMoodRepository
 import kr.mashup.ladder.domain.room.domain.RoomNotFoundException
+import kr.mashup.ladder.domain.room.domain.RoomRole
 import kr.mashup.ladder.domain.room.domain.RoomStatus
+import kr.mashup.ladder.domain.room.infra.jpa.RoomMemberMapperRepository
+import kr.mashup.ladder.domain.room.infra.jpa.RoomMoodRepository
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
@@ -21,6 +23,7 @@ import org.junit.jupiter.api.Test
 internal class RoomServiceTest(
     private val roomService: RoomService,
     private val roomRepository: RoomRepository,
+    private val roomMemberMapperRepository: RoomMemberMapperRepository,
     private val roomMoodRepository: RoomMoodRepository,
     private val playlistRepository: PlaylistRepository,
 ) : SetupMemberIntegrationTest() {
@@ -39,8 +42,46 @@ internal class RoomServiceTest(
         // then
         val rooms = roomRepository.findAll()
         assertThat(rooms).hasSize(1)
-        assertRoom(room = rooms[0], description = request.description, memberId = member.id)
+        assertRoom(room = rooms[0], description = request.description)
         assertThat(rooms[0].invitationKey).isNotNull
+    }
+
+    @Test
+    fun `새로운 방을 생성하면 해당 멤버는 방의 방장이 된다`() {
+        // given
+        val request = RoomCreateRequest(
+            description = "방에 대한 설명",
+            moods = setOf("잔잔한", "댄스", "팝송"),
+        )
+
+        // when
+        roomService.create(request, memberId = member.id)
+
+        // then
+        val rooms = roomRepository.findAll()
+        assertThat(rooms).hasSize(1)
+
+        val participants = roomMemberMapperRepository.findAll()
+        assertThat(participants).hasSize(1)
+        assertThat(participants[0].room.id).isEqualTo(rooms[0].id)
+        assertThat(participants[0].memberId).isEqualTo(member.id)
+        assertThat(participants[0].role).isEqualTo(RoomRole.CREATOR)
+    }
+
+    @Test
+    fun `방을 생성할떄, 분위기 정보도 함께 생성한다`() {
+        // given
+        val request = RoomCreateRequest(
+            description = "방에 대한 설명",
+            moods = setOf("잔잔한", "댄스", "팝송"),
+        )
+
+        // when
+        roomService.create(request, memberId = member.id)
+
+        // then
+        val rooms = roomRepository.findAll()
+        assertThat(rooms).hasSize(1)
 
         val moods = roomMoodRepository.findAll()
         assertThat(moods).hasSize(3)
@@ -50,13 +91,29 @@ internal class RoomServiceTest(
     }
 
     @Test
+    fun `방을 생성할때, 방에 플레이리스트가 생성된다`() {
+        // given
+        val request = RoomCreateRequest(
+            description = "방에 대한 설명",
+        )
+
+        // when
+        roomService.create(request, memberId = member.id)
+
+        // then
+        val playlists = playlistRepository.findAll()
+        assertThat(playlists).hasSize(1)
+        assertThat(playlists[0].roomId).isNotNull
+    }
+
+    @Test
     fun `하나의 계정으로 하나의 방만 생성할 수 있다`() {
         // given
         val room = Room(
-            memberId = member.id,
             description = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
         )
+        room.addCreator(member.id)
         roomRepository.save(room)
 
         val request = RoomCreateRequest(
@@ -74,10 +131,10 @@ internal class RoomServiceTest(
     fun `방에 대한 정보를 수정합니다`() {
         // given
         val room = Room(
-            memberId = member.id,
             description = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
         )
+        room.addCreator(member.id)
         room.updateMoods(setOf("분위기 좋은 노래", "잔잔한"))
         val savedRoom = roomRepository.save(room)
         playlistRepository.save(Playlist(savedRoom.id))
@@ -93,8 +150,33 @@ internal class RoomServiceTest(
         // then
         val rooms = roomRepository.findAll()
         assertThat(rooms).hasSize(1)
-        assertRoom(room = rooms[0], description = request.description, memberId = member.id)
+        assertRoom(room = rooms[0], description = request.description)
         assertThat(rooms[0].invitationKey).isNotNull
+    }
+
+    @Test
+    fun `방의 분위기 정보를 수정한다`() {
+        // given
+        val room = Room(
+            description = "방에 대한 설명",
+            invitationKey = InvitationKey.newInstance(),
+        )
+        room.addCreator(member.id)
+        room.updateMoods(setOf("분위기 좋은 노래", "잔잔한"))
+        val savedRoom = roomRepository.save(room)
+        playlistRepository.save(Playlist(savedRoom.id))
+
+        val request = RoomUpdateRequest(
+            description = "변경 된 방에 대한 설명",
+            moods = setOf("잔잔한", "댄스")
+        )
+
+        // when
+        roomService.update(roomId = room.id, request = request, memberId = member.id)
+
+        // then
+        val rooms = roomRepository.findAll()
+        assertThat(rooms).hasSize(1)
 
         val moods = roomMoodRepository.findAll()
         assertThat(moods).hasSize(2)
@@ -124,10 +206,10 @@ internal class RoomServiceTest(
         val isNotOwnerId = -1L
 
         val room = Room(
-            memberId = member.id,
             description = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance()
         )
+        room.addCreator(member.id)
         roomRepository.save(room)
 
         val request = RoomUpdateRequest(
@@ -145,11 +227,11 @@ internal class RoomServiceTest(
     fun `삭제된 가게에 대해서 수정할 수 없다`() {
         // given
         val room = Room(
-            memberId = member.id,
             description = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
             status = RoomStatus.DELETED,
         )
+        room.addCreator(member.id)
         roomRepository.save(room)
 
         val request = RoomUpdateRequest(
@@ -167,10 +249,10 @@ internal class RoomServiceTest(
     fun `방을 삭제한다`() {
         // given
         val room = Room(
-            memberId = member.id,
             description = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
         )
+        room.addCreator(member.id)
         room.updateMoods(setOf("분위기 좋은 노래", "잔잔한"))
         roomRepository.save(room)
 
@@ -181,7 +263,7 @@ internal class RoomServiceTest(
         val rooms = roomRepository.findAll()
         assertThat(rooms).hasSize(1)
         assertThat(rooms[0].status).isEqualTo(RoomStatus.DELETED)
-        assertRoom(room = rooms[0], description = room.description, memberId = member.id)
+        assertRoom(room = rooms[0], description = room.description)
         assertThat(rooms[0].invitationKey).isNotNull
 
         val moods = roomMoodRepository.findAll()
@@ -196,10 +278,10 @@ internal class RoomServiceTest(
         val isNotOwnerId = -1L
 
         val room = Room(
-            memberId = member.id,
             description = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance()
         )
+        room.addCreator(member.id)
         roomRepository.save(room)
 
         // when & then
@@ -212,11 +294,11 @@ internal class RoomServiceTest(
     fun `삭제된 가게에 대해서 삭제할 수 없다`() {
         // given
         val room = Room(
-            memberId = member.id,
             description = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
             status = RoomStatus.DELETED,
         )
+        room.addCreator(member.id)
         roomRepository.save(room)
 
         // when & then
@@ -225,9 +307,8 @@ internal class RoomServiceTest(
         }.isInstanceOf(RoomNotFoundException::class.java)
     }
 
-    private fun assertRoom(room: Room, memberId: Long, description: String) {
+    private fun assertRoom(room: Room, description: String) {
         assertThat(room.description).isEqualTo(description)
-        assertThat(room.memberId).isEqualTo(memberId)
     }
 
     private fun assertMood(mood: RoomMood, name: String, roomId: Long) {
