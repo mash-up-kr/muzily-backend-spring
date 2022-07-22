@@ -1,7 +1,7 @@
 package kr.mashup.ladder.domain.playlistitem.domain
 
-import kr.mashup.ladder.domain.common.error.ErrorCode
-import kr.mashup.ladder.domain.common.error.model.LadderBaseException
+import kr.mashup.ladder.domain.common.exception.ErrorCode
+import kr.mashup.ladder.domain.common.exception.model.LadderBaseException
 
 data class PlaylistItemNotFoundException(
     override val message: String,

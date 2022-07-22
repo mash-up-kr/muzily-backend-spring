@@ -1,8 +1,8 @@
 package kr.mashup.ladder.auth.service
 
 import kr.mashup.ladder.auth.dto.request.AuthRequest
-import kr.mashup.ladder.auth.external.KaKaoAuthApiClient
-import kr.mashup.ladder.auth.external.dto.response.KaKaoTokenResponse
+import kr.mashup.ladder.auth.external.kakao.KaKaoAuthApiClient
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoTokenResponse
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
 import kr.mashup.ladder.domain.member.domain.Member
 import kr.mashup.ladder.domain.member.domain.SocialType

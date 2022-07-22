@@ -6,7 +6,7 @@ import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
-import kr.mashup.ladder.room.service.RoomService
+import kr.mashup.ladder.room.service.RoomSocketService
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Controller
 
 @Controller
 class RoomWsController(
-    private val roomService: RoomService,
+    private val roomService: RoomSocketService,
 ) {
     @MessageMapping("/v1/rooms/{roomId}/send-chat")
     fun sendChat(

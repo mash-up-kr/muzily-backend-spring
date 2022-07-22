@@ -2,7 +2,7 @@ package kr.mashup.ladder.member.service
 
 import kr.mashup.ladder.IntegrationTest
 import kr.mashup.ladder.domain.member.domain.Member
-import kr.mashup.ladder.domain.member.domain.MemberNotFoundException
+import kr.mashup.ladder.domain.member.exception.MemberNotFoundException
 import kr.mashup.ladder.domain.member.infra.jpa.MemberRepository
 import kr.mashup.ladder.member.dto.request.UpdateMemberInfoRequest
 import org.assertj.core.api.Assertions.assertThat

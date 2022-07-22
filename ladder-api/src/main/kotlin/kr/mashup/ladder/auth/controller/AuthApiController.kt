@@ -3,9 +3,9 @@ package kr.mashup.ladder.auth.controller
 import io.swagger.annotations.ApiOperation
 import kr.mashup.ladder.auth.dto.request.AuthRequest
 import kr.mashup.ladder.auth.dto.response.LoginResponse
+import kr.mashup.ladder.auth.service.AnonymousAuthService
 import kr.mashup.ladder.auth.service.AuthService
 import kr.mashup.ladder.auth.service.AuthServiceFinder
-import kr.mashup.ladder.auth.service.GuestAuthService
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.resolver.MEMBER_ID
 import kr.mashup.ladder.domain.common.constants.ApiResponseConstants
@@ -18,11 +18,11 @@ import javax.validation.Valid
 @RestController
 class AuthApiController(
     private val authServiceFinder: AuthServiceFinder,
-    private val guestAuthService: GuestAuthService,
+    private val anonymousAuthService: AnonymousAuthService,
     private val httpSession: HttpSession,
 ) {
 
-    @ApiOperation("로그인/회원가입 API")
+    @ApiOperation("소셜 로그인/회원가입 API")
     @PostMapping("/api/v1/auth")
     fun handleAuthentication(
         @Valid @RequestBody request: AuthRequest,
@@ -36,7 +36,7 @@ class AuthApiController(
     @ApiOperation("익명 회원가입 API")
     @PostMapping("/api/v1/auth/anonymous")
     fun createAnonymousMember(): LoginResponse {
-        val memberId = guestAuthService.createAnonymousMember()
+        val memberId = anonymousAuthService.createAnonymousMember()
         httpSession.setAttribute(MEMBER_ID, memberId)
         return LoginResponse(token = httpSession.id)
     }

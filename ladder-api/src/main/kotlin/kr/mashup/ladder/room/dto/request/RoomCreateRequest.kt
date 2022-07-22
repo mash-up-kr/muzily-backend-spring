@@ -11,10 +11,10 @@ data class RoomCreateRequest(
     val moods: Set<String> = setOf(),
 ) {
 
-    fun toEntity(accountId: Long): Room {
+    fun toEntity(memberId: Long): Room {
         val rooms = Room.newInstance(
             description = description,
-            memberId = accountId
+            memberId = memberId
         )
         rooms.updateMoods(moods)
         return rooms

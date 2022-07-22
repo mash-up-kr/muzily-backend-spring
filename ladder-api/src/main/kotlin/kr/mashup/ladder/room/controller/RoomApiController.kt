@@ -3,11 +3,10 @@ package kr.mashup.ladder.room.controller
 import io.swagger.annotations.ApiOperation
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.annotation.MemberId
-import kr.mashup.ladder.domain.common.constants.ApiResponseConstants
+import kr.mashup.ladder.domain.common.constants.ApiResponseConstants.SUCCESS
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
 import kr.mashup.ladder.room.dto.response.RoomDetailInfoResponse
-import kr.mashup.ladder.room.dto.response.RoomInfoResponse
 import kr.mashup.ladder.room.service.RoomService
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -52,7 +51,7 @@ class RoomApiController(
         @MemberId memberId: Long,
     ): String {
         roomService.deleteRoom(roomId = roomId, memberId = memberId)
-        return ApiResponseConstants.SUCCESS
+        return SUCCESS
     }
 
     @ApiOperation("내가 생성한 방을 조회합니다 (계정에 연결된 사용자만 가능) (현재 기획상 리스트 1개를 반환)")
@@ -69,16 +68,9 @@ class RoomApiController(
     @GetMapping("/api/v1/rooms/{roomId}")
     fun getRoom(
         @PathVariable roomId: Long,
+        @MemberId memberId: Long,
     ): RoomDetailInfoResponse {
-        return roomService.getRoom(roomId = roomId)
-    }
-
-    @ApiOperation("방에 대한 초대장 정보를 조회합니다")
-    @GetMapping("/api/v1/rooms/invitation/{invitationKey}")
-    fun getRoomInvitationInfo(
-        @PathVariable invitationKey: String,
-    ): RoomInfoResponse {
-        return roomService.getByInvitationKey(invitationKey = invitationKey)
+        return roomService.getRoom(roomId = roomId, memberId = memberId)
     }
 
 }

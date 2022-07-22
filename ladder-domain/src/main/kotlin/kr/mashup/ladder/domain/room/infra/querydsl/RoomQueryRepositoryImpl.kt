@@ -2,6 +2,7 @@ package kr.mashup.ladder.domain.room.infra.querydsl
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import kr.mashup.ladder.domain.room.domain.QRoom.room
+import kr.mashup.ladder.domain.room.domain.QRoomMemberMapper.roomMemberMapper
 import kr.mashup.ladder.domain.room.domain.QRoomMood.roomMood
 import kr.mashup.ladder.domain.room.domain.Room
 import kr.mashup.ladder.domain.room.domain.RoomStatus
@@ -21,24 +22,28 @@ class RoomQueryRepositoryImpl(
     override fun existsRoomByMemberId(memberId: Long): Boolean {
         return queryFactory.selectOne()
             .from(room)
+            .innerJoin(roomMemberMapper)
+            .on(roomMemberMapper.room.id.eq(room.id))
             .where(
-                room.memberId.eq(memberId),
+                roomMemberMapper.memberId.eq(memberId),
                 room.status.eq(RoomStatus.ACTIVE),
             ).fetchFirst() != null
     }
 
     override fun findRoomsByMemberId(memberId: Long): List<Room> {
         return queryFactory.selectFrom(room)
-            .leftJoin(room.moods, roomMood).fetchJoin()
+            .innerJoin(room.participants, roomMemberMapper).fetchJoin()
+            .leftJoin(room.moods, roomMood)
             .where(
-                room.memberId.eq(memberId),
+                roomMemberMapper.memberId.eq(memberId),
                 room.status.eq(RoomStatus.ACTIVE),
             ).fetch()
     }
 
     override fun findRoomById(roomId: Long): Room? {
         return queryFactory.selectFrom(room)
-            .leftJoin(room.moods, roomMood).fetchJoin()
+            .innerJoin(room.participants, roomMemberMapper).fetchJoin()
+            .leftJoin(room.moods, roomMood)
             .where(
                 room.id.eq(roomId),
                 room.status.eq(RoomStatus.ACTIVE),

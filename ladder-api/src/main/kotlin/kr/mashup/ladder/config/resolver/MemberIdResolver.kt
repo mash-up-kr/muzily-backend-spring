@@ -1,7 +1,7 @@
 package kr.mashup.ladder.config.resolver
 
 import kr.mashup.ladder.config.annotation.MemberId
-import kr.mashup.ladder.domain.common.error.model.UnknownErrorException
+import kr.mashup.ladder.domain.common.exception.model.UnknownErrorException
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
