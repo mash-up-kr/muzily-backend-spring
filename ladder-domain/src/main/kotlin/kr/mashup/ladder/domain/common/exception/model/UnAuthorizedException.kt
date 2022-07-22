@@ -1,6 +1,6 @@
-package kr.mashup.ladder.domain.common.error.model
+package kr.mashup.ladder.domain.common.exception.model
 
-import kr.mashup.ladder.domain.common.error.ErrorCode
+import kr.mashup.ladder.domain.common.exception.ErrorCode
 
 /**
  * UnAuthorizedException

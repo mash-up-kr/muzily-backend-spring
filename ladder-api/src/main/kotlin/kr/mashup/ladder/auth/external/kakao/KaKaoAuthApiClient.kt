@@ -1,6 +1,6 @@
-package kr.mashup.ladder.auth.external
+package kr.mashup.ladder.auth.external.kakao
 
-import kr.mashup.ladder.auth.external.dto.response.KaKaoTokenResponse
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoTokenResponse
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
 
 interface KaKaoAuthApiClient {

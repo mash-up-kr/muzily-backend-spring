@@ -3,8 +3,8 @@ package kr.mashup.ladder.room.service
 import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
 import kr.mashup.ladder.domain.room.domain.Room
-import kr.mashup.ladder.domain.room.domain.RoomConflictException
-import kr.mashup.ladder.domain.room.domain.RoomNotFoundException
+import kr.mashup.ladder.domain.room.exception.RoomConflictException
+import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
@@ -31,7 +31,7 @@ class RoomService(
     @Transactional
     fun update(roomId: Long, request: RoomUpdateRequest, memberId: Long): RoomDetailInfoResponse {
         val room = findRoomById(roomId)
-        room.validateCreator(memberId)
+        room.validateCreator(memberId) // TODO: 권한 관리 방식 고려
         room.update(request.description)
         room.updateMoods(request.moods)
         val playlist = playlistRepository.findByRoomId(room.id)
@@ -50,7 +50,7 @@ class RoomService(
         val room = findRoomById(roomId)
         room.validateParticipant(memberId = memberId)
         val playlist = playlistRepository.findByRoomId(room.id)
-        return RoomDetailInfoResponse.of(room, playlist.id, memberId)
+        return RoomDetailInfoResponse.of(room = room, playlistId = playlist.id, memberId = memberId)
     }
 
     @Transactional

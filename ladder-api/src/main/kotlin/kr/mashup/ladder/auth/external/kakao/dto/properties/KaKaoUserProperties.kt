@@ -1,4 +1,4 @@
-package kr.mashup.ladder.auth.external.dto.properties
+package kr.mashup.ladder.auth.external.kakao.dto.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding

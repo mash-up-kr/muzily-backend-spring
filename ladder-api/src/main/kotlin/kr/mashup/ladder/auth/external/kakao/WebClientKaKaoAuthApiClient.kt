@@ -1,12 +1,12 @@
-package kr.mashup.ladder.auth.external
+package kr.mashup.ladder.auth.external.kakao
 
-import kr.mashup.ladder.auth.external.dto.error.InvalidKaKaoTokenException
-import kr.mashup.ladder.auth.external.dto.properties.KaKaoTokenProperties
-import kr.mashup.ladder.auth.external.dto.properties.KaKaoUserProperties
-import kr.mashup.ladder.auth.external.dto.response.KaKaoTokenResponse
+import kr.mashup.ladder.auth.model.exception.InvalidKaKaoTokenException
+import kr.mashup.ladder.auth.external.kakao.dto.properties.KaKaoTokenProperties
+import kr.mashup.ladder.auth.external.kakao.dto.properties.KaKaoUserProperties
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoTokenResponse
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
-import kr.mashup.ladder.domain.common.error.model.BadGatewayException
-import kr.mashup.ladder.domain.common.error.model.UnknownErrorException
+import kr.mashup.ladder.domain.common.exception.model.BadGatewayException
+import kr.mashup.ladder.domain.common.exception.model.UnknownErrorException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component

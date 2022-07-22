@@ -1,12 +1,12 @@
-package kr.mashup.ladder.domain.common.error.model
+package kr.mashup.ladder.domain.common.exception.model
 
-import kr.mashup.ladder.domain.common.error.ErrorCode
+import kr.mashup.ladder.domain.common.exception.ErrorCode
 
 /**
- * UnknownErrorException
+ * BadGatewayException
  * 500 InternalServer
  */
-data class UnknownErrorException(
+data class BadGatewayException(
     override val message: String,
     override val errorCode: ErrorCode = ErrorCode.UNKNOWN_ERROR,
 ) : LadderBaseException(message, errorCode)

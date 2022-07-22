@@ -1,6 +1,6 @@
 package kr.mashup.ladder.common.dto.response
 
-import kr.mashup.ladder.domain.common.error.ErrorCode
+import kr.mashup.ladder.domain.common.exception.ErrorCode
 
 data class ErrorResponse<T>(
     val code: String = "",

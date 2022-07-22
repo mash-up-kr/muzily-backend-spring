@@ -1,14 +1,14 @@
 package kr.mashup.ladder.room.service
 
 import kr.mashup.ladder.SetupMemberIntegrationTest
-import kr.mashup.ladder.domain.common.error.model.ForbiddenException
+import kr.mashup.ladder.domain.common.exception.model.ForbiddenException
 import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
 import kr.mashup.ladder.domain.room.domain.InvitationKey
 import kr.mashup.ladder.domain.room.domain.Room
-import kr.mashup.ladder.domain.room.domain.RoomConflictException
+import kr.mashup.ladder.domain.room.exception.RoomConflictException
 import kr.mashup.ladder.domain.room.domain.RoomMood
-import kr.mashup.ladder.domain.room.domain.RoomNotFoundException
+import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.domain.RoomRole
 import kr.mashup.ladder.domain.room.domain.RoomStatus
 import kr.mashup.ladder.domain.room.infra.jpa.RoomMemberMapperRepository

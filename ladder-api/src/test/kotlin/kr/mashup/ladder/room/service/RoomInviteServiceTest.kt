@@ -3,7 +3,7 @@ package kr.mashup.ladder.room.service
 import kr.mashup.ladder.SetupMemberIntegrationTest
 import kr.mashup.ladder.domain.room.domain.InvitationKey
 import kr.mashup.ladder.domain.room.domain.Room
-import kr.mashup.ladder.domain.room.domain.RoomMemberConflictException
+import kr.mashup.ladder.domain.room.exception.RoomMemberConflictException
 import kr.mashup.ladder.domain.room.domain.RoomRole
 import kr.mashup.ladder.domain.room.infra.jpa.RoomMemberMapperRepository
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository

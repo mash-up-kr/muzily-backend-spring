@@ -1,7 +1,8 @@
 package kr.mashup.ladder.domain.room.domain
 
 import kr.mashup.ladder.domain.common.domain.BaseEntity
-import kr.mashup.ladder.domain.common.error.model.ForbiddenException
+import kr.mashup.ladder.domain.common.exception.model.ForbiddenException
+import kr.mashup.ladder.domain.room.exception.RoomMemberConflictException
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Embedded

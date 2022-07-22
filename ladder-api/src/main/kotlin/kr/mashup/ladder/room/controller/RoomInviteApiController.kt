@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class RoomInviteController(
+class RoomInviteApiController(
     private val roomInviteService: RoomInviteService,
 ) {
 

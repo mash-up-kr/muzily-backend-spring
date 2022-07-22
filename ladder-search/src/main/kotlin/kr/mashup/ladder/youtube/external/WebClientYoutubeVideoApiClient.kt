@@ -1,12 +1,12 @@
 package kr.mashup.ladder.youtube.external
 
 import kotlinx.coroutines.reactor.awaitSingle
-import kr.mashup.ladder.domain.common.error.model.BadGatewayException
-import kr.mashup.ladder.youtube.external.dto.error.YoutubeVideoNotFoundException
+import kr.mashup.ladder.domain.common.exception.model.BadGatewayException
+import kr.mashup.ladder.youtube.model.exception.YoutubeVideoNotFoundException
 import kr.mashup.ladder.youtube.external.dto.properties.YoutubeVideoApiProperties
 import kr.mashup.ladder.youtube.external.dto.response.YoutubeVideoListResponse
 import kr.mashup.ladder.youtube.external.dto.response.YoutubeVideoResponse
-import kr.mashup.ladder.youtube.external.dto.type.YoutubeVideoCategory
+import kr.mashup.ladder.youtube.model.YoutubeVideoCategory
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.util.UriComponentsBuilder

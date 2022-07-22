@@ -4,8 +4,8 @@ import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import kr.mashup.ladder.IntegrationTest
 import kr.mashup.ladder.auth.dto.request.AuthRequest
-import kr.mashup.ladder.auth.external.KaKaoAuthApiClient
-import kr.mashup.ladder.auth.external.dto.response.KaKaoTokenResponse
+import kr.mashup.ladder.auth.external.kakao.KaKaoAuthApiClient
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoTokenResponse
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoAccountResponse
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoProfileResponse

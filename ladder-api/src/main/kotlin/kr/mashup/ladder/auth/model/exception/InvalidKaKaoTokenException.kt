@@ -1,7 +1,7 @@
-package kr.mashup.ladder.auth.external.dto.error
+package kr.mashup.ladder.auth.model.exception
 
-import kr.mashup.ladder.domain.common.error.ErrorCode
-import kr.mashup.ladder.domain.common.error.model.LadderBaseException
+import kr.mashup.ladder.domain.common.exception.ErrorCode
+import kr.mashup.ladder.domain.common.exception.model.LadderBaseException
 
 data class InvalidKaKaoTokenException(
     override val message: String,

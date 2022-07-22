@@ -7,8 +7,7 @@ import kr.mashup.ladder.domain.room.domain.emoji.RoomEmojiMessage
 import kr.mashup.ladder.domain.room.domain.emoji.RoomEmojiMessageRecieveEvent
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemAddMessage
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRequestMessage
-import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRequestMessageReceiveEvent
-import kr.mashup.ladder.domain.util.JsonUtil
+import kr.mashup.ladder.domain.common.util.JsonUtil
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.redis.connection.Message
 import org.springframework.data.redis.connection.MessageListener
