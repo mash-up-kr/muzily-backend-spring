@@ -21,8 +21,8 @@ class WsMemberPrincipalContextManageInterceptor : ChannelInterceptor {
         val memberId = accessor.sessionAttributes?.get(MEMBER_ID)?.toString()?.toLong() ?: throw IllegalStateException()
 
         when (accessor.command) {
-            StompCommand.CONNECT -> WsMemberPrincipalContext.put(memberId, accessor.user)
-            StompCommand.DISCONNECT -> WsMemberPrincipalContext.remove(memberId)
+            StompCommand.CONNECT -> WsMemberPrincipalContext.add(memberId, accessor.user)
+            StompCommand.DISCONNECT -> WsMemberPrincipalContext.remove(memberId, accessor.user)
             else -> {}
         }
 
