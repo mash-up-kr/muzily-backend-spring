@@ -17,8 +17,8 @@ import kr.mashup.ladder.config.ws.WS_DESTINATION_PREFIX_TOPIC
 import kr.mashup.ladder.config.ws.WS_ENDPOINT
 import kr.mashup.ladder.config.ws.WS_USER_DESTINATION_PREFIX
 import kr.mashup.ladder.domain.common.exception.ErrorCode
-import kr.mashup.ladder.domain.room.domain.emoji.EmojiType
 import kr.mashup.ladder.domain.common.util.JsonUtil
+import kr.mashup.ladder.domain.room.domain.emoji.EmojiType
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 생성 요청값`
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 재생목록 항목 신청 승인 요청값`
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 재생목록 항목 신청 요청값`
@@ -45,6 +45,7 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
 import org.springframework.web.socket.WebSocketHttpHeaders
 import java.lang.reflect.Type
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class RoomAcceptanceTest : AcceptanceTest() {
@@ -73,11 +74,27 @@ class RoomAcceptanceTest : AcceptanceTest() {
     }
 
     @Test
+    fun `방 참여자가 아닐 경우 방 구독을 할 수 없다`() {
+        // given
+        val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
+        val `익명 로그인 응답` = `익명 로그인되어 있음`()
+        val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
+        val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
+
+        // when
+        `방 구독 요청`(`익명 세션`, 방.roomId)
+
+        // then
+        `웹소켓 연결해제됨`(`익명 세션`)
+    }
+
+    @Test
     fun `방에 이모지를 보낸다`() {
         // given
         val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
         val `익명 로그인 응답` = `익명 로그인되어 있음`()
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
+        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitationKey)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         val futures = listOf(
@@ -97,6 +114,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
         val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
         val `익명 로그인 응답` = `익명 로그인되어 있음`()
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
+        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitationKey)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
@@ -117,6 +135,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
         val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
         val `익명 로그인 응답` = `익명 로그인되어 있음`()
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
+        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitationKey)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         val futures = listOf(
@@ -147,6 +166,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
         val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
         val `익명 로그인 응답` = `익명 로그인되어 있음`()
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
+        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitationKey)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
@@ -177,6 +197,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
         val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
         val `익명 로그인 응답` = `익명 로그인되어 있음`()
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
+        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitationKey)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         val futures = listOf(
@@ -197,6 +218,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
         val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
         val `익명 로그인 응답` = `익명 로그인되어 있음`()
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
+        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitationKey)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
@@ -245,6 +267,20 @@ class RoomAcceptanceTest : AcceptanceTest() {
             return `방 생성 요청`(token, request).`as`(RoomDetailInfoResponse::class.java)
         }
 
+        fun `방 입장 요청`(token: String, invitationKey: String): ExtractableResponse<Response> {
+            return RestAssured
+                .given().log().all()
+                .header(Header("Authorization", "Bearer $token"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .`when`().put("/api/v1/rooms/invitation/{invitationKey}", invitationKey)
+                .then().log().all()
+                .extract()
+        }
+
+        fun `방 입장되어 있음`(token: String, invitationKey: String) {
+            `방 입장 요청`(token, invitationKey)
+        }
+
         fun `웹소켓 연결되어 있음`(port: Int, token: String): StompSession {
             val stompHeaders = StompHeaders()
             stompHeaders.add("Authorization", "Bearer $token")
@@ -257,7 +293,18 @@ class RoomAcceptanceTest : AcceptanceTest() {
                 .get(5, TimeUnit.SECONDS)
         }
 
-        fun `방 구독되어 있음`(session: StompSession, roomId: Long): CompletableFuture<WsResponse<*>> {
+        fun `웹소켓 연결해제됨`(session: StompSession) {
+            val executor = Executors.newSingleThreadExecutor()
+            val future = executor.submit<Boolean> {
+                TimeUnit.SECONDS.sleep(5)
+                session.isConnected
+            }
+            executor.shutdown()
+            val isConnected = future.get()
+            assertThat(isConnected).isFalse
+        }
+
+        fun `방 구독 요청`(session: StompSession, roomId: Long): CompletableFuture<WsResponse<*>> {
             val future: CompletableFuture<WsResponse<*>> = CompletableFuture()
 
             session.subscribe(
@@ -273,6 +320,10 @@ class RoomAcceptanceTest : AcceptanceTest() {
                 })
 
             return future
+        }
+
+        fun `방 구독되어 있음`(session: StompSession, roomId: Long): CompletableFuture<WsResponse<*>> {
+            return `방 구독 요청`(session, roomId)
         }
 
         fun `이모지 보내기 요청`(session: StompSession, roomId: Long, emojiType: EmojiType) {
