@@ -18,18 +18,18 @@ import org.springframework.stereotype.Component
 class WsMemberPrincipalContextManageInterceptor : ChannelInterceptor {
     override fun preSend(message: Message<*>, channel: MessageChannel): Message<*>? {
         val accessor = StompHeaderAccessor.wrap(message)
-        val memberId = accessor.sessionAttributes?.get(MEMBER_ID)?.toString()?.toLong() ?: throw IllegalStateException()
-
         when (accessor.command) {
-            StompCommand.CONNECT -> WsMemberPrincipalContext.add(memberId, accessor.user)
-            StompCommand.DISCONNECT -> WsMemberPrincipalContext.remove(memberId, accessor.user)
+            StompCommand.CONNECT -> {
+                val memberId = accessor.getMemberIdFromSessionAttributes()
+                WsMemberPrincipalContext.add(memberId, accessor.user)
+            }
+            StompCommand.DISCONNECT -> {
+                val memberId = accessor.getMemberIdFromSessionAttributes()
+                WsMemberPrincipalContext.remove(memberId, accessor.user)
+            }
             else -> {}
         }
 
         return message
-    }
-
-    companion object {
-        private const val MEMBER_ID = "MEMBER_ID"
     }
 }
