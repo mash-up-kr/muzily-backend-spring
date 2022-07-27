@@ -13,7 +13,7 @@ import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
 import org.springframework.stereotype.Service
 
 @Service
-class RoomSocketService(
+class RoomWsService(
     private val playlistService: PlaylistService,
     private val roomMessagePublisher: RoomMessagePublisher,
 ) {

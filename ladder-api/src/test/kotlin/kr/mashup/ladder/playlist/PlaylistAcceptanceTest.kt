@@ -12,6 +12,7 @@ import kr.mashup.ladder.playlist.dto.PlaylistDto
 import kr.mashup.ladder.playlist.dto.PlaylistItemDto
 import kr.mashup.ladder.room.RoomAcceptanceTest.Companion.`방 구독되어 있음`
 import kr.mashup.ladder.room.RoomAcceptanceTest.Companion.`방 생성되어 있음`
+import kr.mashup.ladder.room.RoomAcceptanceTest.Companion.`방 입장되어 있음`
 import kr.mashup.ladder.room.RoomAcceptanceTest.Companion.`웹소켓 연결되어 있음`
 import kr.mashup.ladder.room.RoomAcceptanceTest.Companion.`재생목록 항목 신청되어 있음`
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 생성 요청값`
@@ -55,6 +56,7 @@ class PlaylistAcceptanceTest : AcceptanceTest() {
         val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
         val `익명 로그인 응답` = `익명 로그인되어 있음`()
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
+        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitationKey)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)

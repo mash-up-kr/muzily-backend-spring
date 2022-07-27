@@ -1,62 +1,56 @@
 package kr.mashup.ladder.config.interceptor
 
 import kr.mashup.ladder.config.context.WsRoomSessionContext
-import kr.mashup.ladder.config.ws.WS_DESTINATION_PREFIX_TOPIC
 import kr.mashup.ladder.domain.room.domain.RoomMessageSubscriber
 import kr.mashup.ladder.domain.room.domain.RoomTopic
+import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
+import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import org.springframework.data.redis.listener.RedisMessageListenerContainer
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
 import org.springframework.messaging.simp.stomp.StompCommand
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor
 import org.springframework.messaging.support.ChannelInterceptor
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 @Component
 class WsRoomSessionContextManageInterceptor(
     private val redisMessageListenerContainer: RedisMessageListenerContainer,
     private val roomMessageSubscriber: RoomMessageSubscriber,
+    private val roomRepository: RoomRepository,
 ) : ChannelInterceptor {
     /**
      * @link https://stackoverflow.com/questions/31634973/stomp-disconnects-its-processing-twice-in-channel-interceptor-and-simplebrokerme
      */
+    @Transactional(readOnly = true)
     override fun preSend(message: Message<*>, channel: MessageChannel): Message<*>? {
         val accessor = StompHeaderAccessor.wrap(message)
-        val destination = accessor.destination
-        val sessionId = accessor.sessionId!!
-        val command = accessor.command
-
         when {
-            command == StompCommand.SUBSCRIBE && destination.isRoom() -> {
-                val roomId = destination.getRoomId()
+            accessor.command == StompCommand.SUBSCRIBE && accessor.isDestinationRoom() -> {
+                val roomId = accessor.getRoomId()
+                val room = roomRepository.findByIdOrNull(roomId) ?: throw RoomNotFoundException("$roomId")
+                val memberId = accessor.getMemberIdFromSessionAttributes()
+                room.validateParticipant(memberId)
                 if (WsRoomSessionContext.isEmpty(roomId)) {
                     redisMessageListenerContainer.addMessageListener(roomMessageSubscriber, RoomTopic(roomId))
                 }
-                WsRoomSessionContext.add(roomId, sessionId)
+                WsRoomSessionContext.add(roomId, accessor.sessionId)
             }
-            command == StompCommand.UNSUBSCRIBE && destination.isRoom() -> {
-                val roomId = destination.getRoomId()
-                WsRoomSessionContext.remove(roomId, sessionId)
+            accessor.command == StompCommand.UNSUBSCRIBE && accessor.isDestinationRoom() -> {
+                val roomId = accessor.getRoomId()
+                WsRoomSessionContext.remove(roomId, accessor.sessionId)
                 if (WsRoomSessionContext.isEmpty(roomId)) {
                     redisMessageListenerContainer.removeMessageListener(roomMessageSubscriber, RoomTopic(roomId))
                 }
             }
-            command == StompCommand.DISCONNECT -> {
-                WsRoomSessionContext.remove(sessionId)
+            accessor.command == StompCommand.DISCONNECT -> {
+                WsRoomSessionContext.remove(accessor.sessionId)
             }
             else -> {}
         }
 
         return message
     }
-}
-
-private fun String?.isRoom(): Boolean {
-    return this?.matches(Regex("^${WS_DESTINATION_PREFIX_TOPIC}/v1/rooms/\\d+$")) ?: false
-}
-
-private fun String?.getRoomId(): Long {
-    this ?: throw IllegalArgumentException()
-    val roomIdStr = this.replace("${WS_DESTINATION_PREFIX_TOPIC}/v1/rooms/", "")
-    return roomIdStr.toLong()
 }

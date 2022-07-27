@@ -8,19 +8,31 @@ object WsRoomSessionContext {
         return sessionIds?.isEmpty() ?: true
     }
 
-    fun add(roomId: Long, sessionId: String) {
+    fun add(roomId: Long, sessionId: String?) {
+        if (sessionId == null) {
+            return
+        }
+
         val sessionIds = sessionIdsByRoomId.getOrDefault(roomId, mutableSetOf())
         sessionIds.add(sessionId)
         sessionIdsByRoomId[roomId] = sessionIds
     }
 
-    fun remove(roomId: Long, sessionId: String) {
+    fun remove(roomId: Long, sessionId: String?) {
+        if (sessionId == null) {
+            return
+        }
+
         val sessionIds = sessionIdsByRoomId.getOrDefault(roomId, mutableSetOf())
         sessionIds.remove(sessionId)
         sessionIdsByRoomId[roomId] = sessionIds
     }
 
-    fun remove(sessionId: String) {
+    fun remove(sessionId: String?) {
+        if (sessionId == null) {
+            return
+        }
+
         sessionIdsByRoomId.forEach { e -> e.value.remove(sessionId) }
     }
 }

@@ -6,7 +6,7 @@ import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
-import kr.mashup.ladder.room.service.RoomSocketService
+import kr.mashup.ladder.room.service.RoomWsService
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
@@ -14,14 +14,14 @@ import org.springframework.stereotype.Controller
 
 @Controller
 class RoomWsController(
-    private val roomService: RoomSocketService,
+    private val roomWsService: RoomWsService,
 ) {
     @MessageMapping("/v1/rooms/{roomId}/send-chat")
     fun sendChat(
         @DestinationVariable roomId: Long,
         @Payload request: RoomSendChatRequest,
     ) {
-        roomService.sendChat(roomId, request)
+        roomWsService.sendChat(roomId, request)
     }
 
     @MessageMapping("/v1/rooms/{roomId}/send-emoji")
@@ -29,7 +29,7 @@ class RoomWsController(
         @DestinationVariable roomId: Long,
         @Payload request: RoomSendEmojiRequest,
     ) {
-        roomService.sendEmoji(roomId, request)
+        roomWsService.sendEmoji(roomId, request)
     }
 
     @MessageMapping("/v1/rooms/{roomId}/send-playlist-item-request")
@@ -37,7 +37,7 @@ class RoomWsController(
         @DestinationVariable roomId: Long,
         @Payload request: RoomSendPlaylistItemRequestRequest,
     ) {
-        roomService.sendPlaylistItemRequest(roomId, request)
+        roomWsService.sendPlaylistItemRequest(roomId, request)
     }
 
     @MessageMapping("/v1/rooms/{roomId}/accept-playlist-item-request")
@@ -46,7 +46,7 @@ class RoomWsController(
         @MemberId memberId: Long,
         @Payload request: RoomAcceptPlaylistItemRequestRequest,
     ) {
-        roomService.acceptPlaylistItemRequest(roomId, memberId, request)
+        roomWsService.acceptPlaylistItemRequest(roomId, memberId, request)
     }
 
     @MessageMapping("/v1/rooms/{roomId}/add-playlist-item")
@@ -55,6 +55,6 @@ class RoomWsController(
         @MemberId memberId: Long,
         @Payload request: RoomAddPlaylistItemRequest,
     ) {
-        roomService.addPlaylistItem(roomId, memberId, request)
+        roomWsService.addPlaylistItem(roomId, memberId, request)
     }
 }

@@ -1,6 +1,6 @@
 package kr.mashup.ladder.config.interceptor
 
-import org.springframework.http.HttpHeaders
+import kr.mashup.ladder.config.resolver.MEMBER_ID
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
 import org.springframework.messaging.simp.stomp.StompCommand
@@ -16,30 +16,16 @@ class WsAuthInterceptor(
 ) : ChannelInterceptor {
     override fun preSend(message: Message<*>, channel: MessageChannel): Message<*>? {
         val accessor = StompHeaderAccessor.wrap(message)
-        if (accessor.command != StompCommand.CONNECT) {
-            return message
-        }
-
-        val header = accessor.getFirstNativeHeader(AUTHORIZATION_HEADER_KEY)
-        if (header.isNullOrBlank() || !header.startsWith(AUTHORIZATION_HEADER_VALUE_PREFIX)) {
-            throw IllegalArgumentException()
-        }
-
-        val sessionId = header.split(AUTHORIZATION_HEADER_VALUE_PREFIX)[1]
-        val memberId: Long = sessionRepository.findById(sessionId)?.getAttribute(MEMBER_ID)
-            ?: throw IllegalArgumentException()
-        if (accessor.sessionAttributes != null) {
-            accessor.sessionAttributes!![MEMBER_ID] = memberId
-        } else {
-            accessor.sessionAttributes = mutableMapOf<String, Any>(Pair(MEMBER_ID, memberId))
+        when (accessor.command) {
+            StompCommand.CONNECT -> {
+                val sessionId = accessor.getSessionIdFromHeader()
+                val memberId: Long = sessionRepository.findById(sessionId)?.getAttribute(MEMBER_ID)
+                    ?: throw IllegalArgumentException()
+                accessor.setMemberIdFromSessionAttributes(memberId)
+            }
+            else -> {}
         }
 
         return message
-    }
-
-    companion object {
-        private const val AUTHORIZATION_HEADER_KEY = HttpHeaders.AUTHORIZATION
-        private const val AUTHORIZATION_HEADER_VALUE_PREFIX = "Bearer "
-        private const val MEMBER_ID = "MEMBER_ID"
     }
 }
