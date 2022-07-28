@@ -2,6 +2,7 @@ package kr.mashup.ladder.config.interceptor
 
 import kr.mashup.ladder.config.context.WsRoomSessionContext
 import kr.mashup.ladder.domain.room.domain.RoomMessageSubscriber
+import kr.mashup.ladder.domain.room.domain.RoomRoleValidator.validateParticipant
 import kr.mashup.ladder.domain.room.domain.RoomTopic
 import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
@@ -32,7 +33,7 @@ class WsRoomSessionContextManageInterceptor(
                 val roomId = accessor.getRoomId()
                 val room = roomRepository.findByIdOrNull(roomId) ?: throw RoomNotFoundException("$roomId")
                 val memberId = accessor.getMemberIdFromSessionAttributes()
-                room.validateParticipant(memberId)
+                validateParticipant(room = room, memberId = memberId)
                 if (WsRoomSessionContext.isEmpty(roomId)) {
                     redisMessageListenerContainer.addMessageListener(roomMessageSubscriber, RoomTopic(roomId))
                 }

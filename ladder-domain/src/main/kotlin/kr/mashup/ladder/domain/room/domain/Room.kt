@@ -1,6 +1,7 @@
 package kr.mashup.ladder.domain.room.domain
 
 import kr.mashup.ladder.domain.common.domain.BaseEntity
+import kr.mashup.ladder.domain.room.domain.RoomRoleValidator.validateNotParticipant
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Embedded
@@ -36,12 +37,12 @@ class Room(
     }
 
     fun addCreator(memberId: Long) {
-        RoomRoleValidator.validateNotParticipant(room = this, memberId = memberId)
+        validateNotParticipant(room = this, memberId = memberId)
         this.participants.add(RoomMemberMapper.newAdmin(room = this, memberId = memberId))
     }
 
     fun addGuest(memberId: Long) {
-        RoomRoleValidator.validateNotParticipant(room = this, memberId = memberId)
+        validateNotParticipant(room = this, memberId = memberId)
         this.participants.add(RoomMemberMapper.newGuest(room = this, memberId = memberId))
     }
 

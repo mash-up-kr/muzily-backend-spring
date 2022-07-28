@@ -10,7 +10,7 @@ data class RoomDetailInfoResponse(
     val description: String,
     val invitationKey: String,
     val role: RoomRole?,
-    val participantsCount: Long = 0L, // TODO: 참여자 카운트 조회
+    val participantsCount: Int,
     val moods: List<RoomMoodResponse>,
     val playlistId: Long? = null,
 ) : BaseTimeResponse() {
@@ -22,6 +22,7 @@ data class RoomDetailInfoResponse(
                 description = room.description,
                 invitationKey = room.invitationKey.invitationKey,
                 role = room.getRole(memberId),
+                participantsCount = room.participants.size,
                 moods = moods.map { mood -> RoomMoodResponse.of(mood) },
                 playlistId = playlistId ?: -1L,
             )

@@ -8,7 +8,7 @@ data class RoomInfoResponse(
     val roomId: Long,
     val description: String,
     val role: RoomRole?,
-    val participantsCount: Long = 0L, // TODO: 참여자 카운트 조회
+    val participantsCount: Int,
 ) : BaseTimeResponse() {
 
     companion object {
@@ -17,6 +17,7 @@ data class RoomInfoResponse(
                 roomId = room.id,
                 description = room.description,
                 role = room.getRole(memberId),
+                participantsCount = room.participants.size,
             )
             response.setBaseTime(room)
             return response

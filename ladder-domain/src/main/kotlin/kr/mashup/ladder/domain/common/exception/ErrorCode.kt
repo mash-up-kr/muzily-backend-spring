@@ -19,7 +19,8 @@ enum class ErrorCode(
         status = 403,
         code = "C004",
         message = "익명 사용자는 사용할 수 없습니다.\n해당 기능은 회원가입 이후 사용하실 수 있습니다",
-        shouldLog = false),
+        shouldLog = false
+    ),
     NOT_FOUND(status = 404, code = "C005", message = "해당하는 리소스는 존재하지 않습니다", shouldLog = false),
     METHOD_NOT_ALLOWED(status = 405, code = "C006", message = "Method Not Allowed", shouldLog = false),
     CONFLICT(status = 409, code = "C007", message = "중복된 리소스가 존재합니다", shouldLog = false),
@@ -40,6 +41,7 @@ enum class ErrorCode(
         shouldLog = false
     ),
     ROOM_MEMBER_CONFLICT(status = 409, code = "R003", message = "해당 방에 이미 참여하고 있습니다", shouldLog = false),
+    CREATED_ROOM_MEMBER_NOT_FOUND(status = 404, code = "R004", message = "생성한 방이 없습니다", shouldLog = false),
 
     // playlist
     PLAYLIST_NOT_FOUND(status = 404, code = "P001", message = "해당하는 재생목록이 존재하지 않습니다", shouldLog = false),

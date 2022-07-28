@@ -20,9 +20,18 @@ Authorization: Bearer {{SESSION_ID}}
 {
     "description": "메쇼~쉬는탐",
     "moods": [
-        "분위기 좋은",
-        "신나는3",
-        "여행3"
+        {
+            "name": "분위기 좋은",
+            "emoji": "emoji"
+        },
+        {
+            "name": "신나는",
+            "emoji": "emoji"
+        },
+        {
+            "name": "여행",
+            "emoji": "emoji"
+        }
     ]
 }
 
@@ -36,9 +45,17 @@ Authorization: Bearer {{SESSION_ID}}
 GET {{api}}/api/v1/rooms
 Authorization: Bearer {{SESSION_ID}}
 
+> {%
+client.global.set("ROOM_ID", response.body["roomId"])
+%}
+
+
+### 방에 대한 상세 정보를 조회합니다
+GET {{api}}/api/v1/rooms/{{ROOM_ID}}
+Authorization: Bearer {{SESSION_ID}}
 
 > {%
-client.global.set("INVITATION_KEY", response.body[0]["invitationKey"])
+client.global.set("INVITATION_KEY", response.body["invitationKey"])
 %}
 
 

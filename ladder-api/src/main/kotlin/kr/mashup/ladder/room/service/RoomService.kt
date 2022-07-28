@@ -3,12 +3,15 @@ package kr.mashup.ladder.room.service
 import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
 import kr.mashup.ladder.domain.room.domain.Room
-import kr.mashup.ladder.domain.room.domain.RoomRoleValidator
+import kr.mashup.ladder.domain.room.domain.RoomRoleValidator.validateCreator
+import kr.mashup.ladder.domain.room.domain.RoomRoleValidator.validateParticipant
+import kr.mashup.ladder.domain.room.exception.CreatedRoomNotFoundException
 import kr.mashup.ladder.domain.room.exception.RoomConflictException
 import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
+import kr.mashup.ladder.room.dto.response.CreatedRoomResponse
 import kr.mashup.ladder.room.dto.response.RoomDetailInfoResponse
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -39,7 +42,7 @@ class RoomService(
     @Transactional
     fun update(roomId: Long, request: RoomUpdateRequest, memberId: Long): RoomDetailInfoResponse {
         val room = findRoomById(roomId)
-        RoomRoleValidator.validateCreator(room = room, memberId = memberId) // TODO: 권한 관리 방식 고려
+        validateCreator(room = room, memberId = memberId) // TODO: 권한 관리 방식 고려
         room.update(request.description)
 
         roomMoodService.updateRoomMoods(roomId = roomId, requests = request.moods)
@@ -54,39 +57,30 @@ class RoomService(
     }
 
     @Transactional(readOnly = true)
-    fun getMyRooms(memberId: Long): List<RoomDetailInfoResponse> {
-        val rooms: List<Room> = roomRepository.findRoomsByMemberId(memberId)
-        val playlists = playlistRepository.findByRoomIdIn(rooms.map { it.id })
-        val playlistByRoomId = playlists.associateBy { it.roomId }
-        val moodsGroupByRoomId = roomMoodService.getRoomMoodsMap(rooms.map { room -> room.id })
-
-        return rooms.map { room ->
-            RoomDetailInfoResponse.of(
-                room = room,
-                playlistId = playlistByRoomId[room.id]?.id,
-                memberId = memberId,
-                moods = moodsGroupByRoomId[room.id] ?: emptyList()
-            )
-        }
+    fun getMyCreatedRoom(memberId: Long): CreatedRoomResponse {
+        val roomId = roomRepository.findRoomIdByCreatorId(creatorId = memberId)
+            ?: throw CreatedRoomNotFoundException("멤버($memberId)가 생성한 방이 존재하지 않습니다")
+        return CreatedRoomResponse.of(roomId = roomId)
     }
 
     @Transactional(readOnly = true)
     fun getRoom(roomId: Long, memberId: Long): RoomDetailInfoResponse {
         val room = findRoomById(roomId)
-        RoomRoleValidator.validateParticipant(room = room, memberId = memberId)
+        validateParticipant(room = room, memberId = memberId)
         val playlist = playlistRepository.findByRoomId(room.id)
+        val moods = roomMoodService.getRoomMoods(room.id)
         return RoomDetailInfoResponse.of(
             room = room,
             playlistId = playlist.id,
             memberId = memberId,
-            moods = roomMoodService.getRoomMoods(room.id)
+            moods = moods,
         )
     }
 
     @Transactional
     fun deleteRoom(roomId: Long, memberId: Long) {
         val room = findRoomById(roomId)
-        RoomRoleValidator.validateCreator(room = room, memberId = memberId)
+        validateCreator(room = room, memberId = memberId)
         room.delete()
     }
 
