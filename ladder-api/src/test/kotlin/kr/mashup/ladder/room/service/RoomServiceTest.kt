@@ -6,15 +6,16 @@ import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
 import kr.mashup.ladder.domain.room.domain.InvitationKey
 import kr.mashup.ladder.domain.room.domain.Room
-import kr.mashup.ladder.domain.room.exception.RoomConflictException
 import kr.mashup.ladder.domain.room.domain.RoomMood
-import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.domain.RoomRole
 import kr.mashup.ladder.domain.room.domain.RoomStatus
+import kr.mashup.ladder.domain.room.exception.RoomConflictException
+import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomMemberMapperRepository
 import kr.mashup.ladder.domain.room.infra.jpa.RoomMoodRepository
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
+import kr.mashup.ladder.room.dto.request.RoomMoodRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -31,10 +32,7 @@ internal class RoomServiceTest(
     @Test
     fun `새로운 방을 생성한다`() {
         // given
-        val request = RoomCreateRequest(
-            description = "방에 대한 설명",
-            moods = setOf("잔잔한", "댄스", "팝송"),
-        )
+        val request = RoomCreateRequest(description = "방에 대한 설명")
 
         // when
         roomService.create(request, memberId = member.id)
@@ -49,10 +47,7 @@ internal class RoomServiceTest(
     @Test
     fun `새로운 방을 생성하면 해당 멤버는 방의 방장이 된다`() {
         // given
-        val request = RoomCreateRequest(
-            description = "방에 대한 설명",
-            moods = setOf("잔잔한", "댄스", "팝송"),
-        )
+        val request = RoomCreateRequest(description = "방에 대한 설명")
 
         // when
         roomService.create(request, memberId = member.id)
@@ -73,7 +68,10 @@ internal class RoomServiceTest(
         // given
         val request = RoomCreateRequest(
             description = "방에 대한 설명",
-            moods = setOf("잔잔한", "댄스", "팝송"),
+            moods = setOf(
+                RoomMoodRequest(name = "잔잔한", emoji = "emoji1"),
+                RoomMoodRequest(name = "신나는", emoji = "emoji2"),
+            ),
         )
 
         // when
@@ -84,10 +82,9 @@ internal class RoomServiceTest(
         assertThat(rooms).hasSize(1)
 
         val moods = roomMoodRepository.findAll()
-        assertThat(moods).hasSize(3)
-        assertMood(mood = moods[0], name = "잔잔한", roomId = rooms[0].id)
-        assertMood(mood = moods[1], name = "댄스", roomId = rooms[0].id)
-        assertMood(mood = moods[2], name = "팝송", roomId = rooms[0].id)
+        assertThat(moods).hasSize(2)
+        assertMood(mood = moods[0], name = "잔잔한", emoji = "emoji1", roomId = rooms[0].id)
+        assertMood(mood = moods[1], name = "신나는", emoji = "emoji2", roomId = rooms[0].id)
     }
 
     @Test
@@ -118,7 +115,6 @@ internal class RoomServiceTest(
 
         val request = RoomCreateRequest(
             description = "방에 대한 설명",
-            moods = setOf("잔잔한", "댄스", "팝송"),
         )
 
         // when & then
@@ -135,13 +131,11 @@ internal class RoomServiceTest(
             invitationKey = InvitationKey.newInstance(),
         )
         room.addCreator(member.id)
-        room.updateMoods(setOf("분위기 좋은 노래", "잔잔한"))
         val savedRoom = roomRepository.save(room)
         playlistRepository.save(Playlist(savedRoom.id))
 
         val request = RoomUpdateRequest(
             description = "변경 된 방에 대한 설명",
-            moods = setOf("잔잔한", "댄스")
         )
 
         // when
@@ -162,13 +156,16 @@ internal class RoomServiceTest(
             invitationKey = InvitationKey.newInstance(),
         )
         room.addCreator(member.id)
-        room.updateMoods(setOf("분위기 좋은 노래", "잔잔한"))
+
         val savedRoom = roomRepository.save(room)
         playlistRepository.save(Playlist(savedRoom.id))
 
         val request = RoomUpdateRequest(
             description = "변경 된 방에 대한 설명",
-            moods = setOf("잔잔한", "댄스")
+            moods = setOf(
+                RoomMoodRequest(name = "잔잔한", emoji = "emoji1"),
+                RoomMoodRequest(name = "신나는", emoji = "emoji2"),
+            ),
         )
 
         // when
@@ -180,8 +177,8 @@ internal class RoomServiceTest(
 
         val moods = roomMoodRepository.findAll()
         assertThat(moods).hasSize(2)
-        assertMood(mood = moods[0], name = "잔잔한", roomId = rooms[0].id)
-        assertMood(mood = moods[1], name = "댄스", roomId = rooms[0].id)
+        assertMood(mood = moods[0], name = "잔잔한", emoji = "emoji1", roomId = rooms[0].id)
+        assertMood(mood = moods[1], name = "신나는", emoji = "emoji2", roomId = rooms[0].id)
     }
 
     @Test
@@ -234,10 +231,7 @@ internal class RoomServiceTest(
         room.addCreator(member.id)
         roomRepository.save(room)
 
-        val request = RoomUpdateRequest(
-            description = "변경 된 방에 대한 설명",
-            moods = setOf("잔잔한", "댄스")
-        )
+        val request = RoomUpdateRequest(description = "변경 된 방에 대한 설명")
 
         // when & then
         assertThatThrownBy {
@@ -253,7 +247,6 @@ internal class RoomServiceTest(
             invitationKey = InvitationKey.newInstance(),
         )
         room.addCreator(member.id)
-        room.updateMoods(setOf("분위기 좋은 노래", "잔잔한"))
         roomRepository.save(room)
 
         // when
@@ -265,11 +258,6 @@ internal class RoomServiceTest(
         assertThat(rooms[0].status).isEqualTo(RoomStatus.DELETED)
         assertRoom(room = rooms[0], description = room.description)
         assertThat(rooms[0].invitationKey).isNotNull
-
-        val moods = roomMoodRepository.findAll()
-        assertThat(moods).hasSize(2)
-        assertMood(mood = moods[0], name = "분위기 좋은 노래", roomId = rooms[0].id)
-        assertMood(mood = moods[1], name = "잔잔한", roomId = rooms[0].id)
     }
 
     @Test
@@ -311,8 +299,9 @@ internal class RoomServiceTest(
         assertThat(room.description).isEqualTo(description)
     }
 
-    private fun assertMood(mood: RoomMood, name: String, roomId: Long) {
-        assertThat(mood.room.id).isEqualTo(roomId)
+    private fun assertMood(mood: RoomMood, name: String, emoji: String, roomId: Long) {
+        assertThat(mood.roomId).isEqualTo(roomId)
+        assertThat(mood.emoji).isEqualTo(emoji)
         assertThat(mood.name).isEqualTo(name)
     }
 

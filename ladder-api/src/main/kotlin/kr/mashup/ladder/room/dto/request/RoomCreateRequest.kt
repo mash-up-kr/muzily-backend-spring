@@ -8,16 +8,15 @@ data class RoomCreateRequest(
     @field:NotBlank
     val description: String,
     @field:Size(max = 10)
-    val moods: Set<String> = setOf(),
+    val moods: Set<RoomMoodRequest> = setOf(),
 ) {
 
     fun toEntity(memberId: Long): Room {
-        val rooms = Room.newInstance(
+        return Room.newInstance(
             description = description,
             memberId = memberId
         )
-        rooms.updateMoods(moods)
-        return rooms
     }
 
 }
+
