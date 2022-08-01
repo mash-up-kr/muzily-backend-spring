@@ -4,6 +4,7 @@ import kr.mashup.ladder.domain.playlist.domain.PlaylistNotFoundException
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemNotFoundException
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemRepository
+import kr.mashup.ladder.domain.room.domain.RoomRoleValidator.validateCreator
 import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.playlist.dto.PlaylistDto
@@ -31,7 +32,7 @@ class PlaylistService(
     fun findPendingItems(playlistId: Long, memberId: Long): List<PlaylistItemDto> {
         val playlist = playlistRepository.findByIdOrNull(playlistId) ?: throw PlaylistNotFoundException("$playlistId")
         val room = roomRepository.findByIdOrNull(playlist.roomId) ?: throw RoomNotFoundException("${playlist.roomId}")
-        room.validateCreator(memberId)
+        validateCreator(room = room, memberId = memberId)
         val pendingItems = playlist.getPendingItems()
         return pendingItems.map { PlaylistItemDto.of(it) }
     }
@@ -50,7 +51,7 @@ class PlaylistService(
             ?: throw PlaylistNotFoundException("${request.playlistId}")
         val room = roomRepository.findByIdOrNull(playlist.roomId)
             ?: throw RoomNotFoundException("${playlist.roomId}")
-        room.validateCreator(memberId)
+        validateCreator(room = room, memberId = memberId)
         val item = playlistItemRepository.findByIdOrNull(request.playlistItemId)
             ?: throw PlaylistItemNotFoundException("${request.playlistItemId}")
         item.accept()
@@ -63,7 +64,7 @@ class PlaylistService(
             ?: throw PlaylistNotFoundException("${request.playlistId}")
         val room = roomRepository.findByIdOrNull(playlist.roomId)
             ?: throw RoomNotFoundException("${playlist.roomId}")
-        room.validateCreator(memberId)
+        validateCreator(room = room, memberId = memberId)
         val item = playlistItemRepository.save(request.toEntity(playlist))
         return PlaylistItemDto.of(item)
     }
