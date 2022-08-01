@@ -7,6 +7,7 @@ import kr.mashup.ladder.domain.room.domain.RoomTopic
 import kr.mashup.ladder.playlist.service.PlaylistService
 import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
+import kr.mashup.ladder.room.dto.request.RoomRemovePlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
@@ -56,4 +57,11 @@ class RoomWsService(
         )
     }
 
+    fun removePlaylistItem(roomId: Long, memberId: Long, request: RoomRemovePlaylistItemRequest) {
+        playlistService.removeItem(memberId, request)
+        roomMessagePublisher.publish(
+            RoomTopic(roomId),
+            RoomMessage(RoomMessageType.PLAYLIST_ITEM_REMOVE, request.toMessage(roomId))
+        )
+    }
 }

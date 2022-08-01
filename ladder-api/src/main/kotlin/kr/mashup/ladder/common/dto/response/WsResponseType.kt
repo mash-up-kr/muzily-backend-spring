@@ -6,4 +6,5 @@ enum class WsResponseType {
     EMOJI,
     PLAYLIST_ITEM_REQUEST,
     PLAYLIST_ITEM_ADD,
+    PLAYLIST_ITEM_REMOVE,
 }
