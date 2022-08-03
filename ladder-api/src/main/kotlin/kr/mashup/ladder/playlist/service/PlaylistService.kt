@@ -76,7 +76,7 @@ class PlaylistService(
             ?: throw PlaylistNotFoundException("${request.playlistId}")
         val room = roomRepository.findByIdOrNull(playlist.roomId)
             ?: throw RoomNotFoundException("${playlist.roomId}")
-        room.validateCreator(memberId)
+        validateCreator(room = room, memberId = memberId)
         playlistItemRepository.deleteById(request.playlistItemId)
     }
 }
