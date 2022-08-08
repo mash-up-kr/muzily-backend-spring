@@ -379,6 +379,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
                 { assertThat(response.data!!.title).isEqualTo(request.title) },
                 { assertThat(response.data!!.thumbnail).isEqualTo(request.thumbnail) },
                 { assertThat(response.data!!.duration).isEqualTo(request.duration) },
+                { assertThat(response.data!!.dominantColor).isEqualTo(request.dominantColor) },
             )
 
             return response.data!!
@@ -444,6 +445,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
                 { assertThat(responses.map { it.data!!.title }).allMatch { it == request.title } },
                 { assertThat(responses.map { it.data!!.thumbnail }).allMatch { it == request.thumbnail } },
                 { assertThat(responses.map { it.data!!.duration }).allMatch { it == request.duration } },
+                { assertThat(responses.map { it.data!!.dominantColor }).allMatch { it == request.dominantColor } },
             )
         }
     }

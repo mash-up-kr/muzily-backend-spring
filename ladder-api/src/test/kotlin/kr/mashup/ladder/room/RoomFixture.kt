@@ -19,7 +19,8 @@ class RoomFixture {
                 videoId = "LqfimuFAFJ8",
                 title = "라일락",
                 duration = 229,
-                thumbnail = "https://i.ytimg.com/vi/LqfimuFAFJ8/maxresdefault.jpg"
+                thumbnail = "https://i.ytimg.com/vi/LqfimuFAFJ8/maxresdefault.jpg",
+                dominantColor = "#FFFFFF",
             )
         }
 
@@ -29,7 +30,8 @@ class RoomFixture {
                 videoId = "LqfimuFAFJ8",
                 title = "라일락",
                 duration = 229,
-                thumbnail = "https://i.ytimg.com/vi/LqfimuFAFJ8/maxresdefault.jpg"
+                thumbnail = "https://i.ytimg.com/vi/LqfimuFAFJ8/maxresdefault.jpg",
+                dominantColor = "#FFFFFF",
             )
         }
 
