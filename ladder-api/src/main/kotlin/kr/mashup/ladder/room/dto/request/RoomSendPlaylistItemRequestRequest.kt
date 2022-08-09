@@ -10,6 +10,7 @@ data class RoomSendPlaylistItemRequestRequest(
     val title: String,
     val thumbnail: String,
     val duration: Int,
+    val dominantColor: String?,
 ) {
     fun toEntity(playlist: Playlist): PlaylistItem {
         return PlaylistItem(
@@ -17,7 +18,8 @@ data class RoomSendPlaylistItemRequestRequest(
             videoId = videoId,
             title = title,
             thumbnail = thumbnail,
-            duration = duration
+            duration = duration,
+            dominantColor = dominantColor,
         )
     }
 

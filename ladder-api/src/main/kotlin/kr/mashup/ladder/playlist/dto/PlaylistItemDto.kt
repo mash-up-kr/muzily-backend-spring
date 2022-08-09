@@ -9,6 +9,7 @@ data class PlaylistItemDto(
     val title: String,
     val thumbnail: String,
     val duration: Int,
+    val dominantColor: String?,
 ) {
     companion object {
         fun of(item: PlaylistItem): PlaylistItemDto {
@@ -19,6 +20,7 @@ data class PlaylistItemDto(
                 title = item.title,
                 thumbnail = item.thumbnail,
                 duration = item.duration,
+                dominantColor = item.dominantColor,
             )
         }
     }

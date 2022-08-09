@@ -9,6 +9,7 @@ data class RoomPlaylistItemRequestResponse(
     val title: String,
     val thumbnail: String,
     val duration: Int,
+    val dominantColor: String?,
 ) {
     companion object {
         fun of(item: PlaylistItem): RoomPlaylistItemRequestResponse {
@@ -19,6 +20,7 @@ data class RoomPlaylistItemRequestResponse(
                 title = item.title,
                 thumbnail = item.thumbnail,
                 duration = item.duration,
+                dominantColor = item.dominantColor,
             )
         }
     }
