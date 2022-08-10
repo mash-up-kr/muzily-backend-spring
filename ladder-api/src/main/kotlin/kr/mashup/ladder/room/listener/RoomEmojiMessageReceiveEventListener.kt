@@ -16,7 +16,7 @@ class RoomEmojiMessageReceiveEventListener(
     @EventListener
     fun handle(event: RoomEmojiMessageRecieveEvent) {
         val destination = "${WS_DESTINATION_PREFIX_TOPIC}/v1/rooms/${event.roomId}"
-        val payload = WsResponse.ok(WsResponseType.EMOJI, RoomEmojiResponse(event.emojiType))
+        val payload = WsResponse.ok(WsResponseType.EMOJI, RoomEmojiResponse(event.emojiType, event.intensity))
         simpMessagingTemplate.convertAndSend(destination, payload)
     }
 }

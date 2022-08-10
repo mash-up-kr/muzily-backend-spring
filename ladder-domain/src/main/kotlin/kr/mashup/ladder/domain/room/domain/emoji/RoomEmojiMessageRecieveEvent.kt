@@ -2,5 +2,6 @@ package kr.mashup.ladder.domain.room.domain.emoji
 
 class RoomEmojiMessageRecieveEvent(
     val roomId: Long,
-    val emojiType: EmojiType
+    val emojiType: EmojiType,
+    val intensity: Int,
 )
