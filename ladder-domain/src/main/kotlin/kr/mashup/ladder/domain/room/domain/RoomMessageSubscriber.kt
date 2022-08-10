@@ -5,7 +5,6 @@ import kr.mashup.ladder.domain.common.util.JsonUtil
 import kr.mashup.ladder.domain.room.domain.chat.RoomChatMessage
 import kr.mashup.ladder.domain.room.domain.chat.RoomChatMessageReceiveEvent
 import kr.mashup.ladder.domain.room.domain.emoji.RoomEmojiMessage
-import kr.mashup.ladder.domain.room.domain.emoji.RoomEmojiMessageRecieveEvent
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemAddMessage
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRemoveMessage
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRequestMessage
@@ -35,12 +34,7 @@ class RoomMessageSubscriber(
                 val roomMessage = JsonUtil.fromByteArray(
                     message.body,
                     object : TypeReference<RoomMessage<RoomEmojiMessage>>() {})
-                applicationEventPublisher.publishEvent(
-                    RoomEmojiMessageRecieveEvent(
-                        roomMessage.data.roomId,
-                        roomMessage.data.emojiType
-                    )
-                )
+                applicationEventPublisher.publishEvent(roomMessage.data.toEvent())
             }
             RoomMessageType.PLAYLIST_ITEM_REQUEST -> {
                 val roomMessage = JsonUtil.fromByteArray(

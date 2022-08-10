@@ -18,7 +18,7 @@ import kr.mashup.ladder.config.ws.WS_ENDPOINT
 import kr.mashup.ladder.config.ws.WS_USER_DESTINATION_PREFIX
 import kr.mashup.ladder.domain.common.exception.ErrorCode
 import kr.mashup.ladder.domain.common.util.JsonUtil
-import kr.mashup.ladder.domain.room.domain.emoji.EmojiType
+import kr.mashup.ladder.room.RoomFixture.Companion.`방 100% 하트 이모지 보내기 요청값`
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 생성 요청값`
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 재생목록 항목 신청 승인 요청값`
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 재생목록 항목 신청 요청값`
@@ -100,12 +100,13 @@ class RoomAcceptanceTest : AcceptanceTest() {
         val futures = listOf(
             `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId),
             `방 구독되어 있음`(`익명 세션`, 방.roomId))
+        val `방 이모지 보내기 요청값` = `방 100% 하트 이모지 보내기 요청값`()
 
         // when
-        `이모지 보내기 요청`(`익명 세션`, 방.roomId, EmojiType.HEART)
+        `이모지 보내기 요청`(`익명 세션`, 방.roomId, `방 이모지 보내기 요청값`)
 
         // then
-        `이모지 받음`(futures, EmojiType.HEART)
+        `이모지 받음`(futures, `방 이모지 보내기 요청값`)
     }
 
     @Test
@@ -326,18 +327,19 @@ class RoomAcceptanceTest : AcceptanceTest() {
             return `방 구독 요청`(session, roomId)
         }
 
-        fun `이모지 보내기 요청`(session: StompSession, roomId: Long, emojiType: EmojiType) {
-            session.send("${WS_APP_DESTINATION_PREFIX}/v1/rooms/${roomId}/send-emoji", RoomSendEmojiRequest(emojiType))
+        fun `이모지 보내기 요청`(session: StompSession, roomId: Long, request: RoomSendEmojiRequest) {
+            session.send("${WS_APP_DESTINATION_PREFIX}/v1/rooms/${roomId}/send-emoji", request)
         }
 
-        fun `이모지 받음`(futures: List<CompletableFuture<WsResponse<*>>>, emojiType: EmojiType) {
+        fun `이모지 받음`(futures: List<CompletableFuture<WsResponse<*>>>, request: RoomSendEmojiRequest) {
             val responses = futures
                 .map { it.get(5, TimeUnit.SECONDS) }
                 .map { JsonUtil.reDeserialize(it, object : TypeReference<WsResponse<RoomEmojiResponse>>() {}) }
 
             assertAll(
                 { assertThat(responses.map { it.type }).allMatch { it == WsResponseType.EMOJI } },
-                { assertThat(responses.map { it.data!!.emojiType }).allMatch { it == emojiType } },
+                { assertThat(responses.map { it.data!!.emojiType }).allMatch { it == request.emojiType } },
+                { assertThat(responses.map { it.data!!.intensity }).allMatch { it == request.intensity } },
             )
         }
 

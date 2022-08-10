@@ -1,8 +1,10 @@
 package kr.mashup.ladder.room
 
+import kr.mashup.ladder.domain.room.domain.emoji.EmojiType
 import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
+import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
 
 class RoomFixture {
@@ -11,6 +13,10 @@ class RoomFixture {
             return RoomCreateRequest(
                 description = "매쇼~쉬는탐"
             )
+        }
+
+        fun `방 100% 하트 이모지 보내기 요청값`(): RoomSendEmojiRequest {
+            return RoomSendEmojiRequest(EmojiType.HEART, 100)
         }
 
         fun `방 재생목록 항목 신청 요청값`(playlistId: Long): RoomSendPlaylistItemRequestRequest {
