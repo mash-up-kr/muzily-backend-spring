@@ -76,6 +76,26 @@ spring.config:
   activate:
     on-profile: dev
 
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mysql://ladder-dev-rds.cjutusqxywme.ap-northeast-2.rds.amazonaws.com:3306/ladder_dev?useSSL=false&serverTimezone=Asia/Seoul
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: ENC(LSYUb+AxeBTxdg4KyO1O/uEa3s88kdmy6ry0iifMnP+70P07/pHD0JmqFLrjWl1i)
+      password: ENC(6x1sy4dhws1rO3hIShmvcWXigVbaPoU9Y49vE4Fo3ZH3AC0XdJ5fuRiiEwO4xBP+)
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
 
 ---
 spring.config:
