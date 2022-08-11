@@ -4,7 +4,6 @@ import java.util.*
 import javax.persistence.Column
 import javax.persistence.Embeddable
 
-// TODO: 작업
 @Embeddable
 class InvitationKey(
     @Column(nullable = false)
@@ -12,7 +11,7 @@ class InvitationKey(
 ) {
 
     companion object {
-        private const val INVITATION_PREFIX = "ladder"
+        private const val INVITATION_PREFIX = "ladder-v1"
 
         fun newInstance(): InvitationKey {
             return InvitationKey(

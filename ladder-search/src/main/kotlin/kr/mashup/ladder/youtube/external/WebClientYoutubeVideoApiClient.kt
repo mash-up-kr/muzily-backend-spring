@@ -2,11 +2,11 @@ package kr.mashup.ladder.youtube.external
 
 import kotlinx.coroutines.reactor.awaitSingle
 import kr.mashup.ladder.domain.common.exception.model.BadGatewayException
-import kr.mashup.ladder.youtube.model.exception.YoutubeVideoNotFoundException
 import kr.mashup.ladder.youtube.external.dto.properties.YoutubeVideoApiProperties
 import kr.mashup.ladder.youtube.external.dto.response.YoutubeVideoListResponse
 import kr.mashup.ladder.youtube.external.dto.response.YoutubeVideoResponse
 import kr.mashup.ladder.youtube.model.YoutubeVideoCategory
+import kr.mashup.ladder.youtube.model.exception.YoutubeVideoNotFoundException
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.util.UriComponentsBuilder
@@ -26,13 +26,14 @@ class WebClientYoutubeVideoApiClient(
     // TODO: Add Cache
     override suspend fun getVideoInfo(videoId: String): YoutubeVideoResponse {
         return webClient.get()
-            .uri(UriComponentsBuilder.fromUriString(youtubeVideoApiProperties.url)
-                .queryParam("id", videoId)
-                .queryParam("key", youtubeVideoApiProperties.key)
-                .queryParam("part", youtubeVideoApiProperties.part)
-                .queryParam("videoCategoryId", YoutubeVideoCategory.MUSIC.categoryId)
-                .build()
-                .toUriString()
+            .uri(
+                UriComponentsBuilder.fromUriString(youtubeVideoApiProperties.url)
+                    .queryParam("id", videoId)
+                    .queryParam("key", youtubeVideoApiProperties.key)
+                    .queryParam("part", youtubeVideoApiProperties.part)
+                    .queryParam("videoCategoryId", YoutubeVideoCategory.MUSIC.categoryId)
+                    .build()
+                    .toUriString()
             )
             .retrieve()
             .onStatus({ status -> status.is5xxServerError }, { response ->
