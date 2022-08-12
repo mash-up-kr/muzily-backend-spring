@@ -1,6 +1,6 @@
 ### Liveness
-GET {{api}}/api/actuator/health/liveness
+GET {{api}}/api/health
 
 
 ### Readiness
-GET {{api}}/api/actuator/health/readiness
+GET {{api}}/api/health

@@ -1,6 +1,7 @@
 package kr.mashup.ladder.youtube.model
 
 /**
+ * Youtube Video Category
  * https://gist.github.com/dgp/1b24bf2961521bd75d6c
  */
 enum class YoutubeVideoCategory(

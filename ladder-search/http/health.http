@@ -1,6 +1,6 @@
 ### Liveness
-GET {{search}}/actuator/health/liveness
+GET {{search}}/health
 
 
 ### Readiness
-GET {{search}}/actuator/health/readiness
+GET {{search}}/health

@@ -11,11 +11,13 @@ class YoutubeSearchApiController(
     private val youtubeVideoApiClient: YoutubeVideoApiClient,
 ) {
 
-    @GetMapping("/search/v1/youtube/video")
-    suspend fun getYoutubeVideoInfo(
+    @GetMapping("/v1/youtube/video")
+    suspend fun searchYoutubeVideoInfo(
         @RequestParam videoId: String,
     ): YoutubeVideoResponse {
-        return youtubeVideoApiClient.getVideoInfo(videoId = videoId)
+        val response = youtubeVideoApiClient.getVideoInfo(videoId = videoId)
+        response.validateAllowedCategory()
+        return response
     }
 
 }

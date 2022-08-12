@@ -1,6 +1,5 @@
 package kr.mashup.ladder.config.swagger
 
-import kr.mashup.ladder.config.annotation.MemberId
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -13,9 +12,7 @@ import springfox.documentation.builders.PathSelectors
 import springfox.documentation.builders.RequestHandlerSelectors
 import springfox.documentation.builders.ResponseBuilder
 import springfox.documentation.service.ApiInfo
-import springfox.documentation.service.ApiKey
 import springfox.documentation.service.Response
-import springfox.documentation.service.SecurityScheme
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger.web.DocExpansion
@@ -41,8 +38,6 @@ class SwaggerConfig {
     fun api(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
             .apiInfo(apiInfo())
-            .securitySchemes(authorization())
-            .ignoredParameterTypes(MemberId::class.java)
             .select()
             .apis(RequestHandlerSelectors.withClassAnnotation(RestController::class.java))
             .paths(PathSelectors.ant("/**"))
@@ -79,7 +74,7 @@ class SwaggerConfig {
 
     private fun apiInfo(): ApiInfo {
         return ApiInfoBuilder()
-            .title("Ladder API")
+            .title("Ladder Search API")
             .description(
                 """
                 <공통 에러 코드에 대한 문서>
@@ -89,16 +84,9 @@ class SwaggerConfig {
                 - 404 NotFound
                 - 409 Conflict: 중복된 리소스
                 - 500 Internal Server Exception
-
-                <테스트를 위한 토큰 사용 방법>
-                - 인증 토큰이 필요한 API는 오른쪽에 [Authorize] 자물쇠를 클릭해서 토큰을 넣어서 테스트 할 수 있습니다
             """.trimIndent()
             )
             .build()
-    }
-
-    private fun authorization(): List<SecurityScheme> {
-        return listOf(ApiKey("Bearer", "Authorization", "header"))
     }
 
 }

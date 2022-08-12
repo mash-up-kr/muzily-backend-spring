@@ -9,6 +9,11 @@ dependencies {
 
     // Micrometer Registry prometheus
     implementation("io.micrometer:micrometer-registry-prometheus:1.9.0")
+
+    // swagger
+    implementation("io.springfox:springfox-boot-starter:3.0.0")
+    implementation("io.springfox:springfox-swagger-ui:3.0.0")
+    implementation("io.springfox:springfox-spring-webflux:3.0.0")
 }
 
 jib {
