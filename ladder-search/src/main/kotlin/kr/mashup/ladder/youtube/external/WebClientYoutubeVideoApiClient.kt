@@ -5,7 +5,6 @@ import kr.mashup.ladder.domain.common.exception.model.BadGatewayException
 import kr.mashup.ladder.youtube.external.dto.properties.YoutubeVideoApiProperties
 import kr.mashup.ladder.youtube.external.dto.response.YoutubeVideoListResponse
 import kr.mashup.ladder.youtube.external.dto.response.YoutubeVideoResponse
-import kr.mashup.ladder.youtube.model.YoutubeVideoCategory
 import kr.mashup.ladder.youtube.model.exception.YoutubeVideoNotFoundException
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
@@ -31,7 +30,6 @@ class WebClientYoutubeVideoApiClient(
                     .queryParam("id", videoId)
                     .queryParam("key", youtubeVideoApiProperties.key)
                     .queryParam("part", youtubeVideoApiProperties.part)
-                    .queryParam("videoCategoryId", YoutubeVideoCategory.MUSIC.categoryId)
                     .build()
                     .toUriString()
             )

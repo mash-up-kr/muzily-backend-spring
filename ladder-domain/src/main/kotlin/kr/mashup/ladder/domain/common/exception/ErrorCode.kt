@@ -50,5 +50,11 @@ enum class ErrorCode(
     PLAYLIST_ITEM_NOT_FOUND(status = 404, code = "PI001", message = "해당하는 재생목록 항목이 존재하지 않습니다", shouldLog = false),
 
     // youtube
-    YOUTUBE_VIDEO_NOT_FOUND(status = 404, code = "Y001", "해당하는 유튜브 음악 영상은 존재하지 않습니다", shouldLog = false)
+    YOUTUBE_VIDEO_NOT_FOUND(status = 404, code = "Y001", message = "해당하는 유튜브 음악 영상은 존재하지 않습니다", shouldLog = false),
+    YOUTUBE_VIDEO_NOT_ALLOWED_CATEGORY(
+        status = 403,
+        code = "Y002",
+        message = "해당하는 영상은 허용되지 않은 카테고리입니다",
+        shouldLog = false
+    ),
 }

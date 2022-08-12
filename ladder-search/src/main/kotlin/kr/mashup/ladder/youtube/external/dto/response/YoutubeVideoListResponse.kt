@@ -1,5 +1,7 @@
 package kr.mashup.ladder.youtube.external.dto.response
 
+import kr.mashup.ladder.youtube.model.YoutubeVideoCategory
+import kr.mashup.ladder.youtube.model.exception.YoutubeNotAllowedCategoryException
 import java.time.Duration
 import java.time.LocalDateTime
 
@@ -11,23 +13,31 @@ data class YoutubeVideoResponse(
     val id: String = "",
     val snippet: YoutubeSnippetResponse,
     val contentDetails: YoutubeContentDetailsResponse,
-)
+) {
+
+    fun validateAllowedCategory() {
+        if (YoutubeVideoCategory.MUSIC.categoryId != snippet.categoryId) {
+            throw YoutubeNotAllowedCategoryException("해당하는 Youtube 영상(${id})의 카테고리(${snippet.categoryId})는 음악 카테고리(${YoutubeVideoCategory.MUSIC.categoryId})가 아닙니다")
+        }
+    }
+
+}
 
 data class YoutubeSnippetResponse(
     val publishedAt: LocalDateTime,
     val channelId: String = "",
     val title: String = "",
     val description: String = "",
-    val categoryId: String = "",
+    val categoryId: Int = 0,
     val thumbnails: YoutubeThumbnailListResponse,
 )
 
 data class YoutubeThumbnailListResponse(
-    val default: YoutubeThumbnailResponse,
-    val medium: YoutubeThumbnailResponse,
-    val high: YoutubeThumbnailResponse,
-    val standard: YoutubeThumbnailResponse,
-    val maxres: YoutubeThumbnailResponse,
+    val default: YoutubeThumbnailResponse? = null,
+    val medium: YoutubeThumbnailResponse? = null,
+    val high: YoutubeThumbnailResponse? = null,
+    val standard: YoutubeThumbnailResponse? = null,
+    val maxres: YoutubeThumbnailResponse? = null,
 )
 
 data class YoutubeThumbnailResponse(
