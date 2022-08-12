@@ -17,7 +17,7 @@ server:
 spring:
   application:
     name: ladder-search
-  mvc:
+  webflux:
     format:
       date: iso
       date-time: iso
@@ -26,14 +26,11 @@ spring:
 management:
   endpoints:
     web:
-      base-path: /search
+      base-path: /monitoring
       exposure:
         include:
           - health
           - prometheus
-      path-mapping:
-        health: /health
-        prometheus: /actuator/prometheus
   health:
     defaults:
       enabled: false

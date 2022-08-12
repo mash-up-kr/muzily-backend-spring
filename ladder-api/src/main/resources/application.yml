@@ -27,14 +27,11 @@ spring:
 management:
   endpoints:
     web:
-      base-path: /api
+      base-path: /api/monitoring
       exposure:
         include:
           - health
           - prometheus
-      path-mapping:
-        health: /health
-        prometheus: /actuator/prometheus
   health:
     defaults:
       enabled: false

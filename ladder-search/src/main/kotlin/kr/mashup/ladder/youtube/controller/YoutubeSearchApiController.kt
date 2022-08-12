@@ -11,7 +11,7 @@ class YoutubeSearchApiController(
     private val youtubeVideoApiClient: YoutubeVideoApiClient,
 ) {
 
-    @GetMapping("/search/v1/youtube/video")
+    @GetMapping("/v1/youtube/video")
     suspend fun searchYoutubeVideoInfo(
         @RequestParam videoId: String,
     ): YoutubeVideoResponse {
