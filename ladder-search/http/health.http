@@ -1,6 +1,6 @@
 ### Liveness
-GET {{search}}/health
+GET {{search}}/liveness
 
 
 ### Readiness
-GET {{search}}/health
+GET {{search}}/readiness
