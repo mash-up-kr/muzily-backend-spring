@@ -42,6 +42,7 @@ enum class ErrorCode(
     ),
     ROOM_MEMBER_CONFLICT(status = 409, code = "R003", message = "해당 방에 이미 참여하고 있습니다", shouldLog = false),
     CREATED_ROOM_MEMBER_NOT_FOUND(status = 404, code = "R004", message = "생성한 방이 없습니다", shouldLog = false),
+    ROOM_IS_NOT_CREATOR_FORBIDDEN(status = 403, code = "R005", "방 생성자만이 접근할 수 있습니다", shouldLog = false),
 
     // playlist
     PLAYLIST_NOT_FOUND(status = 404, code = "P001", message = "해당하는 재생목록이 존재하지 않습니다", shouldLog = false),

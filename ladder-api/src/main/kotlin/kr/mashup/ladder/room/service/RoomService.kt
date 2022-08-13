@@ -2,17 +2,16 @@ package kr.mashup.ladder.room.service
 
 import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
-import kr.mashup.ladder.domain.room.domain.Room
-import kr.mashup.ladder.domain.room.domain.RoomRoleValidator.validateCreator
 import kr.mashup.ladder.domain.room.domain.RoomRoleValidator.validateParticipant
 import kr.mashup.ladder.domain.room.exception.CreatedRoomNotFoundException
 import kr.mashup.ladder.domain.room.exception.RoomConflictException
-import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
 import kr.mashup.ladder.room.dto.response.CreatedRoomResponse
 import kr.mashup.ladder.room.dto.response.RoomDetailInfoResponse
+import kr.mashup.ladder.room.service.RoomServiceUtils.findRoomById
+import kr.mashup.ladder.room.service.RoomServiceUtils.validateIsAuthor
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -25,11 +24,10 @@ class RoomService(
 
     @Transactional
     fun create(request: RoomCreateRequest, memberId: Long): RoomDetailInfoResponse {
-        if (roomRepository.existsRoomByMemberId(memberId)) {
-            throw RoomConflictException("멤버($memberId)은 이미 등록한 방이 있습니다 멤버 당 1개의 방만 생성할 수 있습니다")
-        }
+        validateNotExistsCreatedRoom(memberId = memberId)
         val room = roomRepository.save(request.toEntity(memberId = memberId))
         roomMoodService.addRoomMoods(roomId = room.id, requests = request.moods)
+
         val playlist = playlistRepository.save(Playlist(room.id))
         return RoomDetailInfoResponse.of(
             room = room,
@@ -39,10 +37,16 @@ class RoomService(
         )
     }
 
+    private fun validateNotExistsCreatedRoom(memberId: Long) {
+        if (roomRepository.existsRoomByMemberId(memberId)) {
+            throw RoomConflictException("멤버($memberId)은 이미 등록한 방이 있습니다 멤버 당 1개의 방만 생성할 수 있습니다")
+        }
+    }
+
     @Transactional
     fun update(roomId: Long, request: RoomUpdateRequest, memberId: Long): RoomDetailInfoResponse {
-        val room = findRoomById(roomId)
-        validateCreator(room = room, memberId = memberId) // TODO: 권한 관리 방식 고려
+        val room = findRoomById(roomRepository, roomId = roomId)
+        validateIsAuthor(roomRepository = roomRepository, roomId = roomId, memberId = memberId)
         room.update(request.description)
 
         roomMoodService.updateRoomMoods(roomId = roomId, requests = request.moods)
@@ -65,28 +69,22 @@ class RoomService(
 
     @Transactional(readOnly = true)
     fun getRoom(roomId: Long, memberId: Long): RoomDetailInfoResponse {
-        val room = findRoomById(roomId)
+        val room = findRoomById(roomRepository, roomId)
         validateParticipant(room = room, memberId = memberId)
-        val playlist = playlistRepository.findByRoomId(room.id)
-        val moods = roomMoodService.getRoomMoods(room.id)
+
         return RoomDetailInfoResponse.of(
             room = room,
-            playlistId = playlist.id,
+            playlistId = playlistRepository.findByRoomId(room.id).id,
             memberId = memberId,
-            moods = moods,
+            moods = roomMoodService.getRoomMoods(room.id),
         )
     }
 
     @Transactional
     fun deleteRoom(roomId: Long, memberId: Long) {
-        val room = findRoomById(roomId)
-        validateCreator(room = room, memberId = memberId)
+        val room = findRoomById(roomRepository, roomId)
+        validateIsAuthor(roomRepository, roomId = roomId, memberId = memberId)
         room.delete()
-    }
-
-    fun findRoomById(roomId: Long): Room {
-        return roomRepository.findRoomById(roomId)
-            ?: throw RoomNotFoundException("해당하는 방(${roomId})이 존재하지 않습니다")
     }
 
 }

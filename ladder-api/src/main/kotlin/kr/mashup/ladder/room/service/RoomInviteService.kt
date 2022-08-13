@@ -1,9 +1,8 @@
 package kr.mashup.ladder.room.service
 
-import kr.mashup.ladder.domain.room.domain.Room
-import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.room.dto.response.RoomInfoResponse
+import kr.mashup.ladder.room.service.RoomServiceUtils.findRoomByInvitationKey
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -14,19 +13,14 @@ class RoomInviteService(
 
     @Transactional(readOnly = true)
     fun getByInvitationKey(invitationKey: String, memberId: Long): RoomInfoResponse {
-        val room = findRoomByInvitationKey(invitationKey)
+        val room = findRoomByInvitationKey(roomRepository, invitationKey)
         return RoomInfoResponse.from(room = room, memberId = memberId)
     }
 
     @Transactional
     fun enterRoomByInvitationKey(invitationKey: String, memberId: Long) {
-        val room = findRoomByInvitationKey(invitationKey)
+        val room = findRoomByInvitationKey(roomRepository, invitationKey)
         room.addGuest(memberId)
-    }
-
-    private fun findRoomByInvitationKey(invitationKey: String): Room {
-        return roomRepository.findRoomByInvitationKey(invitationKey)
-            ?: throw RoomNotFoundException("해당하는 초대장(${invitationKey})에 해당하는 방은 존재하지 않습니다")
     }
 
 }
