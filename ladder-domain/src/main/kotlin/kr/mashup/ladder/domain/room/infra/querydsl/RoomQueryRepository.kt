@@ -12,4 +12,8 @@ interface RoomQueryRepository {
 
     fun findRoomById(roomId: Long): Room?
 
+    fun findRoomByIdWithFetchMember(roomId: Long): Room?
+
+    fun existsRoomByIdAndCreatorId(roomId: Long, creatorId: Long): Boolean
+
 }

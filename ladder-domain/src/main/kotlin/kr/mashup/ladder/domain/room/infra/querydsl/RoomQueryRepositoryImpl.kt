@@ -44,11 +44,31 @@ class RoomQueryRepositoryImpl(
 
     override fun findRoomById(roomId: Long): Room? {
         return queryFactory.selectFrom(room)
+            .where(
+                room.id.eq(roomId),
+                room.status.eq(RoomStatus.ACTIVE),
+            ).fetchOne()
+    }
+
+    override fun findRoomByIdWithFetchMember(roomId: Long): Room? {
+        return queryFactory.selectFrom(room)
             .innerJoin(room.participants, roomMemberMapper).fetchJoin()
             .where(
                 room.id.eq(roomId),
                 room.status.eq(RoomStatus.ACTIVE),
             ).fetchOne()
+    }
+
+    override fun existsRoomByIdAndCreatorId(roomId: Long, creatorId: Long): Boolean {
+        return queryFactory.selectOne()
+            .from(room)
+            .innerJoin(roomMemberMapper)
+            .on(roomMemberMapper.room.id.eq(room.id))
+            .where(
+                roomMemberMapper.memberId.eq(creatorId),
+                roomMemberMapper.role.eq(RoomRole.CREATOR),
+                room.status.eq(RoomStatus.ACTIVE),
+            ).fetchFirst() != null
     }
 
 }
