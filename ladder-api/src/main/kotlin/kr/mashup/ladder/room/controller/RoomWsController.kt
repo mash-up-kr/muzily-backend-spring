@@ -3,6 +3,7 @@ package kr.mashup.ladder.room.controller
 import kr.mashup.ladder.config.annotation.MemberId
 import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
+import kr.mashup.ladder.room.dto.request.RoomChangeOrderOfPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomRemovePlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
@@ -69,5 +70,14 @@ class RoomWsController(
         @Payload request: RoomRemovePlaylistItemRequest,
     ) {
         roomWsService.removePlaylistItem(roomId, memberId, request)
+    }
+
+    @MessageMapping("/v1/rooms/{roomId}/change-order-playlist-item")
+    fun changeOrderPlaylistItem(
+        @DestinationVariable roomId: Long,
+        @MemberId memberId: Long,
+        @Payload request: RoomChangeOrderOfPlaylistItemRequest,
+    ) {
+        roomWsService.changeOrderPlaylistItem(roomId, memberId, request)
     }
 }

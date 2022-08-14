@@ -11,6 +11,7 @@ import kr.mashup.ladder.playlist.dto.PlaylistDto
 import kr.mashup.ladder.playlist.dto.PlaylistItemDto
 import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
+import kr.mashup.ladder.room.dto.request.RoomChangeOrderOfPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomRemovePlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
 import org.springframework.data.repository.findByIdOrNull
@@ -43,6 +44,7 @@ class PlaylistService(
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
         val item = playlistItemRepository.save(request.toEntity(playlist))
+        playlist.addToOrder(item)
         return PlaylistItemDto.of(item)
     }
 
@@ -67,6 +69,7 @@ class PlaylistService(
             ?: throw RoomNotFoundException("${playlist.roomId}")
         validateCreator(room = room, memberId = memberId)
         val item = playlistItemRepository.save(request.toEntity(playlist))
+        playlist.addToOrder(item)
         return PlaylistItemDto.of(item)
     }
 
@@ -78,5 +81,16 @@ class PlaylistService(
             ?: throw RoomNotFoundException("${playlist.roomId}")
         validateCreator(room = room, memberId = memberId)
         playlistItemRepository.deleteById(request.playlistItemId)
+    }
+
+    @Transactional
+    fun changeOrder(memberId: Long, request: RoomChangeOrderOfPlaylistItemRequest): List<Long> {
+        val playlist = playlistRepository.findByIdOrNull(request.playlistId)
+            ?: throw PlaylistNotFoundException("${request.playlistId}")
+        val room = roomRepository.findByIdOrNull(playlist.roomId)
+            ?: throw RoomNotFoundException("${playlist.roomId}")
+        validateCreator(room = room, memberId = memberId)
+        playlist.changeOrder(request.playlistItemId, request.prevPlaylistItemIdToMove)
+        return playlist.order
     }
 }

@@ -5,6 +5,7 @@ import kr.mashup.ladder.domain.common.util.JsonUtil
 import kr.mashup.ladder.domain.room.domain.chat.RoomChatMessage
 import kr.mashup.ladder.domain.room.domain.emoji.RoomEmojiMessage
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemAddMessage
+import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemChangeOrderMessage
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRemoveMessage
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRequestMessage
 import org.springframework.context.ApplicationEventPublisher
@@ -46,6 +47,12 @@ class RoomMessageSubscriber(
                 val roomMessage = JsonUtil.fromByteArray(
                     message.body,
                     object : TypeReference<RoomMessage<RoomPlaylistItemRemoveMessage>>() {})
+                applicationEventPublisher.publishEvent(roomMessage.data.toEvent())
+            }
+            RoomMessageType.PLAYLIST_ITEM_CHANGE_ORDER -> {
+                val roomMessage = JsonUtil.fromByteArray(
+                    message.body,
+                    object : TypeReference<RoomMessage<RoomPlaylistItemChangeOrderMessage>>() {})
                 applicationEventPublisher.publishEvent(roomMessage.data.toEvent())
             }
         }
