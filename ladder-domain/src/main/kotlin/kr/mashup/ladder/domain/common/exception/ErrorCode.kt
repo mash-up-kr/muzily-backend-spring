@@ -58,4 +58,7 @@ enum class ErrorCode(
         message = "해당하는 영상은 허용되지 않은 카테고리입니다",
         shouldLog = false
     ),
+
+    // Mood Recommend
+    MOOD_RECOMMEND_NOT_FOUND(status = 404, code = "M001", message = "해당하는 분위기 추천은 존재하지 않습니다", shouldLog = false),
 }

@@ -2,8 +2,8 @@ package kr.mashup.ladder.auth.service
 
 import kr.mashup.ladder.auth.dto.request.AuthRequest
 import kr.mashup.ladder.auth.external.kakao.KaKaoAuthApiClient
-import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoTokenResponse
 import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoInfoResponse
+import kr.mashup.ladder.auth.external.kakao.dto.response.KaKaoTokenResponse
 import kr.mashup.ladder.domain.member.domain.Member
 import kr.mashup.ladder.domain.member.domain.SocialType
 import kr.mashup.ladder.domain.member.infra.jpa.MemberRepository
@@ -22,11 +22,12 @@ class KaKaoAuthService(
             getKaKaoProfileInfo(code = request.code, redirectUri = request.redirectUri)
         val member: Member? =
             memberRepository.findMemberBySocialIdAndSocialType(socialId = kaKaoProfile.id, socialType = SOCIAL_TYPE)
-        member?.let {
+
+        if (member != null) {
             return member.id
         }
-        return signup(kaKaoProfile)
 
+        return signup(kaKaoProfile)
     }
 
     private fun signup(kaKaoProfile: KaKaoInfoResponse): Long {
@@ -41,8 +42,7 @@ class KaKaoAuthService(
     }
 
     private fun getKaKaoProfileInfo(code: String, redirectUri: String): KaKaoInfoResponse {
-        val response: KaKaoTokenResponse =
-            kaKaoAuthApiClient.getAccessToken(code = code, redirectUri = redirectUri)
+        val response: KaKaoTokenResponse = kaKaoAuthApiClient.getAccessToken(code = code, redirectUri = redirectUri)
         return kaKaoAuthApiClient.getProfileInfo(accessToken = response.accessToken)
     }
 

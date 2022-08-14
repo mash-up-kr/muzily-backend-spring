@@ -1,6 +1,6 @@
 package kr.mashup.ladder.room.dto.response
 
-import kr.mashup.ladder.domain.room.domain.RoomMood
+import kr.mashup.ladder.domain.mood.domain.Mood
 
 data class RoomMoodResponse(
     val name: String,
@@ -8,10 +8,10 @@ data class RoomMoodResponse(
 ) {
 
     companion object {
-        fun of(roomMood: RoomMood): RoomMoodResponse {
+        fun of(mood: Mood): RoomMoodResponse {
             return RoomMoodResponse(
-                name = roomMood.name,
-                emoji = roomMood.emoji
+                name = mood.name,
+                emoji = mood.emoji
             )
         }
     }

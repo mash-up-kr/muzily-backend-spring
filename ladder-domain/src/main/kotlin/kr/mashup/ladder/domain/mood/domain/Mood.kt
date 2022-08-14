@@ -1,13 +1,13 @@
-package kr.mashup.ladder.domain.room.domain
+package kr.mashup.ladder.domain.mood.domain
 
 import kr.mashup.ladder.domain.common.domain.BaseEntity
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Table
 
-@Table(name = "room_mood")
+@Table(name = "mood")
 @Entity
-class RoomMood(
+class Mood(
     val roomId: Long,
 
     @Column(nullable = false)
@@ -18,8 +18,8 @@ class RoomMood(
 ) : BaseEntity() {
 
     companion object {
-        fun of(roomId: Long, name: String, emoji: String): RoomMood {
-            return RoomMood(
+        fun of(roomId: Long, name: String, emoji: String): Mood {
+            return Mood(
                 roomId = roomId,
                 name = name,
                 emoji = emoji,

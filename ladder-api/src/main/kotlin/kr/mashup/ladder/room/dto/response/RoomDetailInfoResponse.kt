@@ -2,7 +2,7 @@ package kr.mashup.ladder.room.dto.response
 
 import kr.mashup.ladder.common.dto.response.BaseTimeResponse
 import kr.mashup.ladder.domain.room.domain.Room
-import kr.mashup.ladder.domain.room.domain.RoomMood
+import kr.mashup.ladder.domain.mood.domain.Mood
 import kr.mashup.ladder.domain.room.domain.RoomRole
 
 data class RoomDetailInfoResponse(
@@ -16,7 +16,7 @@ data class RoomDetailInfoResponse(
 ) : BaseTimeResponse() {
 
     companion object {
-        fun of(room: Room, playlistId: Long?, memberId: Long, moods: List<RoomMood>): RoomDetailInfoResponse {
+        fun of(room: Room, playlistId: Long?, memberId: Long, moods: List<Mood>): RoomDetailInfoResponse {
             val response = RoomDetailInfoResponse(
                 roomId = room.id,
                 description = room.description,

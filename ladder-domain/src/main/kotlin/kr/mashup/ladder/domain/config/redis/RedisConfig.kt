@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.listener.RedisMessageListenerContainer
 import org.springframework.data.redis.serializer.StringRedisSerializer
 
+
 @Configuration
 class RedisConfig(
     @Value("\${spring.redis.host}") private val host: String,

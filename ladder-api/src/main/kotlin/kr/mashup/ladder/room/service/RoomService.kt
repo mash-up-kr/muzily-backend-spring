@@ -6,6 +6,7 @@ import kr.mashup.ladder.domain.room.domain.RoomRoleValidator.validateParticipant
 import kr.mashup.ladder.domain.room.exception.CreatedRoomNotFoundException
 import kr.mashup.ladder.domain.room.exception.RoomConflictException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
+import kr.mashup.ladder.mood.service.MoodService
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
 import kr.mashup.ladder.room.dto.response.CreatedRoomResponse
@@ -19,21 +20,21 @@ import org.springframework.transaction.annotation.Transactional
 class RoomService(
     private val roomRepository: RoomRepository,
     private val playlistRepository: PlaylistRepository,
-    private val roomMoodService: RoomMoodService,
+    private val moodService: MoodService,
 ) {
 
     @Transactional
     fun create(request: RoomCreateRequest, memberId: Long): RoomDetailInfoResponse {
         validateNotExistsCreatedRoom(memberId = memberId)
         val room = roomRepository.save(request.toEntity(memberId = memberId))
-        roomMoodService.addRoomMoods(roomId = room.id, requests = request.moods)
+        moodService.addRoomMoods(roomId = room.id, requests = request.moods)
 
         val playlist = playlistRepository.save(Playlist(room.id))
         return RoomDetailInfoResponse.of(
             room = room,
             playlistId = playlist.id,
             memberId = memberId,
-            moods = roomMoodService.getRoomMoods(roomId = room.id)
+            moods = moodService.getRoomMoods(roomId = room.id)
         )
     }
 
@@ -49,14 +50,14 @@ class RoomService(
         validateIsAuthor(roomRepository = roomRepository, roomId = roomId, memberId = memberId)
         room.update(request.description)
 
-        roomMoodService.updateRoomMoods(roomId = roomId, requests = request.moods)
+        moodService.updateRoomMoods(roomId = roomId, requests = request.moods)
         val playlist = playlistRepository.findByRoomId(room.id)
 
         return RoomDetailInfoResponse.of(
             room = room,
             playlistId = playlist.id,
             memberId = memberId,
-            moods = roomMoodService.getRoomMoods(roomId = room.id)
+            moods = moodService.getRoomMoods(roomId = room.id)
         )
     }
 
@@ -76,7 +77,7 @@ class RoomService(
             room = room,
             playlistId = playlistRepository.findByRoomId(room.id).id,
             memberId = memberId,
-            moods = roomMoodService.getRoomMoods(room.id),
+            moods = moodService.getRoomMoods(room.id),
         )
     }
 
