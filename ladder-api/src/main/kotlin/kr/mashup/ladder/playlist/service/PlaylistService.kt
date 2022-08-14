@@ -44,7 +44,6 @@ class PlaylistService(
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
         val item = playlistItemRepository.save(request.toEntity(playlist))
-        playlist.addToOrder(item)
         return PlaylistItemDto.of(item)
     }
 
@@ -58,6 +57,7 @@ class PlaylistService(
         val item = playlistItemRepository.findByIdOrNull(request.playlistItemId)
             ?: throw PlaylistItemNotFoundException("${request.playlistItemId}")
         item.accept()
+        playlist.addToOrder(item)
         return PlaylistItemDto.of(item)
     }
 
@@ -81,6 +81,7 @@ class PlaylistService(
             ?: throw RoomNotFoundException("${playlist.roomId}")
         validateCreator(room = room, memberId = memberId)
         playlistItemRepository.deleteById(request.playlistItemId)
+        playlist.removeFromOrder(request.playlistItemId)
     }
 
     @Transactional

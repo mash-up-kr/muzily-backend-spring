@@ -34,6 +34,10 @@ class Playlist(
         order.add(item.id)
     }
 
+    fun removeFromOrder(itemId: Long) {
+        order.removeIf { it == itemId }
+    }
+
     fun changeOrder(itemId: Long, prevItemIdToMove: Long?) {
         if (order.isEmpty() || order.find { it == itemId } == null) {
             return
