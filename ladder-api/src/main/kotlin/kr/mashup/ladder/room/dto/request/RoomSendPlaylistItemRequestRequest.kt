@@ -23,9 +23,10 @@ data class RoomSendPlaylistItemRequestRequest(
         )
     }
 
-    fun toMessage(roomId: Long, playlistItemId: Long): RoomPlaylistItemRequestMessage {
+    fun toMessage(roomId: Long, senderId: Long, playlistItemId: Long): RoomPlaylistItemRequestMessage {
         return RoomPlaylistItemRequestMessage(
             roomId = roomId,
+            senderId = senderId,
             playlistId = playlistId,
             playlistItemId = playlistItemId
         )

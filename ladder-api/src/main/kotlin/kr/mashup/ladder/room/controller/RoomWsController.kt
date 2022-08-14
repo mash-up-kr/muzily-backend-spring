@@ -20,25 +20,28 @@ class RoomWsController(
     @MessageMapping("/v1/rooms/{roomId}/send-chat")
     fun sendChat(
         @DestinationVariable roomId: Long,
+        @MemberId memberId: Long,
         @Payload request: RoomSendChatRequest,
     ) {
-        roomWsService.sendChat(roomId, request)
+        roomWsService.sendChat(roomId, memberId, request)
     }
 
     @MessageMapping("/v1/rooms/{roomId}/send-emoji")
     fun sendEmoji(
         @DestinationVariable roomId: Long,
+        @MemberId memberId: Long,
         @Payload request: RoomSendEmojiRequest,
     ) {
-        roomWsService.sendEmoji(roomId, request)
+        roomWsService.sendEmoji(roomId, memberId, request)
     }
 
     @MessageMapping("/v1/rooms/{roomId}/send-playlist-item-request")
     fun sendPlaylistItemRequest(
         @DestinationVariable roomId: Long,
+        @MemberId memberId: Long,
         @Payload request: RoomSendPlaylistItemRequestRequest,
     ) {
-        roomWsService.sendPlaylistItemRequest(roomId, request)
+        roomWsService.sendPlaylistItemRequest(roomId, memberId, request)
     }
 
     @MessageMapping("/v1/rooms/{roomId}/accept-playlist-item-request")

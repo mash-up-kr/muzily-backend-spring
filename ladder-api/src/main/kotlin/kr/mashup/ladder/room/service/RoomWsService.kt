@@ -19,25 +19,25 @@ class RoomWsService(
     private val roomMessagePublisher: RoomMessagePublisher,
 ) {
 
-    fun sendChat(roomId: Long, request: RoomSendChatRequest) {
+    fun sendChat(roomId: Long, senderId: Long, request: RoomSendChatRequest) {
         roomMessagePublisher.publish(
             RoomTopic(roomId),
-            RoomMessage(RoomMessageType.CHAT, request.toMessage(roomId))
+            RoomMessage(RoomMessageType.CHAT, request.toMessage(roomId, senderId))
         )
     }
 
-    fun sendEmoji(roomId: Long, request: RoomSendEmojiRequest) {
+    fun sendEmoji(roomId: Long, senderId: Long, request: RoomSendEmojiRequest) {
         roomMessagePublisher.publish(
             RoomTopic(roomId),
-            RoomMessage(RoomMessageType.EMOJI, request.toMessage(roomId))
+            RoomMessage(RoomMessageType.EMOJI, request.toMessage(roomId, senderId))
         )
     }
 
-    fun sendPlaylistItemRequest(roomId: Long, request: RoomSendPlaylistItemRequestRequest) {
+    fun sendPlaylistItemRequest(roomId: Long, senderId: Long, request: RoomSendPlaylistItemRequestRequest) {
         val item = playlistService.addItemRequest(request)
         roomMessagePublisher.publish(
             RoomTopic(roomId),
-            RoomMessage(RoomMessageType.PLAYLIST_ITEM_REQUEST, request.toMessage(roomId, item.id))
+            RoomMessage(RoomMessageType.PLAYLIST_ITEM_REQUEST, request.toMessage(roomId, senderId, item.id))
         )
     }
 
