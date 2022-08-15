@@ -7,9 +7,10 @@ data class RoomSendEmojiRequest(
     val emojiType: EmojiType,
     val intensity: Int,
 ) {
-    fun toMessage(roomId: Long): RoomEmojiMessage {
+    fun toMessage(roomId: Long, senderId: Long): RoomEmojiMessage {
         return RoomEmojiMessage(
             roomId = roomId,
+            senderId = senderId,
             emojiType = emojiType,
             intensity = intensity,
         )

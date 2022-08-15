@@ -3,6 +3,7 @@ package kr.mashup.ladder.room.controller
 import kr.mashup.ladder.config.annotation.MemberId
 import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
+import kr.mashup.ladder.room.dto.request.RoomChangeOrderOfPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomRemovePlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
@@ -20,25 +21,28 @@ class RoomWsController(
     @MessageMapping("/v1/rooms/{roomId}/send-chat")
     fun sendChat(
         @DestinationVariable roomId: Long,
+        @MemberId memberId: Long,
         @Payload request: RoomSendChatRequest,
     ) {
-        roomWsService.sendChat(roomId, request)
+        roomWsService.sendChat(roomId, memberId, request)
     }
 
     @MessageMapping("/v1/rooms/{roomId}/send-emoji")
     fun sendEmoji(
         @DestinationVariable roomId: Long,
+        @MemberId memberId: Long,
         @Payload request: RoomSendEmojiRequest,
     ) {
-        roomWsService.sendEmoji(roomId, request)
+        roomWsService.sendEmoji(roomId, memberId, request)
     }
 
     @MessageMapping("/v1/rooms/{roomId}/send-playlist-item-request")
     fun sendPlaylistItemRequest(
         @DestinationVariable roomId: Long,
+        @MemberId memberId: Long,
         @Payload request: RoomSendPlaylistItemRequestRequest,
     ) {
-        roomWsService.sendPlaylistItemRequest(roomId, request)
+        roomWsService.sendPlaylistItemRequest(roomId, memberId, request)
     }
 
     @MessageMapping("/v1/rooms/{roomId}/accept-playlist-item-request")
@@ -66,5 +70,14 @@ class RoomWsController(
         @Payload request: RoomRemovePlaylistItemRequest,
     ) {
         roomWsService.removePlaylistItem(roomId, memberId, request)
+    }
+
+    @MessageMapping("/v1/rooms/{roomId}/change-order-playlist-item")
+    fun changeOrderPlaylistItem(
+        @DestinationVariable roomId: Long,
+        @MemberId memberId: Long,
+        @Payload request: RoomChangeOrderOfPlaylistItemRequest,
+    ) {
+        roomWsService.changeOrderPlaylistItem(roomId, memberId, request)
     }
 }

@@ -30,7 +30,7 @@ class AuthApiController(
         val authService: AuthService = authServiceFinder.getService(request.socialType)
         val memberId = authService.authentication(request)
         httpSession.setAttribute(MEMBER_ID, memberId)
-        return LoginResponse(token = httpSession.id)
+        return LoginResponse(memberId = memberId, token = httpSession.id)
     }
 
     @ApiOperation("익명 회원가입 API")
@@ -38,7 +38,7 @@ class AuthApiController(
     fun createAnonymousMember(): LoginResponse {
         val memberId = anonymousAuthService.createAnonymousMember()
         httpSession.setAttribute(MEMBER_ID, memberId)
-        return LoginResponse(token = httpSession.id)
+        return LoginResponse(memberId = memberId, token = httpSession.id)
     }
 
     @ApiOperation("로그아웃 API")

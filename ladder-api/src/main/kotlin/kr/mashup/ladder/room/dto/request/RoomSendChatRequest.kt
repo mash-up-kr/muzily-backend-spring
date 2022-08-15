@@ -5,7 +5,7 @@ import kr.mashup.ladder.domain.room.domain.chat.RoomChatMessage
 data class RoomSendChatRequest(
     val chat: String,
 ) {
-    fun toMessage(roomId: Long): RoomChatMessage {
-        return RoomChatMessage(roomId, chat)
+    fun toMessage(roomId: Long, senderId: Long): RoomChatMessage {
+        return RoomChatMessage(roomId, senderId, chat)
     }
 }

@@ -16,7 +16,7 @@ class RoomChatMessageReceiveEventListener(
     @EventListener
     fun handle(event: RoomChatMessageReceiveEvent) {
         val destination = "${WS_DESTINATION_PREFIX_TOPIC}/v1/rooms/${event.roomId}"
-        val payload = WsResponse.ok(WsResponseType.CHAT, RoomChatResponse(event.chat))
+        val payload = WsResponse.ok(WsResponseType.CHAT, RoomChatResponse(event.chat, event.senderId))
         simpMessagingTemplate.convertAndSend(destination, payload)
     }
 }

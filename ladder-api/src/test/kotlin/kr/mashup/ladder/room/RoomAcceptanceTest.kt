@@ -106,7 +106,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
         `이모지 보내기 요청`(`익명 세션`, 방.roomId, `방 이모지 보내기 요청값`)
 
         // then
-        `이모지 받음`(futures, `방 이모지 보내기 요청값`)
+        `이모지 받음`(futures, `익명 로그인 응답`.memberId, `방 이모지 보내기 요청값`)
     }
 
     @Test
@@ -127,7 +127,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
         `재생목록 항목 신청 요청`(`익명 세션`, 방.roomId, `방 재생목록 항목 신청 요청값`)
 
         // then
-        `재생목록 항목 신청 요청 받음`(future, `방 재생목록 항목 신청 요청값`)
+        `재생목록 항목 신청 요청 받음`(future, `익명 로그인 응답`.memberId, `방 재생목록 항목 신청 요청값`)
     }
 
     @Test
@@ -331,7 +331,11 @@ class RoomAcceptanceTest : AcceptanceTest() {
             session.send("${WS_APP_DESTINATION_PREFIX}/v1/rooms/${roomId}/send-emoji", request)
         }
 
-        fun `이모지 받음`(futures: List<CompletableFuture<WsResponse<*>>>, request: RoomSendEmojiRequest) {
+        fun `이모지 받음`(
+            futures: List<CompletableFuture<WsResponse<*>>>,
+            senderId: Long,
+            request: RoomSendEmojiRequest,
+        ) {
             val responses = futures
                 .map { it.get(5, TimeUnit.SECONDS) }
                 .map { JsonUtil.reDeserialize(it, object : TypeReference<WsResponse<RoomEmojiResponse>>() {}) }
@@ -340,6 +344,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
                 { assertThat(responses.map { it.type }).allMatch { it == WsResponseType.EMOJI } },
                 { assertThat(responses.map { it.data!!.emojiType }).allMatch { it == request.emojiType } },
                 { assertThat(responses.map { it.data!!.intensity }).allMatch { it == request.intensity } },
+                { assertThat(responses.map { it.data!!.senderId }).allMatch { it == senderId } },
             )
         }
 
@@ -367,6 +372,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
 
         fun `재생목록 항목 신청 요청 받음`(
             future: CompletableFuture<WsResponse<*>>,
+            senderId: Long?,
             request: RoomSendPlaylistItemRequestRequest,
         ): RoomPlaylistItemRequestResponse {
             val response = JsonUtil.reDeserialize(
@@ -382,6 +388,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
                 { assertThat(response.data!!.thumbnail).isEqualTo(request.thumbnail) },
                 { assertThat(response.data!!.duration).isEqualTo(request.duration) },
                 { assertThat(response.data!!.dominantColor).isEqualTo(request.dominantColor) },
+                { if (senderId != null) assertThat(response.data!!.senderId).isEqualTo(senderId) },
             )
 
             return response.data!!
@@ -394,7 +401,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
             request: RoomSendPlaylistItemRequestRequest,
         ): RoomPlaylistItemRequestResponse {
             `재생목록 항목 신청 요청`(itemRequestSession, roomId, request)
-            return `재생목록 항목 신청 요청 받음`(`개인 큐 구독되어 있음`(roomCreatorSession), request)
+            return `재생목록 항목 신청 요청 받음`(`개인 큐 구독되어 있음`(roomCreatorSession), null, request)
         }
 
         fun `재생목록 항목 신청 승인 요청`(session: StompSession, roomId: Long, request: RoomAcceptPlaylistItemRequestRequest) {

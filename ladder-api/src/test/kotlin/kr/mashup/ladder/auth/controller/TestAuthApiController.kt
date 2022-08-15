@@ -22,7 +22,7 @@ class TestAuthApiController(
     fun handleAuthentication(@Valid @RequestBody request: AuthRequest): LoginResponse {
         val member = memberRepository.save(Member.newKaKao("y2o2u2n", "star"))
         httpSession.setAttribute(MEMBER_ID, member.id)
-        return LoginResponse(token = httpSession.id)
+        return LoginResponse(memberId = member.id, token = httpSession.id)
     }
 
     @PostMapping("/test-api/v1/auth/anonymous")
@@ -30,6 +30,6 @@ class TestAuthApiController(
     fun createAnonymousMember(): LoginResponse {
         val member = memberRepository.save(Member.newAnonymous())
         httpSession.setAttribute(MEMBER_ID, member.id)
-        return LoginResponse(token = httpSession.id)
+        return LoginResponse(memberId = member.id, token = httpSession.id)
     }
 }

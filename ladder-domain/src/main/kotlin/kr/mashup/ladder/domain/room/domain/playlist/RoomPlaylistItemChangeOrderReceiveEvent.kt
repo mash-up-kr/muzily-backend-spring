@@ -1,8 +1,8 @@
 package kr.mashup.ladder.domain.room.domain.playlist
 
-class RoomPlaylistItemRequestMessageReceiveEvent(
+class RoomPlaylistItemChangeOrderReceiveEvent(
     val roomId: Long,
-    val senderId: Long,
     val playlistId: Long,
     val playlistItemId: Long,
+    val order: List<Long>,
 )

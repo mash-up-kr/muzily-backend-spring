@@ -48,9 +48,12 @@ class AuthAcceptanceTest : AcceptanceTest() {
         }
 
         fun `SNS 계정 로그인됨`(response: ExtractableResponse<Response>) {
+            val loginResponse = response.`as`(LoginResponse::class.java)
+
             assertAll(
                 { assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()) },
-                { assertThat(response.`as`(LoginResponse::class.java).token).isNotNull() }
+                { assertThat(loginResponse.memberId).isNotNull() },
+                { assertThat(loginResponse.token).isNotNull() }
             )
         }
 
@@ -68,9 +71,12 @@ class AuthAcceptanceTest : AcceptanceTest() {
         }
 
         fun `익명 로그인됨`(response: ExtractableResponse<Response>) {
+            val loginResponse = response.`as`(LoginResponse::class.java)
+
             assertAll(
                 { assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()) },
-                { assertThat(response.`as`(LoginResponse::class.java).token).isNotNull() }
+                { assertThat(loginResponse.memberId).isNotNull() },
+                { assertThat(loginResponse.token).isNotNull() }
             )
         }
 
