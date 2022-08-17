@@ -2,17 +2,17 @@ package kr.mashup.ladder.room.service
 
 import kr.mashup.ladder.SetupMemberIntegrationTest
 import kr.mashup.ladder.domain.common.exception.model.ForbiddenException
+import kr.mashup.ladder.domain.mood.domain.Mood
+import kr.mashup.ladder.domain.mood.infra.jpa.MoodRepository
 import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
 import kr.mashup.ladder.domain.room.domain.InvitationKey
 import kr.mashup.ladder.domain.room.domain.Room
-import kr.mashup.ladder.domain.room.domain.RoomMood
 import kr.mashup.ladder.domain.room.domain.RoomRole
 import kr.mashup.ladder.domain.room.domain.RoomStatus
 import kr.mashup.ladder.domain.room.exception.RoomConflictException
 import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomMemberMapperRepository
-import kr.mashup.ladder.domain.room.infra.jpa.RoomMoodRepository
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomMoodRequest
@@ -25,7 +25,7 @@ internal class RoomServiceTest(
     private val roomService: RoomService,
     private val roomRepository: RoomRepository,
     private val roomMemberMapperRepository: RoomMemberMapperRepository,
-    private val roomMoodRepository: RoomMoodRepository,
+    private val moodRepository: MoodRepository,
     private val playlistRepository: PlaylistRepository,
 ) : SetupMemberIntegrationTest() {
 
@@ -81,7 +81,7 @@ internal class RoomServiceTest(
         val rooms = roomRepository.findAll()
         assertThat(rooms).hasSize(1)
 
-        val moods = roomMoodRepository.findAll()
+        val moods = moodRepository.findAll()
         assertThat(moods).hasSize(2)
         assertMood(mood = moods[0], name = "잔잔한", emoji = "emoji1", roomId = rooms[0].id)
         assertMood(mood = moods[1], name = "신나는", emoji = "emoji2", roomId = rooms[0].id)
@@ -175,7 +175,7 @@ internal class RoomServiceTest(
         val rooms = roomRepository.findAll()
         assertThat(rooms).hasSize(1)
 
-        val moods = roomMoodRepository.findAll()
+        val moods = moodRepository.findAll()
         assertThat(moods).hasSize(2)
         assertMood(mood = moods[0], name = "잔잔한", emoji = "emoji1", roomId = rooms[0].id)
         assertMood(mood = moods[1], name = "신나는", emoji = "emoji2", roomId = rooms[0].id)
@@ -299,7 +299,7 @@ internal class RoomServiceTest(
         assertThat(room.description).isEqualTo(description)
     }
 
-    private fun assertMood(mood: RoomMood, name: String, emoji: String, roomId: Long) {
+    private fun assertMood(mood: Mood, name: String, emoji: String, roomId: Long) {
         assertThat(mood.roomId).isEqualTo(roomId)
         assertThat(mood.emoji).isEqualTo(emoji)
         assertThat(mood.name).isEqualTo(name)

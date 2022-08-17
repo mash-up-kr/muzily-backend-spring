@@ -1,0 +1,17 @@
+### 방의 분위기를 추천합니다
+POST {{api}}/api/v1/room/{{ROOM_ID}}/mood/recommends
+Content-Type: application/json
+Authorization: Bearer {{SESSION_ID}}
+
+{
+    "descriptions": [
+        "신나는",
+        "여행",
+        "드라이브"
+    ]
+}
+
+
+### 방에 추천된 분위기 목록을 조회합니다
+GET {{api}}/api/v1/room/{{ROOM_ID}}/mood/recommends?size=2
+Authorization: Bearer {{SESSION_ID}}
