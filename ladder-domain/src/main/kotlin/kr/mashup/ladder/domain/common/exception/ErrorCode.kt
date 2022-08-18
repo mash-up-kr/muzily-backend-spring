@@ -15,35 +15,33 @@ enum class ErrorCode(
     INVALID_REQUEST(status = 400, code = "C001", message = "잘못된 요청입니다", shouldLog = false),
     UNAUTHORIZED(status = 401, code = "C002", message = "인증에 실패하였습니다 다시 로그인 해주세요", shouldLog = false),
     FORBIDDEN(status = 403, code = "C003", message = "해당 권한이 존재하지 않습니다", shouldLog = false),
-    FORBIDDEN_NEED_ACCOUNT(
-        status = 403,
-        code = "C004",
-        message = "익명 사용자는 사용할 수 없습니다.\n해당 기능은 회원가입 이후 사용하실 수 있습니다",
-        shouldLog = false
-    ),
     NOT_FOUND(status = 404, code = "C005", message = "해당하는 리소스는 존재하지 않습니다", shouldLog = false),
     METHOD_NOT_ALLOWED(status = 405, code = "C006", message = "Method Not Allowed", shouldLog = false),
     CONFLICT(status = 409, code = "C007", message = "중복된 리소스가 존재합니다", shouldLog = false),
     UNKNOWN_ERROR(status = 500, code = "C008", message = "서버에서 에러가 발생하였습니다 ㅠㅠ", shouldLog = true),
 
     // auth
-    KAKAO_INVALID_AUTHORIZATION_CODE(status = 400, code = "AT001", "잘못된 카카오 인가 코드입니다", shouldLog = false),
+    INVALID_AUTH_CODE(status = 400, code = "AT001", message = "잘못된 인증 코드입니다", shouldLog = false),
 
     // member
     MEMBER_NOT_FOUND(status = 404, code = "A001", message = "해당하는 계정은 존재하지 않습니다", shouldLog = false),
 
     // room
-    ROOM_NOT_FOUND(status = 404, code = "R001", message = "해당하는 방이 존재하지 않습니다", shouldLog = false),
-    ROOM_CONFLICT_AS_ADMIN(
+    ROOM_NOT_FOUND(status = 404, code = "R001", message = "해당하는 방은 존재하지 않습니다", shouldLog = false),
+    ALREADY_ROOM_CREATOR_CONFLICT(
         status = 409,
         code = "R002",
         message = "이미 생성한 방이 존재합니다. 1개의 방만 생성할 수 있습니다",
         shouldLog = false
     ),
-    ROOM_MEMBER_CONFLICT(status = 409, code = "R003", message = "해당 방에 이미 참여하고 있습니다", shouldLog = false),
-    CREATED_ROOM_MEMBER_NOT_FOUND(status = 404, code = "R004", message = "생성한 방이 없습니다", shouldLog = false),
-    ROOM_IS_NOT_CREATOR_FORBIDDEN(status = 403, code = "R005", "방 생성자만이 접근할 수 있습니다", shouldLog = false),
-    NOT_PARTICIPANT_IN_ROOM_FORBIDDEN(status = 403, code = "R006", "해당 방에 참가중이지 않습니다", shouldLog = false),
+    ALREADY_EXISTS_MEMBER_IN_ROOM_CONFLICT(
+        status = 409,
+        code = "R003",
+        message = "해당하는 방에 이미 참여하고 있습니다",
+        shouldLog = false
+    ),
+    CREATED_ROOM_NOT_FOUND(status = 404, code = "R004", message = "해당하는 멤버가 생성한 방이 존재하지 않습니다", shouldLog = false),
+    IS_NOT_CREATOR_IN_ROOM_FORBIDDEN(status = 403, code = "R005", message = "방장만이 접근할 수 있습니다", shouldLog = false),
 
     // playlist
     PLAYLIST_NOT_FOUND(status = 404, code = "P001", message = "해당하는 재생목록이 존재하지 않습니다", shouldLog = false),
@@ -52,14 +50,14 @@ enum class ErrorCode(
     PLAYLIST_ITEM_NOT_FOUND(status = 404, code = "PI001", message = "해당하는 재생목록 항목이 존재하지 않습니다", shouldLog = false),
 
     // youtube
-    YOUTUBE_VIDEO_NOT_FOUND(status = 404, code = "Y001", message = "해당하는 유튜브 음악 영상은 존재하지 않습니다", shouldLog = false),
+    YOUTUBE_VIDEO_NOT_FOUND(status = 404, code = "YO001", message = "해당하는 유튜브 영상은 존재하지 않습니다", shouldLog = false),
     YOUTUBE_VIDEO_NOT_ALLOWED_CATEGORY(
         status = 403,
         code = "Y002",
-        message = "해당하는 영상은 허용되지 않은 카테고리입니다",
+        message = "해당 영상은 허용되지 않은 카테고리 입니다",
         shouldLog = false
     ),
 
-    // Mood Recommend
-    MOOD_RECOMMEND_NOT_FOUND(status = 404, code = "M001", message = "해당하는 분위기 추천은 존재하지 않습니다", shouldLog = false),
+    // Mood Suggestion
+    MOOD_SUGGESTION_NOT_FOUND(status = 404, code = "M001", message = "해당하는 분위기 제안 정보는 존재하지 않습니다", shouldLog = false),
 }

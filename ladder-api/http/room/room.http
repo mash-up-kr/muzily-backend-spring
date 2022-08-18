@@ -43,7 +43,7 @@ GET {{api}}/api/v1/rooms/{{ROOM_ID}}
 Authorization: Bearer {{SESSION_ID}}
 
 > {%
-client.global.set("INVITATION_KEY", response.body["invitationKey"])
+client.global.set("INVITATION_KEY", response.body["invitation"]["invitationKey"])
 %}
 
 

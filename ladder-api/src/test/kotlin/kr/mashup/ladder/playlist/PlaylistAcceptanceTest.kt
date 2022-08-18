@@ -31,10 +31,10 @@ class PlaylistAcceptanceTest : AcceptanceTest() {
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
 
         // when
-        val response = `재생목록 조회 요청`(`SNS 계정 로그인 응답`.token, 방.playlistId!!)
+        val response = `재생목록 조회 요청`(`SNS 계정 로그인 응답`.token, 방.playlist?.playlistId!!)
 
         // then
-        `재생목록 조회됨`(response, 방.playlistId!!)
+        `재생목록 조회됨`(response, 방.playlist?.playlistId!!)
     }
 
     @Test
@@ -44,7 +44,7 @@ class PlaylistAcceptanceTest : AcceptanceTest() {
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
 
         // when
-        val response = `재생목록 조회 요청`("unknown-token", 방.playlistId!!)
+        val response = `재생목록 조회 요청`("unknown-token", 방.playlist?.playlistId!!)
 
         // then
         `재생목록 조회되지 않음`(response)
@@ -56,16 +56,16 @@ class PlaylistAcceptanceTest : AcceptanceTest() {
         val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
         val `익명 로그인 응답` = `익명 로그인되어 있음`()
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
-        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitationKey)
+        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitation.invitationKey)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
         `방 구독되어 있음`(`익명 세션`, 방.roomId)
-        val `방 재생목록 항목 신청 요청값들` = listOf(`방 재생목록 항목 신청 요청값`(방.playlistId!!))
+        val `방 재생목록 항목 신청 요청값들` = listOf(`방 재생목록 항목 신청 요청값`(방.playlist?.playlistId!!))
         `방 재생목록 항목 신청 요청값들`.forEach { `재생목록 항목 신청되어 있음`(`익명 세션`, `SNS 계정 세션`, 방.roomId, it) }
 
         // when
-        val response = `계류중인 재생목록 항목 목록 조회 요청`(`SNS 계정 로그인 응답`.token, 방.playlistId!!)
+        val response = `계류중인 재생목록 항목 목록 조회 요청`(`SNS 계정 로그인 응답`.token, 방.playlist?.playlistId!!)
 
         // then
         `계류중인 재생목록 항목 목록 조회됨`(response, `방 재생목록 항목 신청 요청값들`)
@@ -79,7 +79,7 @@ class PlaylistAcceptanceTest : AcceptanceTest() {
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
 
         // when
-        val response = `계류중인 재생목록 항목 목록 조회 요청`(`익명 로그인 응답`.token, 방.playlistId!!)
+        val response = `계류중인 재생목록 항목 목록 조회 요청`(`익명 로그인 응답`.token, 방.playlist?.playlistId!!)
 
         // then
         `계류중인 재생목록 항목 목록 조회되지 않음`(response)

@@ -5,5 +5,5 @@ import kr.mashup.ladder.domain.common.exception.model.LadderBaseException
 
 data class RoomConflictException(
     override val message: String,
-    override val errorCode: ErrorCode = ErrorCode.ROOM_CONFLICT_AS_ADMIN,
+    override val errorCode: ErrorCode = ErrorCode.ALREADY_ROOM_CREATOR_CONFLICT,
 ) : LadderBaseException(message, errorCode)

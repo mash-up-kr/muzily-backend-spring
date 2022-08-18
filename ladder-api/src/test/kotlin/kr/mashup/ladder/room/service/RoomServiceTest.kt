@@ -37,7 +37,7 @@ internal class RoomServiceTest(
         // then
         val rooms = roomRepository.findAll()
         assertThat(rooms).hasSize(1)
-        assertRoom(room = rooms[0], description = request.name)
+        assertRoom(room = rooms[0], name = request.name)
         assertThat(rooms[0].invitationKey).isNotNull
         assertThat(rooms[0].emojiType).isEqualTo(request.emojiType)
     }
@@ -123,7 +123,7 @@ internal class RoomServiceTest(
         // then
         val rooms = roomRepository.findAll()
         assertThat(rooms).hasSize(1)
-        assertRoom(room = rooms[0], description = request.name)
+        assertRoom(room = rooms[0], name = request.name)
         assertThat(rooms[0].invitationKey).isNotNull
         assertThat(rooms[0].emojiType).isEqualTo(request.emojiType)
     }
@@ -206,7 +206,7 @@ internal class RoomServiceTest(
         val rooms = roomRepository.findAll()
         assertThat(rooms).hasSize(1)
         assertThat(rooms[0].status).isEqualTo(RoomStatus.DELETED)
-        assertRoom(room = rooms[0], description = room.name)
+        assertRoom(room = rooms[0], name = room.name)
         assertThat(rooms[0].invitationKey).isNotNull
     }
 
@@ -247,8 +247,8 @@ internal class RoomServiceTest(
         }.isInstanceOf(RoomNotFoundException::class.java)
     }
 
-    private fun assertRoom(room: Room, description: String) {
-        assertThat(room.name).isEqualTo(description)
+    private fun assertRoom(room: Room, name: String) {
+        assertThat(room.name).isEqualTo(name)
     }
 
 }

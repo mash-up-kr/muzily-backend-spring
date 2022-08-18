@@ -94,7 +94,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
         val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
         val `익명 로그인 응답` = `익명 로그인되어 있음`()
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
-        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitationKey)
+        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitation.invitationKey)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         val futures = listOf(
@@ -115,13 +115,13 @@ class RoomAcceptanceTest : AcceptanceTest() {
         val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
         val `익명 로그인 응답` = `익명 로그인되어 있음`()
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
-        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitationKey)
+        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitation.invitationKey)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
         `방 구독되어 있음`(`익명 세션`, 방.roomId)
         val future = `개인 큐 구독되어 있음`(`SNS 계정 세션`)
-        val `방 재생목록 항목 신청 요청값` = `방 재생목록 항목 신청 요청값`(방.playlistId!!)
+        val `방 재생목록 항목 신청 요청값` = `방 재생목록 항목 신청 요청값`(방.playlist?.playlistId!!)
 
         // when
         `재생목록 항목 신청 요청`(`익명 세션`, 방.roomId, `방 재생목록 항목 신청 요청값`)
@@ -136,7 +136,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
         val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
         val `익명 로그인 응답` = `익명 로그인되어 있음`()
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
-        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitationKey)
+        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitation.invitationKey)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         val futures = listOf(
@@ -146,7 +146,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
             `익명 세션`,
             `SNS 계정 세션`,
             방.roomId,
-            `방 재생목록 항목 신청 요청값`(방.playlistId!!))
+            `방 재생목록 항목 신청 요청값`(방.playlist?.playlistId!!))
         val `방 재생목록 항목 신청 승인 요청값` = `방 재생목록 항목 신청 승인 요청값`(
             `신청된 재생목록 항목`.playlistId,
             `신청된 재생목록 항목`.playlistItemId)
@@ -167,7 +167,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
         val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
         val `익명 로그인 응답` = `익명 로그인되어 있음`()
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
-        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitationKey)
+        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitation.invitationKey)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
@@ -177,7 +177,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
             `익명 세션`,
             `SNS 계정 세션`,
             방.roomId,
-            `방 재생목록 항목 신청 요청값`(방.playlistId!!))
+            `방 재생목록 항목 신청 요청값`(방.playlist?.playlistId!!))
         val `방 재생목록 항목 신청 승인 요청값` = `방 재생목록 항목 신청 승인 요청값`(
             `신청된 재생목록 항목`.playlistId,
             `신청된 재생목록 항목`.playlistItemId)
@@ -198,13 +198,13 @@ class RoomAcceptanceTest : AcceptanceTest() {
         val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
         val `익명 로그인 응답` = `익명 로그인되어 있음`()
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
-        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitationKey)
+        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitation.invitationKey)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         val futures = listOf(
             `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId),
             `방 구독되어 있음`(`익명 세션`, 방.roomId))
-        val `방 재생목록 항목 추가 요청값` = `방 재생목록 항목 추가 요청값`(방.playlistId!!)
+        val `방 재생목록 항목 추가 요청값` = `방 재생목록 항목 추가 요청값`(방.playlist?.playlistId!!)
 
         // when
         `재생목록 항목 추가 요청`(`SNS 계정 세션`, 방.roomId, `방 재생목록 항목 추가 요청값`)
@@ -219,13 +219,13 @@ class RoomAcceptanceTest : AcceptanceTest() {
         val `SNS 계정 로그인 응답` = `SNS 계정 로그인되어 있음`(`인증 요청값`())
         val `익명 로그인 응답` = `익명 로그인되어 있음`()
         val 방 = `방 생성되어 있음`(`SNS 계정 로그인 응답`.token, `방 생성 요청값`())
-        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitationKey)
+        `방 입장되어 있음`(`익명 로그인 응답`.token, 방.invitation.invitationKey)
         val `SNS 계정 세션` = `웹소켓 연결되어 있음`(port, `SNS 계정 로그인 응답`.token)
         val `익명 세션` = `웹소켓 연결되어 있음`(port, `익명 로그인 응답`.token)
         `방 구독되어 있음`(`SNS 계정 세션`, 방.roomId)
         `방 구독되어 있음`(`익명 세션`, 방.roomId)
         val future = `개인 큐 구독되어 있음`(`익명 세션`)
-        val `방 재생목록 항목 추가 요청값` = `방 재생목록 항목 추가 요청값`(방.playlistId!!)
+        val `방 재생목록 항목 추가 요청값` = `방 재생목록 항목 추가 요청값`(방.playlist?.playlistId!!)
 
         // when
         `재생목록 항목 추가 요청`(`익명 세션`, 방.roomId, `방 재생목록 항목 추가 요청값`)
@@ -255,8 +255,8 @@ class RoomAcceptanceTest : AcceptanceTest() {
             assertAll(
                 { assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()) },
                 { assertThat(room.roomId).isNotNull() },
-                { assertThat(room.description).isEqualTo(request.name) },
-                { assertThat(room.playlistId).isNotNull() },
+                { assertThat(room.name).isEqualTo(request.name) },
+                { assertThat(room.playlist?.playlistId).isNotNull() },
             )
         }
 

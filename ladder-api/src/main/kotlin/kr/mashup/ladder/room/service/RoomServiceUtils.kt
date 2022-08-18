@@ -1,6 +1,6 @@
 package kr.mashup.ladder.room.service
 
-import kr.mashup.ladder.domain.common.exception.ErrorCode.ROOM_IS_NOT_CREATOR_FORBIDDEN
+import kr.mashup.ladder.domain.common.exception.ErrorCode.IS_NOT_CREATOR_IN_ROOM_FORBIDDEN
 import kr.mashup.ladder.domain.common.exception.model.ForbiddenException
 import kr.mashup.ladder.domain.room.domain.Room
 import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
@@ -12,7 +12,7 @@ object RoomServiceUtils {
         if (!roomRepository.existsRoomByIdAndCreatorId(roomId = roomId, creatorId = memberId)) {
             throw ForbiddenException(
                 "멤버($memberId)는 해당하는 방($roomId)에 대한 권한이 없습니다",
-                ROOM_IS_NOT_CREATOR_FORBIDDEN
+                IS_NOT_CREATOR_IN_ROOM_FORBIDDEN
             )
         }
     }

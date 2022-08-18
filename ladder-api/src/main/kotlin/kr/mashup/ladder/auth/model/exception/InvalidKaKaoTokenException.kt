@@ -5,5 +5,5 @@ import kr.mashup.ladder.domain.common.exception.model.LadderBaseException
 
 data class InvalidKaKaoTokenException(
     override val message: String,
-    override val errorCode: ErrorCode = ErrorCode.KAKAO_INVALID_AUTHORIZATION_CODE,
+    override val errorCode: ErrorCode = ErrorCode.INVALID_AUTH_CODE,
 ) : LadderBaseException(message, errorCode)
