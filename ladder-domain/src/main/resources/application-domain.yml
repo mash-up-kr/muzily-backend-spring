@@ -93,7 +93,7 @@ spring:
       username: ENC(LSYUb+AxeBTxdg4KyO1O/uEa3s88kdmy6ry0iifMnP+70P07/pHD0JmqFLrjWl1i)
       password: ENC(6x1sy4dhws1rO3hIShmvcWXigVbaPoU9Y49vE4Fo3ZH3AC0XdJ5fuRiiEwO4xBP+)
   redis:
-    host: 127.0.0.1
+    host: ENC(eked9MSeoPN1H9lEZ9ChbTNfjz2ad9kgB6jPLUxJfY1RcwK3VnmkzVqxPMA7O+0j)
     port: 6379
 
 
