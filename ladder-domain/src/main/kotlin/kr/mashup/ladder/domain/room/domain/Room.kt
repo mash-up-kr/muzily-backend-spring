@@ -2,6 +2,7 @@ package kr.mashup.ladder.domain.room.domain
 
 import kr.mashup.ladder.domain.common.domain.BaseEntity
 import kr.mashup.ladder.domain.room.domain.RoomRoleValidator.validateNotParticipant
+import kr.mashup.ladder.domain.room.domain.emoji.EmojiType
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Embedded
@@ -15,10 +16,14 @@ import javax.persistence.Table
 @Entity
 class Room(
     @Column(nullable = false)
-    var description: String,
+    var name: String,
 
     @Embedded
     var invitationKey: InvitationKey,
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    var emojiType: EmojiType,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -28,8 +33,9 @@ class Room(
     @OneToMany(mappedBy = "room", cascade = [CascadeType.ALL], orphanRemoval = true)
     val participants: MutableList<RoomMemberMapper> = mutableListOf()
 
-    fun update(description: String) {
-        this.description = description
+    fun update(name: String, emojiType: EmojiType) {
+        this.name = name
+        this.emojiType = emojiType
     }
 
     fun delete() {
@@ -68,10 +74,15 @@ class Room(
     }
 
     companion object {
-        fun newInstance(description: String, memberId: Long): Room {
+        fun newInstance(
+            name: String,
+            emojiType: EmojiType,
+            memberId: Long,
+        ): Room {
             val room = Room(
-                description = description,
-                invitationKey = InvitationKey.newInstance()
+                name = name,
+                invitationKey = InvitationKey.newInstance(),
+                emojiType = emojiType,
             )
             room.addCreator(memberId)
             return room

@@ -6,16 +6,16 @@ import javax.validation.constraints.Size
 
 data class AddMoodRecommendRequest(
     @field:Valid
-    @field:Size(max = 10)
-    val descriptions: Set<String>,
+    @field:Size(max = 10, message = "방 분위기 추천은 최대 10개씩만 가능합니다")
+    val names: Set<String>,
 ) {
 
     fun toEntity(roomId: Long, memberId: Long): List<MoodRecommend> {
-        return descriptions.map { description ->
-            MoodRecommend(
+        return names.map { description ->
+            MoodRecommend.of(
                 roomId = roomId,
                 recommenderId = memberId,
-                description = description
+                name = description
             )
         }
     }

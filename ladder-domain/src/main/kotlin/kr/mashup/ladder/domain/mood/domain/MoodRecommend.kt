@@ -8,22 +8,20 @@ import javax.persistence.Table
 @Entity
 class MoodRecommend(
     val roomId: Long,
-    val description: String,
+    val name: String,
     val recommenderId: Long,
 ) : BaseEntity() {
 
     companion object {
         fun of(
             roomId: Long,
-            description: String,
+            name: String,
             recommenderId: Long,
-        ): MoodRecommend {
-            return MoodRecommend(
-                roomId = roomId,
-                description = description,
-                recommenderId = recommenderId,
-            )
-        }
+        ) = MoodRecommend(
+            roomId = roomId,
+            name = name,
+            recommenderId = recommenderId,
+        )
     }
 
 }

@@ -11,7 +11,8 @@ class RoomFixture {
     companion object {
         fun `방 생성 요청값`(): RoomCreateRequest {
             return RoomCreateRequest(
-                description = "매쇼~쉬는탐"
+                name = "매쇼~쉬는탐",
+                emojiType = EmojiType.BOOK,
             )
         }
 

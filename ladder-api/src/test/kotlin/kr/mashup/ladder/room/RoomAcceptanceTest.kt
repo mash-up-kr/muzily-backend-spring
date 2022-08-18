@@ -255,7 +255,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
             assertAll(
                 { assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()) },
                 { assertThat(room.roomId).isNotNull() },
-                { assertThat(room.description).isEqualTo(request.description) },
+                { assertThat(room.description).isEqualTo(request.name) },
                 { assertThat(room.playlistId).isNotNull() },
             )
         }

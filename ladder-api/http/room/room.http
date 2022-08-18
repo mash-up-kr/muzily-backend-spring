@@ -4,7 +4,8 @@ Content-Type: application/json
 Authorization: Bearer {{SESSION_ID}}
 
 {
-    "description": "메쇼~쉬는탐"
+    "name": "메쇼~쉬는탐",
+    "emojiType": "HEART"
 }
 
 > {%
@@ -18,21 +19,8 @@ Content-Type: application/json
 Authorization: Bearer {{SESSION_ID}}
 
 {
-    "description": "메쇼~쉬는탐",
-    "moods": [
-        {
-            "name": "분위기 좋은",
-            "emoji": "emoji"
-        },
-        {
-            "name": "신나는",
-            "emoji": "emoji"
-        },
-        {
-            "name": "여행",
-            "emoji": "emoji"
-        }
-    ]
+    "name": "메쇼~쉬는탐",
+    "emojiType": "BOOK"
 }
 
 

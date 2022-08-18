@@ -1,6 +1,5 @@
 package kr.mashup.ladder.room.service
 
-import kr.mashup.ladder.domain.mood.domain.Mood
 import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
 import kr.mashup.ladder.domain.room.domain.Room
@@ -8,7 +7,6 @@ import kr.mashup.ladder.domain.room.domain.RoomRoleValidator.validateParticipant
 import kr.mashup.ladder.domain.room.exception.CreatedRoomNotFoundException
 import kr.mashup.ladder.domain.room.exception.RoomConflictException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
-import kr.mashup.ladder.mood.service.MoodService
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
 import kr.mashup.ladder.room.dto.response.CreatedRoomResponse
@@ -23,21 +21,18 @@ import org.springframework.transaction.annotation.Transactional
 class RoomService(
     private val roomRepository: RoomRepository,
     private val playlistRepository: PlaylistRepository,
-    private val moodService: MoodService,
 ) {
 
     @Transactional
     fun create(request: RoomCreateRequest, memberId: Long): RoomDetailInfoResponse {
         validateNotExistsCreatedRoomByMember(memberId = memberId)
         val room: Room = roomRepository.save(request.toEntity(memberId = memberId))
-        val moods: List<Mood> = moodService.addMoodsInRoom(roomId = room.id, requests = request.moods)
 
         val playlist = playlistRepository.save(Playlist(room.id))
         return RoomDetailInfoResponse.of(
             room = room,
             playlistId = playlist.id,
             memberId = memberId,
-            moods = moods,
         )
     }
 
@@ -52,14 +47,12 @@ class RoomService(
         val room = findRoomByIdFetchMember(roomRepository, roomId = roomId)
         validateIsAuthor(roomRepository = roomRepository, roomId = roomId, memberId = memberId)
 
-        room.update(request.description)
-        moodService.updateMoodsInRoom(roomId = roomId, requests = request.moods)
+        room.update(name = request.name, emojiType = request.emojiType)
 
         return RoomDetailInfoResponse.of(
             room = room,
             playlistId = playlistRepository.findByRoomId(room.id).id,
             memberId = memberId,
-            moods = moodService.retrieveMoodsInRoom(roomId = room.id)
         )
     }
 
@@ -79,7 +72,6 @@ class RoomService(
             room = room,
             playlistId = playlistRepository.findByRoomId(room.id).id,
             memberId = memberId,
-            moods = moodService.retrieveMoodsInRoom(room.id),
         )
     }
 
