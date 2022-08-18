@@ -15,7 +15,7 @@ data class RoomInfoResponse(
         fun from(room: Room, memberId: Long): RoomInfoResponse {
             val response = RoomInfoResponse(
                 roomId = room.id,
-                description = room.description,
+                description = room.name,
                 role = room.getRole(memberId),
                 participantsCount = room.participants.size,
             )

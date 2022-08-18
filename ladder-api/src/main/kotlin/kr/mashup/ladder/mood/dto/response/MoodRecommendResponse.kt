@@ -12,7 +12,7 @@ data class MoodRecommendResponse(
         fun of(moodRecommend: MoodRecommend): MoodRecommendResponse {
             val response = MoodRecommendResponse(
                 recommendId = moodRecommend.id,
-                description = moodRecommend.description,
+                description = moodRecommend.name,
             )
             response.setBaseTime(moodRecommend)
             return response

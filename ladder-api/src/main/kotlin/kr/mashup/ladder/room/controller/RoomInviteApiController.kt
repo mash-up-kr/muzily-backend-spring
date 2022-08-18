@@ -17,7 +17,7 @@ class RoomInviteApiController(
 ) {
 
     @ApiOperation("방에 대한 초대장 정보를 조회합니다")
-    @Auth(allowedAnonymous = true)
+    @Auth
     @GetMapping("/api/v1/rooms/invitation/{invitationKey}")
     fun getRoomInvitationInfo(
         @PathVariable invitationKey: String,

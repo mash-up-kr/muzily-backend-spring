@@ -42,7 +42,7 @@ class AuthApiController(
     }
 
     @ApiOperation("로그아웃 API")
-    @Auth(allowedAnonymous = true)
+    @Auth
     @PostMapping("/api/v1/logout")
     fun logout(): String {
         httpSession.invalidate()

@@ -3,8 +3,9 @@ package kr.mashup.ladder.room.service
 import kr.mashup.ladder.SetupMemberIntegrationTest
 import kr.mashup.ladder.domain.room.domain.InvitationKey
 import kr.mashup.ladder.domain.room.domain.Room
-import kr.mashup.ladder.domain.room.exception.RoomMemberConflictException
 import kr.mashup.ladder.domain.room.domain.RoomRole
+import kr.mashup.ladder.domain.room.domain.emoji.EmojiType
+import kr.mashup.ladder.domain.room.exception.RoomMemberConflictException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomMemberMapperRepository
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -21,8 +22,9 @@ internal class RoomInviteServiceTest(
     fun `초대장을 통해 방에 참여한다`() {
         // given
         val room = Room(
-            description = "방에 대한 설명",
+            name = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
+            emojiType = EmojiType.BOOK,
         )
         roomRepository.save(room)
 
@@ -41,8 +43,9 @@ internal class RoomInviteServiceTest(
     fun `방에 참여할때, 해당 방에 이미 참여자이면 Conflict 에러가 발생한다`() {
         // given
         val room = Room(
-            description = "방에 대한 설명",
+            name = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
+            emojiType = EmojiType.BOOK,
         )
         room.addGuest(member.id)
         roomRepository.save(room)
@@ -57,8 +60,9 @@ internal class RoomInviteServiceTest(
     fun `방에 참여할때, 해당 방에 이미 방장이면 Conflict 에러가 발생한다`() {
         // given
         val room = Room(
-            description = "방에 대한 설명",
+            name = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
+            emojiType = EmojiType.BOOK,
         )
         room.addCreator(member.id)
         roomRepository.save(room)
