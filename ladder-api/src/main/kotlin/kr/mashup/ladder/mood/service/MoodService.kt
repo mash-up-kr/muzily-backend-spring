@@ -12,13 +12,13 @@ class MoodService(
 ) {
 
     @Transactional
-    fun addRoomMoods(roomId: Long, requests: Set<RoomMoodRequest>) {
+    fun addMoodsInRoom(roomId: Long, requests: Set<RoomMoodRequest>): List<Mood> {
         val moods = requests.map { mood -> mood.toEntity(roomId = roomId) }
-        moodRepository.saveAll(moods)
+        return moodRepository.saveAll(moods)
     }
 
     @Transactional
-    fun updateRoomMoods(roomId: Long, requests: Set<RoomMoodRequest>) {
+    fun updateMoodsInRoom(roomId: Long, requests: Set<RoomMoodRequest>) {
         // TODO: 변경 필요
         val roomMoods = moodRepository.findAllByRoomId(roomId)
         moodRepository.deleteAll(roomMoods)
@@ -27,7 +27,7 @@ class MoodService(
     }
 
     @Transactional(readOnly = true)
-    fun getRoomMoods(roomId: Long): List<Mood> {
+    fun retrieveMoodsInRoom(roomId: Long): List<Mood> {
         return moodRepository.findAllByRoomId(roomId)
     }
 

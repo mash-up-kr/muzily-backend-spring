@@ -24,7 +24,7 @@ class MoodRecommendService(
     }
 
     @Transactional
-    fun getMoodRecommends(
+    fun retrieveMoodRecommends(
         roomId: Long,
         request: CursorPagingRequest,
         memberId: Long,
@@ -47,7 +47,7 @@ class MoodRecommendService(
     }
 
     @Transactional
-    fun readMoodRecommend(roomId: Long, memberId: Long, recommendId: Long) {
+    fun deleteMoodRecommend(roomId: Long, memberId: Long, recommendId: Long) {
         validateHasAuthority(roomId = roomId, creatorId = memberId)
         val recommend = moodRecommendRepository.findByIdAndRoomId(recommendId, roomId)
             ?: throw MoodRecommendNotFoundException("방($roomId)에 해당하는 추천 분위기($recommendId)는 존재하지 않습니다")

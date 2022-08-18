@@ -10,13 +10,11 @@ data class MemberInfoResponse(
 ) {
 
     companion object {
-        fun of(member: Member): MemberInfoResponse {
-            return MemberInfoResponse(
-                nickname = member.nickname,
-                profileUrl = member.profileUrl,
-                accountConnectType = member.accountConnectType,
-            )
-        }
+        fun of(member: Member) = MemberInfoResponse(
+            nickname = member.nickname,
+            profileUrl = member.profileUrl,
+            accountConnectType = member.accountConnectType,
+        )
     }
 
 }

@@ -42,7 +42,7 @@ class MoodRecommendController(
         @MemberId memberId: Long,
         @Valid request: CursorPagingRequest,
     ): PagingResponse<MoodRecommendResponse> {
-        return moodRecommendService.getMoodRecommends(
+        return moodRecommendService.retrieveMoodRecommends(
             roomId = roomId,
             memberId = memberId,
             request = request,
@@ -57,7 +57,7 @@ class MoodRecommendController(
         @MemberId memberId: Long,
         @PathVariable recommendId: Long,
     ): String {
-        moodRecommendService.readMoodRecommend(
+        moodRecommendService.deleteMoodRecommend(
             roomId = roomId,
             memberId = memberId,
             recommendId = recommendId
