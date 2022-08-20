@@ -6,6 +6,7 @@ import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItem
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemStatus
 import javax.persistence.Column
 import javax.persistence.Convert
+import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.OneToMany
 import javax.persistence.Table
@@ -21,6 +22,9 @@ class Playlist(
     @Column(name = "`order`")
     @Convert(converter = OrderConverter::class)
     val order: MutableList<Long> = mutableListOf()
+
+    @Embedded
+    val playInformation: PlayInformation = PlayInformation()
 
     fun getPendingItems(): List<PlaylistItem> {
         return items.filter { it.status == PlaylistItemStatus.PENDING }
@@ -50,5 +54,9 @@ class Playlist(
         }
 
         order.add(order.indexOf(prevItemIdToMove) + 1, itemId)
+    }
+
+    fun updatePlayInformation(currentItemId: Long, playStatus: PlayStatus) {
+        playInformation.update(currentItemId, playStatus)
     }
 }
