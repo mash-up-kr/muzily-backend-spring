@@ -2,7 +2,7 @@ package kr.mashup.ladder.room.service
 
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.room.dto.response.RoomInfoResponse
-import kr.mashup.ladder.room.service.RoomServiceUtils.findRoomByInvitationKey
+import kr.mashup.ladder.room.service.RoomServiceHelper.findRoomByInvitationKey
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

@@ -16,4 +16,6 @@ interface RoomQueryRepository {
 
     fun existsRoomByIdAndCreatorId(roomId: Long, creatorId: Long): Boolean
 
+    fun existsRoomByIdAndMemberId(roomId: Long, creatorId: Long): Boolean
+
 }

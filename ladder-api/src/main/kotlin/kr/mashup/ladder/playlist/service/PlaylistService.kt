@@ -4,8 +4,6 @@ import kr.mashup.ladder.domain.playlist.domain.PlaylistNotFoundException
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemNotFoundException
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemRepository
-import kr.mashup.ladder.domain.room.domain.RoomRoleValidator.validateCreator
-import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.playlist.dto.PlaylistDto
 import kr.mashup.ladder.playlist.dto.PlaylistItemDto
@@ -14,6 +12,8 @@ import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomChangeOrderOfPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomRemovePlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
+import kr.mashup.ladder.room.service.RoomServiceHelper.validateIsCreator
+import kr.mashup.ladder.room.service.RoomServiceHelper.validateIsParticipant
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -25,24 +25,37 @@ class PlaylistService(
     private val roomRepository: RoomRepository,
 ) {
     @Transactional(readOnly = true)
-    fun findById(playlistId: Long): PlaylistDto {
+    fun findById(playlistId: Long, memberId: Long): PlaylistDto {
         val playlist = playlistRepository.findByIdOrNull(playlistId) ?: throw PlaylistNotFoundException("$playlistId")
+        validateIsParticipant(
+            roomRepository = roomRepository,
+            roomId = playlist.roomId,
+            memberId = memberId
+        )
         return PlaylistDto.of(playlist)
     }
 
     @Transactional(readOnly = true)
     fun findPendingItems(playlistId: Long, memberId: Long): List<PlaylistItemDto> {
         val playlist = playlistRepository.findByIdOrNull(playlistId) ?: throw PlaylistNotFoundException("$playlistId")
-        val room = roomRepository.findByIdOrNull(playlist.roomId) ?: throw RoomNotFoundException("${playlist.roomId}")
-        validateCreator(room = room, memberId = memberId)
+        validateIsCreator(
+            roomRepository = roomRepository,
+            roomId = playlist.roomId,
+            memberId = memberId
+        )
         val pendingItems = playlist.getPendingItems()
         return pendingItems.map { PlaylistItemDto.of(it) }
     }
 
     @Transactional
-    fun addItemRequest(request: RoomSendPlaylistItemRequestRequest): PlaylistItemDto {
+    fun addItemRequest(request: RoomSendPlaylistItemRequestRequest, memberId: Long): PlaylistItemDto {
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
+        validateIsParticipant(
+            roomRepository = roomRepository,
+            roomId = playlist.roomId,
+            memberId = memberId
+        )
         val item = playlistItemRepository.save(request.toEntity(playlist))
         return PlaylistItemDto.of(item)
     }
@@ -51,9 +64,11 @@ class PlaylistService(
     fun acceptItemRequest(memberId: Long, request: RoomAcceptPlaylistItemRequestRequest): PlaylistItemDto {
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
-        val room = roomRepository.findByIdOrNull(playlist.roomId)
-            ?: throw RoomNotFoundException("${playlist.roomId}")
-        validateCreator(room = room, memberId = memberId)
+        validateIsCreator(
+            roomRepository = roomRepository,
+            roomId = playlist.roomId,
+            memberId = memberId
+        )
         val item = playlistItemRepository.findByIdOrNull(request.playlistItemId)
             ?: throw PlaylistItemNotFoundException("${request.playlistItemId}")
         item.accept()
@@ -65,9 +80,11 @@ class PlaylistService(
     fun addItem(memberId: Long, request: RoomAddPlaylistItemRequest): PlaylistItemDto {
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
-        val room = roomRepository.findByIdOrNull(playlist.roomId)
-            ?: throw RoomNotFoundException("${playlist.roomId}")
-        validateCreator(room = room, memberId = memberId)
+        validateIsCreator(
+            roomRepository = roomRepository,
+            roomId = playlist.roomId,
+            memberId = memberId
+        )
         val item = playlistItemRepository.save(request.toEntity(playlist))
         playlist.addToOrder(item)
         return PlaylistItemDto.of(item)
@@ -77,9 +94,11 @@ class PlaylistService(
     fun removeItem(memberId: Long, request: RoomRemovePlaylistItemRequest) {
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
-        val room = roomRepository.findByIdOrNull(playlist.roomId)
-            ?: throw RoomNotFoundException("${playlist.roomId}")
-        validateCreator(room = room, memberId = memberId)
+        validateIsCreator(
+            roomRepository = roomRepository,
+            roomId = playlist.roomId,
+            memberId = memberId
+        )
         playlistItemRepository.deleteById(request.playlistItemId)
         playlist.removeFromOrder(request.playlistItemId)
     }
@@ -88,9 +107,11 @@ class PlaylistService(
     fun changeOrder(memberId: Long, request: RoomChangeOrderOfPlaylistItemRequest): List<Long> {
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
-        val room = roomRepository.findByIdOrNull(playlist.roomId)
-            ?: throw RoomNotFoundException("${playlist.roomId}")
-        validateCreator(room = room, memberId = memberId)
+        validateIsCreator(
+            roomRepository = roomRepository,
+            roomId = playlist.roomId,
+            memberId = memberId
+        )
         playlist.changeOrder(request.playlistItemId, request.prevPlaylistItemIdToMove)
         return playlist.order
     }

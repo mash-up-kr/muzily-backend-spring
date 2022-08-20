@@ -1,8 +1,8 @@
 package kr.mashup.ladder.domain.room.domain
 
 import kr.mashup.ladder.domain.common.domain.BaseEntity
-import kr.mashup.ladder.domain.room.domain.RoomRoleValidator.validateNotParticipant
 import kr.mashup.ladder.domain.room.domain.emoji.EmojiType
+import kr.mashup.ladder.domain.room.exception.RoomMemberConflictException
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Embedded
@@ -43,21 +43,23 @@ class Room(
     }
 
     fun addCreator(memberId: Long) {
-        validateNotParticipant(room = this, memberId = memberId)
+        validateIsNotParticipantInRoom(memberId)
         this.participants.add(RoomMemberMapper.newAdmin(room = this, memberId = memberId))
     }
 
     fun addGuest(memberId: Long) {
-        validateNotParticipant(room = this, memberId = memberId)
+        validateIsNotParticipantInRoom(memberId)
         this.participants.add(RoomMemberMapper.newGuest(room = this, memberId = memberId))
+    }
+
+    private fun validateIsNotParticipantInRoom(memberId: Long) {
+        if (isParticipant(memberId)) {
+            throw RoomMemberConflictException("이미 해당하는 방(${id})에 참여하고 있는 멤버(${memberId}) 입니다")
+        }
     }
 
     fun getRole(memberId: Long): RoomRole? {
         return findParticipant(memberId)?.role
-    }
-
-    fun isCreator(memberId: Long): Boolean {
-        return findParticipant(memberId)?.role == RoomRole.CREATOR
     }
 
     fun isParticipant(memberId: Long): Boolean {
