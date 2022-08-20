@@ -6,7 +6,16 @@ import javax.persistence.Enumerated
 
 @Embeddable
 data class PlayInformation(
-    val currentItemId: Long? = null,
+    val currentItemId: Long,
     @Enumerated(EnumType.STRING)
-    val playStatus: PlayStatus? = null,
-)
+    val playStatus: PlayStatus,
+) {
+    companion object {
+        fun empty(): PlayInformation {
+            return PlayInformation(
+                currentItemId = -1,
+                playStatus = PlayStatus.PAUSE
+            )
+        }
+    }
+}

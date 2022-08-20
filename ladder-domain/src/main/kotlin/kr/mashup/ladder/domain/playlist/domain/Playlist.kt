@@ -24,7 +24,7 @@ class Playlist(
     val order: MutableList<Long> = mutableListOf()
 
     @Embedded
-    var playInformation: PlayInformation = PlayInformation()
+    var playInformation: PlayInformation = PlayInformation.empty()
         protected set
 
     fun getPendingItems(): List<PlaylistItem> {
