@@ -23,6 +23,10 @@ dependencies {
     // swagger
     implementation("io.springfox:springfox-boot-starter:3.0.0")
     implementation("io.springfox:springfox-swagger-ui:3.0.0")
+
+    // Sentry
+    implementation("io.sentry:sentry-spring-boot-starter:6.4.0")
+    implementation("io.sentry:sentry-logback:6.4.0")
 }
 
 jib {

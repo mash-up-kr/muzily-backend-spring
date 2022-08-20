@@ -3,6 +3,7 @@ spring.config:
   import:
     - classpath:/application-domain.yml
     - classpath:/application-thirdparty.yml
+    - classpath:/application-sentry.yml
     - optional:classpath:/application-secret.yml
 
 server:
