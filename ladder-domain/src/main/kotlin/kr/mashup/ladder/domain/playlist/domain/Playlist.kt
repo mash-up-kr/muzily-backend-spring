@@ -18,7 +18,7 @@ class Playlist(
     @OneToMany(mappedBy = "playlist")
     val items: List<PlaylistItem> = listOf()
 
-    @Column(name = "`order`")
+    @Column(name = "`order`", columnDefinition = "TEXT")
     @Convert(converter = OrderConverter::class)
     val order: MutableList<Long> = mutableListOf()
 

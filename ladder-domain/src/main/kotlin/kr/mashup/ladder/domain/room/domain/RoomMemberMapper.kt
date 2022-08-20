@@ -20,7 +20,7 @@ class RoomMemberMapper(
     @Column(nullable = false)
     val memberId: Long,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     val role: RoomRole,
 ) : BaseEntity() {

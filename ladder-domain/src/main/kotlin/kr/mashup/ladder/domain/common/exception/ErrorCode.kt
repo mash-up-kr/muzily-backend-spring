@@ -31,7 +31,7 @@ enum class ErrorCode(
     ALREADY_ROOM_CREATOR_CONFLICT(
         status = 409,
         code = "R002",
-        message = "이미 생성한 방이 존재합니다. 1개의 방만 생성할 수 있습니다",
+        message = "이미 해당 계정에서 생성한 방이 존재합니다.\n1개의 방만 생성할 수 있습니다",
         shouldLog = false
     ),
     ALREADY_EXISTS_MEMBER_IN_ROOM_CONFLICT(

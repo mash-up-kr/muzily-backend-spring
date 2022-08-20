@@ -6,7 +6,6 @@ import javax.validation.constraints.Size
 
 data class AddMoodSuggestionRequest(
     @field:Valid
-    @field:Size(max = 10, message = "방 분위기 추천은 최대 10개씩만 가능합니다")
     val names: Set<String>,
 ) {
 

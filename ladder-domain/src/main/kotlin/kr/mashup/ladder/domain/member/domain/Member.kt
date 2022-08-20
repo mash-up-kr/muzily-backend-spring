@@ -14,12 +14,13 @@ private const val ANONYMOUS_DEFAULT_NICKNAME = "Anonymous"
 @Table(name = "member")
 @Entity
 class Member(
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     var nickname: String,
 
+    @Column(length = 300)
     var profileUrl: String? = null,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     var accountConnectType: AccountConnectType = AccountConnectType.UNCONNECTED,
 ) : BaseEntity() {

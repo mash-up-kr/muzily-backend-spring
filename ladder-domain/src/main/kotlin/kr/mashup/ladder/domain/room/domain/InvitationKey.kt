@@ -6,7 +6,7 @@ import javax.persistence.Embeddable
 
 @Embeddable
 class InvitationKey(
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     val invitationKey: String,
 ) {
 

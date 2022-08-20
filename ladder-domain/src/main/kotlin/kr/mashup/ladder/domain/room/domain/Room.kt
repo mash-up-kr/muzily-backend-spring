@@ -15,17 +15,17 @@ import javax.persistence.Table
 @Table(name = "room")
 @Entity
 class Room(
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     var name: String,
 
     @Embedded
     var invitationKey: InvitationKey,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     var emojiType: EmojiType,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     var status: RoomStatus = RoomStatus.ACTIVE,
 ) : BaseEntity() {
