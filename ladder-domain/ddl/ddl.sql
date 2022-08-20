@@ -27,6 +27,8 @@ create table `playlist`
     `id`         bigint auto_increment,
     `room_id`    bigint       not null,
     `order`    TEXT,
+    `current_item_id` bigint null,
+    `play_status` varchar(30) null,
     `created_at` datetime(6)  null,
     `updated_at` datetime(6)  null,
      PRIMARY KEY (`id`),
