@@ -12,8 +12,7 @@ class FilterConfig {
     @Bean
     fun requestLoggingFilter(): FilterRegistrationBean<RequestLoggingFilter> {
         val filter: FilterRegistrationBean<RequestLoggingFilter> = FilterRegistrationBean(RequestLoggingFilter())
-        filter.addUrlPatterns("/api/v1/*", "/ws/*")
-        filter.order = 1
+        filter.addUrlPatterns("/api/v1/*", "/topic/*", "/app/*", "/user/*")
         return filter
     }
 
