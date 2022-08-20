@@ -3,7 +3,6 @@ package kr.mashup.ladder.room.service
 import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
 import kr.mashup.ladder.domain.room.domain.Room
-import kr.mashup.ladder.domain.room.domain.RoomRoleValidator.validateParticipant
 import kr.mashup.ladder.domain.room.exception.CreatedRoomNotFoundException
 import kr.mashup.ladder.domain.room.exception.RoomConflictException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
@@ -11,9 +10,10 @@ import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
 import kr.mashup.ladder.room.dto.response.CreatedRoomResponse
 import kr.mashup.ladder.room.dto.response.RoomDetailInfoResponse
-import kr.mashup.ladder.room.service.RoomServiceUtils.findRoomById
-import kr.mashup.ladder.room.service.RoomServiceUtils.findRoomByIdFetchMember
-import kr.mashup.ladder.room.service.RoomServiceUtils.validateIsAuthor
+import kr.mashup.ladder.room.service.RoomServiceHelper.findRoomById
+import kr.mashup.ladder.room.service.RoomServiceHelper.findRoomByIdFetchMember
+import kr.mashup.ladder.room.service.RoomServiceHelper.validateIsCreator
+import kr.mashup.ladder.room.service.RoomServiceHelper.validateIsParticipant
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -45,7 +45,7 @@ class RoomService(
     @Transactional
     fun update(roomId: Long, request: RoomUpdateRequest, memberId: Long): RoomDetailInfoResponse {
         val room = findRoomByIdFetchMember(roomRepository, roomId = roomId)
-        validateIsAuthor(roomRepository = roomRepository, roomId = roomId, memberId = memberId)
+        validateIsCreator(roomRepository = roomRepository, roomId = roomId, memberId = memberId)
 
         room.update(name = request.name, emojiType = request.emojiType)
 
@@ -66,7 +66,7 @@ class RoomService(
     @Transactional(readOnly = true)
     fun getRoom(roomId: Long, memberId: Long): RoomDetailInfoResponse {
         val room = findRoomById(roomRepository, roomId)
-        validateParticipant(room = room, memberId = memberId)
+        validateIsParticipant(roomRepository = roomRepository, roomId = room.id, memberId = memberId)
 
         return RoomDetailInfoResponse.of(
             room = room,
@@ -78,7 +78,7 @@ class RoomService(
     @Transactional
     fun deleteRoom(roomId: Long, memberId: Long) {
         val room = findRoomById(roomRepository, roomId)
-        validateIsAuthor(roomRepository, roomId = roomId, memberId = memberId)
+        validateIsCreator(roomRepository = roomRepository, roomId = roomId, memberId = memberId)
         room.delete()
     }
 

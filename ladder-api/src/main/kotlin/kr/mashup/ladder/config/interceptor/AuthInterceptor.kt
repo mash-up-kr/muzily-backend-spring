@@ -1,8 +1,9 @@
 package kr.mashup.ladder.config.interceptor
 
+import kr.mashup.ladder.common.exception.model.ForbiddenNotAllowedAnonymousException
+import kr.mashup.ladder.common.exception.model.UnAuthorizedException
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.resolver.MEMBER_ID
-import kr.mashup.ladder.common.exception.model.UnAuthorizedException
 import kr.mashup.ladder.domain.member.domain.AccountConnectType
 import kr.mashup.ladder.domain.member.infra.jpa.MemberRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -40,15 +41,19 @@ class AuthInterceptor(
 
         if (memberId != null && passCheckAuth(auth = auth, memberId = memberId)) {
             request.setAttribute(MEMBER_ID, memberId)
-            return true
         }
-        throw UnAuthorizedException("유효하지 않은 세션($sessionId)의 멤버(${memberId}) 입니다.")
+        return true
     }
 
     private fun passCheckAuth(auth: Auth, memberId: Long): Boolean {
-        val member = memberRepository.findByIdOrNull(memberId) ?: return false
+        val member = memberRepository.findByIdOrNull(memberId)
+            ?: throw UnAuthorizedException("유효하지 않은 세션의 멤버(${memberId}) 입니다.")
+
         if (!auth.allowedAnonymous) {
-            return AccountConnectType.CONNECTED == member.accountConnectType
+            if (AccountConnectType.CONNECTED == member.accountConnectType) {
+                return true
+            }
+            throw ForbiddenNotAllowedAnonymousException("멤버($memberId)는 게스트 사용자입니다. 계정에 연결된 멤버만이 접근할 수 있습니다")
         }
         return true
     }

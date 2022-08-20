@@ -36,7 +36,7 @@ class RoomWsService(
     }
 
     fun sendPlaylistItemRequest(roomId: Long, senderId: Long, request: RoomSendPlaylistItemRequestRequest) {
-        val item = playlistService.addItemRequest(request)
+        val item = playlistService.addItemRequest(request, memberId = senderId)
         roomMessagePublisher.publish(
             RoomTopic(roomId),
             RoomMessage(RoomMessageType.PLAYLIST_ITEM_REQUEST, request.toMessage(roomId, senderId, item.id))

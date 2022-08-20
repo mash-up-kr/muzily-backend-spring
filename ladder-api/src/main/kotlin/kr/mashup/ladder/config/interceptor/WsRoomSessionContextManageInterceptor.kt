@@ -2,12 +2,10 @@ package kr.mashup.ladder.config.interceptor
 
 import kr.mashup.ladder.config.context.WsRoomSessionContext
 import kr.mashup.ladder.domain.room.domain.RoomMessageSubscriber
-import kr.mashup.ladder.domain.room.domain.RoomRoleValidator.validateParticipant
 import kr.mashup.ladder.domain.room.domain.RoomTopic
-import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
+import kr.mashup.ladder.room.service.RoomServiceHelper
 import org.springframework.data.redis.listener.RedisMessageListenerContainer
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.messaging.Message
 import org.springframework.messaging.MessageChannel
 import org.springframework.messaging.simp.stomp.StompCommand
@@ -31,9 +29,12 @@ class WsRoomSessionContextManageInterceptor(
         when {
             accessor.command == StompCommand.SUBSCRIBE && accessor.isDestinationRoom() -> {
                 val roomId = accessor.getRoomId()
-                val room = roomRepository.findByIdOrNull(roomId) ?: throw RoomNotFoundException("$roomId")
                 val memberId = accessor.getMemberIdFromSessionAttributes()
-                validateParticipant(room = room, memberId = memberId)
+                RoomServiceHelper.validateIsParticipant(
+                    roomRepository = roomRepository,
+                    roomId = roomId,
+                    memberId = memberId
+                )
                 if (WsRoomSessionContext.isEmpty(roomId)) {
                     redisMessageListenerContainer.addMessageListener(roomMessageSubscriber, RoomTopic(roomId))
                 }

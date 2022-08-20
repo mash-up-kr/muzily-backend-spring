@@ -8,7 +8,7 @@ import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemRepository
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRequestMessageReceiveEvent
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.room.dto.response.RoomPlaylistItemRequestResponse
-import kr.mashup.ladder.room.service.RoomServiceUtils.findRoomByIdFetchMember
+import kr.mashup.ladder.room.service.RoomServiceHelper.findRoomByIdFetchMember
 import org.springframework.context.event.EventListener
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.messaging.simp.SimpMessagingTemplate
