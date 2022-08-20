@@ -80,7 +80,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
   datasource:
     hikari:
       jdbc-url: ENC(kZ+I+sJehZ7fEvTz4V10tQfy4l1JvlTJkhqwQkKfMnl9AGzeQfdSe9M7LXVL/tstEgbYYcChyvshKPrBp4KetKdvYK4W2dhdjiQ/0swr0l6jWq+O3ngIWlJitXf0AJCsf4rT9CCbSYOnexfRCeyOFO5nMyW0JfNrb7YaeDIVGja2LXwRBbzZBzhhWhk6ZUJ8ond461LwN2ZlZ0INuef8CasmjPDTIsbDpiNk32wUo3w=)

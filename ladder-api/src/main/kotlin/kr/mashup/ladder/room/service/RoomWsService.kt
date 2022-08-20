@@ -12,6 +12,7 @@ import kr.mashup.ladder.room.dto.request.RoomRemovePlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
+import kr.mashup.ladder.room.dto.request.RoomUpdatePlayInformationRequest
 import org.springframework.stereotype.Service
 
 @Service
@@ -71,6 +72,14 @@ class RoomWsService(
         roomMessagePublisher.publish(
             RoomTopic(roomId),
             RoomMessage(RoomMessageType.PLAYLIST_ITEM_CHANGE_ORDER, request.toMessage(roomId, order))
+        )
+    }
+
+    fun updatePlayInformation(roomId: Long, memberId: Long, request: RoomUpdatePlayInformationRequest) {
+        playlistService.updatePlayInformation(memberId, request)
+        roomMessagePublisher.publish(
+            RoomTopic(roomId),
+            RoomMessage(RoomMessageType.PLAY_INFORMATION_UPDATE, request.toMessage(roomId))
         )
     }
 }

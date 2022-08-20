@@ -96,8 +96,9 @@ class PlaylistAcceptanceTest : AcceptanceTest() {
         }
 
         fun `재생목록 조회됨`(response: ExtractableResponse<Response>, playlistId: Long) {
-            val playlist = response.`as`(PlaylistDto::class.java)
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
 
+            val playlist = response.`as`(PlaylistDto::class.java)
             assertAll(
                 { assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()) },
                 { assertThat(playlist.playlistId).isEqualTo(playlistId) },

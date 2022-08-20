@@ -8,6 +8,7 @@ import kr.mashup.ladder.room.dto.request.RoomRemovePlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
+import kr.mashup.ladder.room.dto.request.RoomUpdatePlayInformationRequest
 import kr.mashup.ladder.room.service.RoomWsService
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
@@ -79,5 +80,14 @@ class RoomWsController(
         @Payload request: RoomChangeOrderOfPlaylistItemRequest,
     ) {
         roomWsService.changeOrderPlaylistItem(roomId, memberId, request)
+    }
+
+    @MessageMapping("/v1/rooms/{roomId}/update-play-information")
+    fun updatePlayInformation(
+        @DestinationVariable roomId: Long,
+        @MemberId memberId: Long,
+        @Payload request: RoomUpdatePlayInformationRequest,
+    ) {
+        roomWsService.updatePlayInformation(roomId, memberId, request)
     }
 }

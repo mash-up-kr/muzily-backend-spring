@@ -22,6 +22,7 @@ class PlaylistItem(
     thumbnail: String,
     duration: Int,
     dominantColor: String?,
+    status: PlaylistItemStatus
 ) : BaseEntity() {
     @Column(nullable = false, length = 300)
     var videoId: String = videoId
@@ -37,7 +38,7 @@ class PlaylistItem(
 
     @Column(nullable = false, length = 30)
     @Enumerated(value = EnumType.STRING)
-    var status: PlaylistItemStatus = PlaylistItemStatus.PENDING
+    var status: PlaylistItemStatus = status
         protected set
 
     fun accept() {

@@ -2,6 +2,7 @@ package kr.mashup.ladder.room.dto.request
 
 import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItem
+import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemStatus
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRequestMessage
 
 data class RoomSendPlaylistItemRequestRequest(
@@ -20,6 +21,7 @@ data class RoomSendPlaylistItemRequestRequest(
             thumbnail = thumbnail,
             duration = duration,
             dominantColor = dominantColor,
+            status = PlaylistItemStatus.PENDING
         )
     }
 
