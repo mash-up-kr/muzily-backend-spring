@@ -4,6 +4,7 @@ import kr.mashup.ladder.domain.playlist.domain.PlaylistNotFoundException
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemNotFoundException
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemRepository
+import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.playlist.dto.PlaylistDto
 import kr.mashup.ladder.playlist.dto.PlaylistItemDto
@@ -121,9 +122,11 @@ class PlaylistService(
     fun updatePlayInformation(memberId: Long, request: RoomUpdatePlayInformationRequest) {
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
-        val room = roomRepository.findByIdOrNull(playlist.roomId)
-            ?: throw RoomNotFoundException("${playlist.roomId}")
-        validateCreator(room = room, memberId = memberId)
+        validateIsCreator(
+            roomRepository = roomRepository,
+            roomId = playlist.roomId,
+            memberId = memberId
+        )
         playlist.updatePlayInformation(request.playlistItemId, request.playStatus)
     }
 }
