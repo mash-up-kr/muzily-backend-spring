@@ -261,7 +261,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
         }
 
         fun `방 생성되지 않음`(response: ExtractableResponse<Response>) {
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value())
         }
 
         fun `방 생성되어 있음`(token: String, request: RoomCreateRequest): RoomDetailInfoResponse {

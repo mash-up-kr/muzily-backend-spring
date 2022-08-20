@@ -22,6 +22,7 @@ enum class ErrorCode(
 
     // auth
     INVALID_AUTH_CODE(status = 400, code = "AT001", message = "잘못된 인증 코드입니다", shouldLog = false),
+    FORBIDDEN_NOT_ALLOWED_ANONYMOUS(status = 403, code = "AT002", message = "게스트 사용자는 접근할 수 없습니다", shouldLog = false),
 
     // member
     MEMBER_NOT_FOUND(status = 404, code = "A001", message = "해당하는 계정은 존재하지 않습니다", shouldLog = false),

@@ -132,7 +132,7 @@ class PlaylistAcceptanceTest : AcceptanceTest() {
         }
 
         fun `계류중인 재생목록 항목 목록 조회되지 않음`(response: ExtractableResponse<Response>) {
-            assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+            assertThat(response.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value())
         }
     }
 }
