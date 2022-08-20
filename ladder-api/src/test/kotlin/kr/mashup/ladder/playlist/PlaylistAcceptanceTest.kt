@@ -100,7 +100,7 @@ class PlaylistAcceptanceTest : AcceptanceTest() {
 
             assertAll(
                 { assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()) },
-                { assertThat(playlist.id).isEqualTo(playlistId) },
+                { assertThat(playlist.playlistId).isEqualTo(playlistId) },
                 { assertThat(playlist.order).isNotNull() },
             )
         }

@@ -1,0 +1,21 @@
+spring.config:
+  activate:
+    on-profile:
+      - local
+
+sentry:
+  logging:
+    enabled: false
+
+---
+spring.config:
+  activate:
+    on-profile:
+      - dev
+
+sentry:
+  environment: dev
+  traces-sample-rate: 0.2
+  dsn: ENC(clT0kZgN0Kp9YHAC7q7pcoStmJCAwTKe2IOVAX+sL/zO3/3QuW97p2A7As9CLhjJUz2Fm7vcgQ8oafwvQLKNGCyYokI69kUasuBJrEKUt8xuXnIgaEd2DEOHbhG3Jwb67LMunzWIiRzUmaYofWEc2Q==)
+
+---

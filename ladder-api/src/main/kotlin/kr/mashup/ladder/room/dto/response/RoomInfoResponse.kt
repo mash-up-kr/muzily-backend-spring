@@ -9,17 +9,19 @@ data class RoomInfoResponse(
     val name: String,
     val emojiType: EmojiType,
     val participantsCount: Int,
+    val playListItemsCount: Int,
     val currentUser: RoomMyRoleResponse,
 ) : BaseTimeResponse() {
 
     companion object {
-        fun from(room: Room, memberId: Long): RoomInfoResponse {
+        fun of(room: Room, memberId: Long, playListItemsCount: Int): RoomInfoResponse {
             val response = RoomInfoResponse(
                 roomId = room.id,
                 name = room.name,
                 emojiType = room.emojiType,
                 currentUser = RoomMyRoleResponse.of(room = room, memberId = memberId),
                 participantsCount = room.participants.size,
+                playListItemsCount = playListItemsCount,
             )
             response.setBaseTime(room)
             return response

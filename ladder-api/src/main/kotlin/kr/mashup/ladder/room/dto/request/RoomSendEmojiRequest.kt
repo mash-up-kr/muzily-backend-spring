@@ -6,6 +6,7 @@ import kr.mashup.ladder.domain.room.domain.emoji.RoomEmojiMessage
 data class RoomSendEmojiRequest(
     val emojiType: EmojiType,
     val intensity: Int,
+    val messageText: String,
 ) {
     fun toMessage(roomId: Long, senderId: Long): RoomEmojiMessage {
         return RoomEmojiMessage(
@@ -13,6 +14,7 @@ data class RoomSendEmojiRequest(
             senderId = senderId,
             emojiType = emojiType,
             intensity = intensity,
+            messageText = messageText,
         )
     }
 }

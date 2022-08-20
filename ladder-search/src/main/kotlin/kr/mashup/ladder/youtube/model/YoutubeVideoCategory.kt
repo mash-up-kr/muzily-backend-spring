@@ -10,5 +10,16 @@ enum class YoutubeVideoCategory(
 ) {
 
     MUSIC(description = "음악", categoryId = 10),
+    ENTERTAINMENT(description = "Entertainment", categoryId = 24),
+    CLASSIC(description = "Classics", categoryId = 33),
+    ;
+
+    companion object {
+
+        fun isMusicCategory(categoryId: Int): Boolean {
+            return values().map { value -> value.categoryId }.contains(categoryId)
+        }
+
+    }
 
 }

@@ -51,7 +51,7 @@ class RoomService(
 
         return RoomDetailInfoResponse.of(
             room = room,
-            playlistId = playlistRepository.findByRoomId(room.id).id,
+            playlistId = playlistRepository.findByRoomId(room.id)?.id ?: -1,
             memberId = memberId,
         )
     }
@@ -70,7 +70,7 @@ class RoomService(
 
         return RoomDetailInfoResponse.of(
             room = room,
-            playlistId = playlistRepository.findByRoomId(room.id).id,
+            playlistId = playlistRepository.findByRoomId(room.id)?.id ?: -1,
             memberId = memberId,
         )
     }

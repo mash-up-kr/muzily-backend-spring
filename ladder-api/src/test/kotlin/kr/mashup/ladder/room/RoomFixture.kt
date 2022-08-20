@@ -17,7 +17,7 @@ class RoomFixture {
         }
 
         fun `방 100% 하트 이모지 보내기 요청값`(): RoomSendEmojiRequest {
-            return RoomSendEmojiRequest(EmojiType.HEART, 100)
+            return RoomSendEmojiRequest(EmojiType.HEART, 100, "Hello, World!")
         }
 
         fun `방 재생목록 항목 신청 요청값`(playlistId: Long): RoomSendPlaylistItemRequestRequest {

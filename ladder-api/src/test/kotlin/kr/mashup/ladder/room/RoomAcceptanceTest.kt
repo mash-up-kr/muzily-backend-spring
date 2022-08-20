@@ -11,13 +11,13 @@ import kr.mashup.ladder.auth.AuthAcceptanceTest.Companion.`익명 로그인되�
 import kr.mashup.ladder.auth.AuthFixture.Companion.`인증 요청값`
 import kr.mashup.ladder.common.dto.response.WsResponse
 import kr.mashup.ladder.common.dto.response.WsResponseType
+import kr.mashup.ladder.common.exception.ErrorCode
+import kr.mashup.ladder.common.util.JsonUtil
 import kr.mashup.ladder.config.ws.WS_APP_DESTINATION_PREFIX
 import kr.mashup.ladder.config.ws.WS_DESTINATION_PREFIX_QUEUE
 import kr.mashup.ladder.config.ws.WS_DESTINATION_PREFIX_TOPIC
 import kr.mashup.ladder.config.ws.WS_ENDPOINT
 import kr.mashup.ladder.config.ws.WS_USER_DESTINATION_PREFIX
-import kr.mashup.ladder.common.exception.ErrorCode
-import kr.mashup.ladder.common.util.JsonUtil
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 100% 하트 이모지 보내기 요청값`
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 생성 요청값`
 import kr.mashup.ladder.room.RoomFixture.Companion.`방 재생목록 항목 신청 승인 요청값`
@@ -344,6 +344,7 @@ class RoomAcceptanceTest : AcceptanceTest() {
                 { assertThat(responses.map { it.type }).allMatch { it == WsResponseType.EMOJI } },
                 { assertThat(responses.map { it.data!!.emojiType }).allMatch { it == request.emojiType } },
                 { assertThat(responses.map { it.data!!.intensity }).allMatch { it == request.intensity } },
+                { assertThat(responses.map { it.data!!.messageText }).allMatch { it == request.messageText } },
                 { assertThat(responses.map { it.data!!.senderId }).allMatch { it == senderId } },
             )
         }
