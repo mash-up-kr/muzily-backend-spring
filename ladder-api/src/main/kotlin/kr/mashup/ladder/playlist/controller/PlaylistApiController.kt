@@ -17,8 +17,11 @@ class PlaylistApiController(
     @ApiOperation("재생목록을 조회합니다")
     @Auth
     @GetMapping("/api/v1/playlists/{playlistId}")
-    fun findById(@PathVariable playlistId: Long): PlaylistDto {
-        return playlistService.findById(playlistId)
+    fun findById(
+        @PathVariable playlistId: Long,
+        @MemberId memberId: Long,
+    ): PlaylistDto {
+        return playlistService.findById(playlistId = playlistId, memberId = memberId)
     }
 
     @ApiOperation("계류중인 재생목록 항목들을 조회합니다")
@@ -28,6 +31,6 @@ class PlaylistApiController(
         @PathVariable playlistId: Long,
         @MemberId memberId: Long,
     ): List<PlaylistItemDto> {
-        return playlistService.findPendingItems(playlistId, memberId)
+        return playlistService.findPendingItems(playlistId = playlistId, memberId = memberId)
     }
 }

@@ -6,10 +6,19 @@ import kr.mashup.ladder.domain.room.domain.Room
 import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 
-object RoomServiceUtils {
+object RoomServiceHelper {
 
-    fun validateIsAuthor(roomRepository: RoomRepository, roomId: Long, memberId: Long) {
+    fun validateIsCreator(roomRepository: RoomRepository, roomId: Long, memberId: Long) {
         if (!roomRepository.existsRoomByIdAndCreatorId(roomId = roomId, creatorId = memberId)) {
+            throw ForbiddenException(
+                "멤버($memberId)는 해당하는 방($roomId)에 대한 권한이 없습니다",
+                IS_NOT_CREATOR_IN_ROOM_FORBIDDEN
+            )
+        }
+    }
+
+    fun validateIsParticipant(roomRepository: RoomRepository, roomId: Long, memberId: Long) {
+        if (!roomRepository.existsRoomByIdAndMemberId(roomId = roomId, creatorId = memberId)) {
             throw ForbiddenException(
                 "멤버($memberId)는 해당하는 방($roomId)에 대한 권한이 없습니다",
                 IS_NOT_CREATOR_IN_ROOM_FORBIDDEN

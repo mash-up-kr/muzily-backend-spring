@@ -430,8 +430,8 @@ class RoomAcceptanceTest : AcceptanceTest() {
 
             assertAll(
                 { assertThat(response.type).isEqualTo(WsResponseType.ERROR) },
-                { assertThat(response.code).isEqualTo(ErrorCode.FORBIDDEN.code) },
-                { assertThat(response.message).isEqualTo(ErrorCode.FORBIDDEN.message) },
+                { assertThat(response.code).isEqualTo(ErrorCode.IS_NOT_CREATOR_IN_ROOM_FORBIDDEN.code) },
+                { assertThat(response.message).isEqualTo(ErrorCode.IS_NOT_CREATOR_IN_ROOM_FORBIDDEN.message) },
             )
         }
 
@@ -464,8 +464,8 @@ class RoomAcceptanceTest : AcceptanceTest() {
 
         assertAll(
             { assertThat(response.type).isEqualTo(WsResponseType.ERROR) },
-            { assertThat(response.code).isEqualTo(ErrorCode.FORBIDDEN.code) },
-            { assertThat(response.message).isEqualTo(ErrorCode.FORBIDDEN.message) },
+            { assertThat(response.code).isEqualTo(ErrorCode.IS_NOT_CREATOR_IN_ROOM_FORBIDDEN.code) },
+            { assertThat(response.message).isEqualTo(ErrorCode.IS_NOT_CREATOR_IN_ROOM_FORBIDDEN.message) },
         )
     }
 }
