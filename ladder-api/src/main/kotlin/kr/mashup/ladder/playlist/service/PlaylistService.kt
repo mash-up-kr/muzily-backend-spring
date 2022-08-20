@@ -14,6 +14,7 @@ import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomChangeOrderOfPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomRemovePlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
+import kr.mashup.ladder.room.dto.request.RoomUpdatePlayInformationRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -93,5 +94,15 @@ class PlaylistService(
         validateCreator(room = room, memberId = memberId)
         playlist.changeOrder(request.playlistItemId, request.prevPlaylistItemIdToMove)
         return playlist.order
+    }
+
+    @Transactional
+    fun updatePlayInformation(memberId: Long, request: RoomUpdatePlayInformationRequest) {
+        val playlist = playlistRepository.findByIdOrNull(request.playlistId)
+            ?: throw PlaylistNotFoundException("${request.playlistId}")
+        val room = roomRepository.findByIdOrNull(playlist.roomId)
+            ?: throw RoomNotFoundException("${playlist.roomId}")
+        validateCreator(room = room, memberId = memberId)
+        playlist.updatePlayInformation(request.playlistItemId, request.playStatus)
     }
 }
