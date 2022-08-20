@@ -55,7 +55,7 @@ enum class ErrorCode(
     YOUTUBE_VIDEO_NOT_ALLOWED_CATEGORY(
         status = 403,
         code = "Y002",
-        message = "해당 영상은 허용되지 않은 카테고리 입니다",
+        message = "등록할 수 없는 영상입니다",
         shouldLog = false
     ),
 
