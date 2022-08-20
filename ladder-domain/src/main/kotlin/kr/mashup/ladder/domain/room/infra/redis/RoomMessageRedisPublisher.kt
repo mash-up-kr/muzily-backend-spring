@@ -3,7 +3,7 @@ package kr.mashup.ladder.domain.room.infra.redis
 import kr.mashup.ladder.domain.room.domain.RoomMessage
 import kr.mashup.ladder.domain.room.domain.RoomMessagePublisher
 import kr.mashup.ladder.domain.room.domain.RoomTopic
-import kr.mashup.ladder.domain.common.util.JsonUtil
+import kr.mashup.ladder.common.util.JsonUtil
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Component
 

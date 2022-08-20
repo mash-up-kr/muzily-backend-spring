@@ -1,6 +1,6 @@
-package kr.mashup.ladder.domain.common.exception.model
+package kr.mashup.ladder.common.exception.model
 
-import kr.mashup.ladder.domain.common.exception.ErrorCode
+import kr.mashup.ladder.common.exception.ErrorCode
 
 abstract class LadderBaseException(
     override val message: String,

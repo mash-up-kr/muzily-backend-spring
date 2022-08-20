@@ -1,5 +1,5 @@
 dependencies {
-    implementation(project(":ladder-domain")) // TODO: domain 모듈 필요 없을 경우 common 모듈 생성하고 제거
+    implementation(project(":ladder-common"))
 
     // Spring Webflux
     implementation("org.springframework.boot:spring-boot-starter-webflux")

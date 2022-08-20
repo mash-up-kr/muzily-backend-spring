@@ -3,7 +3,7 @@ package kr.mashup.ladder.room.controller
 import io.swagger.annotations.ApiOperation
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.annotation.MemberId
-import kr.mashup.ladder.domain.common.constants.ApiResponseConstants
+import kr.mashup.ladder.common.constants.ApiResponseConstants
 import kr.mashup.ladder.room.dto.response.RoomInfoResponse
 import kr.mashup.ladder.room.service.RoomInviteService
 import org.springframework.web.bind.annotation.GetMapping

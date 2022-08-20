@@ -13,6 +13,8 @@ allOpen {
 }
 
 dependencies {
+    api(project(":ladder-common"))
+
     // jpa
     api("org.springframework.boot:spring-boot-starter-data-jpa")
 

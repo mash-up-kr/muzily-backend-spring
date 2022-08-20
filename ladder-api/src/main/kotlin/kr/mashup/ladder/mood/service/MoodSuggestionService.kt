@@ -3,7 +3,7 @@ package kr.mashup.ladder.mood.service
 import kr.mashup.ladder.common.dto.request.CursorPagingRequest
 import kr.mashup.ladder.common.dto.response.CursorResponse
 import kr.mashup.ladder.common.dto.response.PagingResponse
-import kr.mashup.ladder.domain.common.exception.model.ForbiddenException
+import kr.mashup.ladder.common.exception.model.ForbiddenException
 import kr.mashup.ladder.domain.mood.exception.MoodSuggestionNotFoundException
 import kr.mashup.ladder.domain.mood.infra.jpa.MoodSuggestionRepository
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository

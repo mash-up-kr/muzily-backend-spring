@@ -2,7 +2,7 @@ package kr.mashup.ladder.config.interceptor
 
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.resolver.MEMBER_ID
-import kr.mashup.ladder.domain.common.exception.model.UnAuthorizedException
+import kr.mashup.ladder.common.exception.model.UnAuthorizedException
 import kr.mashup.ladder.domain.member.domain.AccountConnectType
 import kr.mashup.ladder.domain.member.infra.jpa.MemberRepository
 import org.springframework.data.repository.findByIdOrNull

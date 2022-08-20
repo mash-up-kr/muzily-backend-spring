@@ -2,8 +2,8 @@ package kr.mashup.ladder.common.advice
 
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import kr.mashup.ladder.common.dto.response.ErrorResponse
-import kr.mashup.ladder.domain.common.exception.ErrorCode
-import kr.mashup.ladder.domain.common.exception.model.LadderBaseException
+import kr.mashup.ladder.common.exception.ErrorCode
+import kr.mashup.ladder.common.exception.model.LadderBaseException
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

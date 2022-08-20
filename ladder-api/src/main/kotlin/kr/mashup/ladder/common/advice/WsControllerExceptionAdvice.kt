@@ -2,8 +2,8 @@ package kr.mashup.ladder.common.advice
 
 import kr.mashup.ladder.common.dto.response.WsResponse
 import kr.mashup.ladder.config.ws.WS_DESTINATION_PREFIX_QUEUE
-import kr.mashup.ladder.domain.common.exception.ErrorCode
-import kr.mashup.ladder.domain.common.exception.model.LadderBaseException
+import kr.mashup.ladder.common.exception.ErrorCode
+import kr.mashup.ladder.common.exception.model.LadderBaseException
 import mu.KotlinLogging
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler
 import org.springframework.messaging.simp.annotation.SendToUser

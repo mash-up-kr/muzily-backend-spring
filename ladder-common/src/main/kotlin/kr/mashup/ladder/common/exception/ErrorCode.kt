@@ -1,4 +1,4 @@
-package kr.mashup.ladder.domain.common.exception
+package kr.mashup.ladder.common.exception
 
 /**
  * 에러 코드

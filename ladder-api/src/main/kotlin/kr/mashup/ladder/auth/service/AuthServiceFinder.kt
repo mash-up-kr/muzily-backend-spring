@@ -1,6 +1,6 @@
 package kr.mashup.ladder.auth.service
 
-import kr.mashup.ladder.domain.common.exception.model.UnknownErrorException
+import kr.mashup.ladder.common.exception.model.UnknownErrorException
 import kr.mashup.ladder.domain.member.domain.SocialType
 import org.springframework.stereotype.Component
 import java.util.*

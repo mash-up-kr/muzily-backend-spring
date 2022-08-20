@@ -1,7 +1,7 @@
 package kr.mashup.ladder.room.service
 
 import kr.mashup.ladder.SetupMemberIntegrationTest
-import kr.mashup.ladder.domain.common.exception.model.ForbiddenException
+import kr.mashup.ladder.common.exception.model.ForbiddenException
 import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
 import kr.mashup.ladder.domain.room.domain.InvitationKey

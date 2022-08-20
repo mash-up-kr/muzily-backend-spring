@@ -1,7 +1,7 @@
 package kr.mashup.ladder.common.controller
 
-import kr.mashup.ladder.domain.common.constants.ApiResponseConstants.SUCCESS
-import kr.mashup.ladder.domain.common.exception.model.BadGatewayException
+import kr.mashup.ladder.common.constants.ApiResponseConstants.SUCCESS
+import kr.mashup.ladder.common.exception.model.BadGatewayException
 import org.springframework.boot.availability.ApplicationAvailability
 import org.springframework.boot.availability.LivenessState
 import org.springframework.boot.availability.ReadinessState

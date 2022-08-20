@@ -5,7 +5,7 @@ import kr.mashup.ladder.common.dto.request.CursorPagingRequest
 import kr.mashup.ladder.common.dto.response.PagingResponse
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.annotation.MemberId
-import kr.mashup.ladder.domain.common.constants.ApiResponseConstants.SUCCESS
+import kr.mashup.ladder.common.constants.ApiResponseConstants.SUCCESS
 import kr.mashup.ladder.mood.dto.request.AddMoodSuggestionRequest
 import kr.mashup.ladder.mood.dto.response.MoodSuggestionResponse
 import kr.mashup.ladder.mood.service.MoodSuggestionService
