@@ -1,7 +1,7 @@
 package kr.mashup.ladder.room.service
 
-import kr.mashup.ladder.domain.common.exception.ErrorCode.IS_NOT_CREATOR_IN_ROOM_FORBIDDEN
-import kr.mashup.ladder.domain.common.exception.model.ForbiddenException
+import kr.mashup.ladder.common.exception.ErrorCode.IS_NOT_CREATOR_IN_ROOM_FORBIDDEN
+import kr.mashup.ladder.common.exception.model.ForbiddenException
 import kr.mashup.ladder.domain.room.domain.Room
 import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository

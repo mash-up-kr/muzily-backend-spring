@@ -1,7 +1,7 @@
 package kr.mashup.ladder.domain.room.exception
 
-import kr.mashup.ladder.domain.common.exception.ErrorCode
-import kr.mashup.ladder.domain.common.exception.model.LadderBaseException
+import kr.mashup.ladder.common.exception.ErrorCode
+import kr.mashup.ladder.common.exception.model.LadderBaseException
 
 data class CreatedRoomNotFoundException(
     override val message: String,

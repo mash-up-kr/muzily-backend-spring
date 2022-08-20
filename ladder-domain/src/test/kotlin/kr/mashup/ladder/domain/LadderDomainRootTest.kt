@@ -1,6 +1,6 @@
 package kr.mashup.ladder.domain
 
-import kr.mashup.ladder.domain.common.constants.PackageConstants.LADDER_BASE_PACKAGE
+import kr.mashup.ladder.common.constants.PackageConstants.LADDER_BASE_PACKAGE
 import org.junit.jupiter.api.Test
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan

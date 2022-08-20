@@ -9,6 +9,6 @@ Content-Type: application/json
 Authorization: Bearer {{SESSION_ID}}
 
 {
-    "nickname": "새로운 닉네임",
-    "profileUrl": "https://profile-image.png"
+    "nickname": "닉네임",
+    "profileUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqMz0mGjcm8KKYc_ngUUyT6bWhVWqkSHd0mw&usqp=CAU"
 }

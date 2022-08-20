@@ -1,7 +1,7 @@
 package kr.mashup.ladder.youtube.external
 
 import kotlinx.coroutines.reactor.awaitSingle
-import kr.mashup.ladder.domain.common.exception.model.BadGatewayException
+import kr.mashup.ladder.common.exception.model.BadGatewayException
 import kr.mashup.ladder.youtube.external.dto.properties.YoutubeVideoApiProperties
 import kr.mashup.ladder.youtube.external.dto.response.YoutubeVideoListResponse
 import kr.mashup.ladder.youtube.external.dto.response.YoutubeVideoResponse

@@ -1,6 +1,6 @@
 package kr.mashup.ladder.domain.room.domain
 
-import kr.mashup.ladder.domain.common.exception.model.ForbiddenException
+import kr.mashup.ladder.common.exception.model.ForbiddenException
 import kr.mashup.ladder.domain.room.exception.RoomMemberConflictException
 
 object RoomRoleValidator {

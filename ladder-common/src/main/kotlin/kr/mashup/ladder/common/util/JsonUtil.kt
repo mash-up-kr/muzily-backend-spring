@@ -1,4 +1,4 @@
-package kr.mashup.ladder.domain.common.util
+package kr.mashup.ladder.common.util
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper

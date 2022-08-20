@@ -7,11 +7,11 @@ import javax.persistence.Enumerated
 
 @Embeddable
 data class AccountSocialInfo(
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
     val socialType: SocialType,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 300)
     val socialId: String,
 ) {
 

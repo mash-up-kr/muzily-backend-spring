@@ -1,4 +1,4 @@
-package kr.mashup.ladder.domain.common.constants
+package kr.mashup.ladder.common.constants
 
 object PackageConstants {
 

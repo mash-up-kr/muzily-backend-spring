@@ -1,7 +1,7 @@
 package kr.mashup.ladder.domain.room.domain
 
 import com.fasterxml.jackson.core.type.TypeReference
-import kr.mashup.ladder.domain.common.util.JsonUtil
+import kr.mashup.ladder.common.util.JsonUtil
 import kr.mashup.ladder.domain.room.domain.chat.RoomChatMessage
 import kr.mashup.ladder.domain.room.domain.emoji.RoomEmojiMessage
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemAddMessage

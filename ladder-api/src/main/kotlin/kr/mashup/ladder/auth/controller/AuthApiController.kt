@@ -8,7 +8,7 @@ import kr.mashup.ladder.auth.service.AuthService
 import kr.mashup.ladder.auth.service.AuthServiceFinder
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.resolver.MEMBER_ID
-import kr.mashup.ladder.domain.common.constants.ApiResponseConstants
+import kr.mashup.ladder.common.constants.ApiResponseConstants
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
