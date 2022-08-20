@@ -32,33 +32,41 @@ enum class ErrorCode(
     ALREADY_ROOM_CREATOR_CONFLICT(
         status = 409,
         code = "R002",
-        message = "이미 해당 계정에서 생성한 방이 존재합니다.\n1개의 방만 생성할 수 있습니다",
+        message = "이미 해당 계정에서 생성한 방이 존재합니다.\n계정 당 1개의 방만 생성할 수 있습니다",
         shouldLog = false
     ),
     ALREADY_EXISTS_MEMBER_IN_ROOM_CONFLICT(
         status = 409,
         code = "R003",
-        message = "해당하는 방에 이미 참여하고 있습니다",
+        message = "방에 이미 참여하고 있습니다",
         shouldLog = false
     ),
     CREATED_ROOM_NOT_FOUND(status = 404, code = "R004", message = "해당하는 멤버가 생성한 방이 존재하지 않습니다", shouldLog = false),
     IS_NOT_CREATOR_IN_ROOM_FORBIDDEN(status = 403, code = "R005", message = "방장만이 접근할 수 있습니다", shouldLog = false),
 
     // playlist
-    PLAYLIST_NOT_FOUND(status = 404, code = "P001", message = "해당하는 재생목록이 존재하지 않습니다", shouldLog = false),
+    PLAYLIST_NOT_FOUND(status = 404, code = "P001", message = "해당하는 플레이 리스트가 존재하지 않습니다", shouldLog = false),
 
     // playlist item
-    PLAYLIST_ITEM_NOT_FOUND(status = 404, code = "PI001", message = "해당하는 재생목록 항목이 존재하지 않습니다", shouldLog = false),
+    PLAYLIST_ITEM_NOT_FOUND(status = 404, code = "PI001", message = "해당하는 곡이 존재하지 않습니다", shouldLog = false),
 
     // youtube
-    YOUTUBE_VIDEO_NOT_FOUND(status = 404, code = "YO001", message = "해당하는 유튜브 영상은 존재하지 않습니다", shouldLog = false),
+    YOUTUBE_VIDEO_NOT_FOUND(status = 404, code = "YO001", message = "잘못된 유튜브 링크입니다\n다시 확인해 주세요", shouldLog = false),
     YOUTUBE_VIDEO_NOT_ALLOWED_CATEGORY(
         status = 403,
         code = "Y002",
-        message = "등록할 수 없는 영상입니다",
+        message = "음악과 관련된 영상만 등록할 수 있습니다",
         shouldLog = false
     ),
 
     // Mood Suggestion
     MOOD_SUGGESTION_NOT_FOUND(status = 404, code = "M001", message = "해당하는 분위기 제안 정보는 존재하지 않습니다", shouldLog = false),
 }
+
+
+/**
+ * 1. 유튜브 영상 링크가 잘못되었을때 (잘못된 유튜브 링크입니다)
+ * 2. 해당 영상이 음악 관련 카테고리가 아닌 경우
+ * 3. 방의 방장만이 접근
+ * 4.
+ */
