@@ -5,13 +5,15 @@ data class RoomEmojiMessage(
     val senderId: Long,
     val emojiType: EmojiType,
     val intensity: Int,
+    val messageText: String,
 ) {
     fun toEvent(): RoomEmojiMessageRecieveEvent {
         return RoomEmojiMessageRecieveEvent(
             roomId = roomId,
             senderId = senderId,
             emojiType = emojiType,
-            intensity = intensity
+            intensity = intensity,
+            messageText = messageText,
         )
     }
 }

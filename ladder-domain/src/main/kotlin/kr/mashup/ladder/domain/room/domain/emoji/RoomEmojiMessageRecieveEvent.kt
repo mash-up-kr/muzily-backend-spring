@@ -5,4 +5,5 @@ class RoomEmojiMessageRecieveEvent(
     val senderId: Long,
     val emojiType: EmojiType,
     val intensity: Int,
+    val messageText: String,
 )
