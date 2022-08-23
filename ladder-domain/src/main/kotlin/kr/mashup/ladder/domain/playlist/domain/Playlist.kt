@@ -29,10 +29,13 @@ class Playlist(
 
     fun getPendingItems(): List<PlaylistItem> {
         return items.filter { it.status == PlaylistItemStatus.PENDING }
+            .sortedBy { it.createdAt }
     }
 
     fun getAcceptedItems(): List<PlaylistItem> {
-        return items.filter { it.status == PlaylistItemStatus.ACCEPTED }
+        val itemById = items.filter { it.status == PlaylistItemStatus.ACCEPTED }
+            .associateBy { it.id }
+        return order.mapNotNull { itemById[it] }
     }
 
     fun addToOrder(item: PlaylistItem) {

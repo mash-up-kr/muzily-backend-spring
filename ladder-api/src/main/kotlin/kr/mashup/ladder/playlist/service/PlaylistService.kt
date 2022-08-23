@@ -2,6 +2,7 @@ package kr.mashup.ladder.playlist.service
 
 import kr.mashup.ladder.domain.playlist.domain.PlaylistNotFoundException
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
+import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItem
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemNotFoundException
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemRepository
 import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
@@ -11,6 +12,7 @@ import kr.mashup.ladder.playlist.dto.PlaylistItemDto
 import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomChangeOrderOfPlaylistItemRequest
+import kr.mashup.ladder.room.dto.request.RoomDeclinePlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomRemovePlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
 import kr.mashup.ladder.room.service.RoomServiceHelper.validateIsCreator
@@ -75,6 +77,21 @@ class PlaylistService(
             ?: throw PlaylistItemNotFoundException("${request.playlistItemId}")
         item.accept()
         playlist.addToOrder(item)
+        return PlaylistItemDto.of(item)
+    }
+
+    @Transactional
+    fun declineItemRequest(memberId: Long, request: RoomDeclinePlaylistItemRequestRequest): PlaylistItemDto {
+        val playlist = playlistRepository.findByIdOrNull(request.playlistId)
+            ?: throw PlaylistNotFoundException("${request.playlistId}")
+        validateIsCreator(
+            roomRepository = roomRepository,
+            roomId = playlist.roomId,
+            memberId = memberId
+        )
+        val item = playlistItemRepository.findByIdOrNull(request.playlistItemId)
+            ?: throw PlaylistItemNotFoundException("${request.playlistItemId}")
+        item.decline()
         return PlaylistItemDto.of(item)
     }
 

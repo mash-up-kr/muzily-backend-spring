@@ -8,6 +8,7 @@ import kr.mashup.ladder.domain.room.domain.playlist.RoomPlayInformationUpdateMes
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemAddMessage
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemChangeOrderMessage
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRemoveMessage
+import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRequestDeclineMessage
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRequestMessage
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.redis.connection.Message
@@ -36,6 +37,12 @@ class RoomMessageSubscriber(
                 val roomMessage = JsonUtil.fromByteArray(
                     message.body,
                     object : TypeReference<RoomMessage<RoomPlaylistItemRequestMessage>>() {})
+                applicationEventPublisher.publishEvent(roomMessage.data.toEvent())
+            }
+            RoomMessageType.PLAYLIST_ITEM_REQUEST_DECLINE -> {
+                val roomMessage = JsonUtil.fromByteArray(
+                    message.body,
+                    object : TypeReference<RoomMessage<RoomPlaylistItemRequestDeclineMessage>>() {})
                 applicationEventPublisher.publishEvent(roomMessage.data.toEvent())
             }
             RoomMessageType.PLAYLIST_ITEM_ADD -> {
