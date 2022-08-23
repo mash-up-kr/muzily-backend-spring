@@ -44,4 +44,8 @@ class PlaylistItem(
     fun accept() {
         status = PlaylistItemStatus.ACCEPTED
     }
+
+    fun decline() {
+        status = PlaylistItemStatus.DECLINED
+    }
 }

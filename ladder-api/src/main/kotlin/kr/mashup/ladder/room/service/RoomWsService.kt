@@ -8,6 +8,7 @@ import kr.mashup.ladder.playlist.service.PlaylistService
 import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomChangeOrderOfPlaylistItemRequest
+import kr.mashup.ladder.room.dto.request.RoomDeclinePlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomRemovePlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
@@ -48,6 +49,14 @@ class RoomWsService(
         roomMessagePublisher.publish(
             RoomTopic(roomId),
             RoomMessage(RoomMessageType.PLAYLIST_ITEM_ADD, request.toMessage(roomId))
+        )
+    }
+
+    fun declinePlaylistItemRequest(roomId: Long, memberId: Long, request: RoomDeclinePlaylistItemRequestRequest) {
+        playlistService.declineItemRequest(memberId, request)
+        roomMessagePublisher.publish(
+            RoomTopic(roomId),
+            RoomMessage(RoomMessageType.PLAYLIST_ITEM_REQUEST_DECLINE, request.toMessage(roomId))
         )
     }
 
