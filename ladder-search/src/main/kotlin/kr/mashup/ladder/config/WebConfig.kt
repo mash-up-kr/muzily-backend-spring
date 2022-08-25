@@ -1,4 +1,4 @@
-package kr.mashup.ladder.config.webclient
+package kr.mashup.ladder.config
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.config.CorsRegistry
@@ -11,8 +11,8 @@ class WebConfig : WebFluxConfigurer {
         registry.addMapping("/**")
             .allowedOrigins(
                 "http://localhost:3000",
-                "https://developmusily.netlify.app",
-                "https://musily.netlify.app"
+                "https://dev.muzily.app",
+                "https://muzily.app"
             ) // TODO: 프론트에서 proxy 설정하면 localhost 제거
             .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD")
             .allowedHeaders("*")
