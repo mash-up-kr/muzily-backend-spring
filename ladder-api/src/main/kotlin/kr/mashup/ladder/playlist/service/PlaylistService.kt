@@ -29,22 +29,14 @@ class PlaylistService(
     @Transactional(readOnly = true)
     fun findById(playlistId: Long, memberId: Long): PlaylistDto {
         val playlist = playlistRepository.findByIdOrNull(playlistId) ?: throw PlaylistNotFoundException("$playlistId")
-        validateIsParticipant(
-            roomRepository = roomRepository,
-            roomId = playlist.roomId,
-            memberId = memberId
-        )
+        validateIsParticipant(roomRepository = roomRepository, roomId = playlist.roomId, memberId = memberId)
         return PlaylistDto.of(playlist)
     }
 
     @Transactional(readOnly = true)
     fun findPendingItems(playlistId: Long, memberId: Long): List<PlaylistItemDto> {
         val playlist = playlistRepository.findByIdOrNull(playlistId) ?: throw PlaylistNotFoundException("$playlistId")
-        validateIsCreator(
-            roomRepository = roomRepository,
-            roomId = playlist.roomId,
-            memberId = memberId
-        )
+        validateIsCreator(roomRepository = roomRepository, roomId = playlist.roomId, memberId = memberId)
         val pendingItems = playlist.getPendingItems()
         return pendingItems.map { PlaylistItemDto.of(it) }
     }
@@ -53,11 +45,7 @@ class PlaylistService(
     fun addItemRequest(request: RoomSendPlaylistItemRequestRequest, memberId: Long): PlaylistItemDto {
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
-        validateIsParticipant(
-            roomRepository = roomRepository,
-            roomId = playlist.roomId,
-            memberId = memberId
-        )
+        validateIsParticipant(roomRepository = roomRepository, roomId = playlist.roomId, memberId = memberId)
         val item = playlistItemRepository.save(request.toEntity(playlist))
         return PlaylistItemDto.of(item)
     }
@@ -66,11 +54,7 @@ class PlaylistService(
     fun acceptItemRequest(memberId: Long, request: RoomAcceptPlaylistItemRequestRequest): PlaylistItemDto {
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
-        validateIsCreator(
-            roomRepository = roomRepository,
-            roomId = playlist.roomId,
-            memberId = memberId
-        )
+        validateIsCreator(roomRepository = roomRepository, roomId = playlist.roomId, memberId = memberId)
         val item = playlistItemRepository.findByIdOrNull(request.playlistItemId)
             ?: throw PlaylistItemNotFoundException("${request.playlistItemId}")
         item.accept()
@@ -82,11 +66,7 @@ class PlaylistService(
     fun declineItemRequest(memberId: Long, request: RoomDeclinePlaylistItemRequestRequest): PlaylistItemDto {
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
-        validateIsCreator(
-            roomRepository = roomRepository,
-            roomId = playlist.roomId,
-            memberId = memberId
-        )
+        validateIsCreator(roomRepository = roomRepository, roomId = playlist.roomId, memberId = memberId)
         val item = playlistItemRepository.findByIdOrNull(request.playlistItemId)
             ?: throw PlaylistItemNotFoundException("${request.playlistItemId}")
         item.decline()
@@ -97,11 +77,7 @@ class PlaylistService(
     fun addItem(memberId: Long, request: RoomAddPlaylistItemRequest): PlaylistItemDto {
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
-        validateIsCreator(
-            roomRepository = roomRepository,
-            roomId = playlist.roomId,
-            memberId = memberId
-        )
+        validateIsCreator(roomRepository = roomRepository, roomId = playlist.roomId, memberId = memberId)
         val item = playlistItemRepository.save(request.toEntity(playlist))
         playlist.addToOrder(item)
         return PlaylistItemDto.of(item)
@@ -111,11 +87,7 @@ class PlaylistService(
     fun removeItem(memberId: Long, request: RoomRemovePlaylistItemRequest) {
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
-        validateIsCreator(
-            roomRepository = roomRepository,
-            roomId = playlist.roomId,
-            memberId = memberId
-        )
+        validateIsCreator(roomRepository = roomRepository, roomId = playlist.roomId, memberId = memberId)
         val playListItems = playlistItemRepository.findAllById(request.playlistItemIds)
         if (playListItems.isEmpty()) {
             return
@@ -128,11 +100,7 @@ class PlaylistService(
     fun changeOrder(memberId: Long, request: RoomChangeOrderOfPlaylistItemRequest): List<Long> {
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
-        validateIsCreator(
-            roomRepository = roomRepository,
-            roomId = playlist.roomId,
-            memberId = memberId
-        )
+        validateIsCreator(roomRepository = roomRepository, roomId = playlist.roomId, memberId = memberId)
         playlist.changeOrder(request.playlistItemId, request.prevPlaylistItemIdToMove)
         return playlist.order
     }
@@ -141,11 +109,7 @@ class PlaylistService(
     fun updatePlayInformation(memberId: Long, request: RoomUpdatePlayInformationRequest) {
         val playlist = playlistRepository.findByIdOrNull(request.playlistId)
             ?: throw PlaylistNotFoundException("${request.playlistId}")
-        validateIsCreator(
-            roomRepository = roomRepository,
-            roomId = playlist.roomId,
-            memberId = memberId
-        )
+        validateIsCreator(roomRepository = roomRepository, roomId = playlist.roomId, memberId = memberId)
         playlist.updatePlayInformation(request.playlistItemId, request.playStatus)
     }
 }

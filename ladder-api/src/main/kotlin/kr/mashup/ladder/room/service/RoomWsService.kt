@@ -4,6 +4,7 @@ import kr.mashup.ladder.domain.room.domain.RoomMessage
 import kr.mashup.ladder.domain.room.domain.RoomMessagePublisher
 import kr.mashup.ladder.domain.room.domain.RoomMessageType
 import kr.mashup.ladder.domain.room.domain.RoomTopic
+import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.playlist.service.PlaylistService
 import kr.mashup.ladder.room.dto.request.RoomAcceptPlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomAddPlaylistItemRequest
@@ -14,12 +15,14 @@ import kr.mashup.ladder.room.dto.request.RoomSendChatRequest
 import kr.mashup.ladder.room.dto.request.RoomSendEmojiRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdatePlayInformationRequest
+import kr.mashup.ladder.room.service.RoomServiceHelper.validateIsParticipant
 import org.springframework.stereotype.Service
 
 @Service
 class RoomWsService(
     private val playlistService: PlaylistService,
     private val roomMessagePublisher: RoomMessagePublisher,
+    private val roomRepository: RoomRepository,
 ) {
 
     fun sendChat(roomId: Long, senderId: Long, request: RoomSendChatRequest) {
@@ -30,6 +33,7 @@ class RoomWsService(
     }
 
     fun sendEmoji(roomId: Long, senderId: Long, request: RoomSendEmojiRequest) {
+        validateIsParticipant(roomRepository = roomRepository, roomId = roomId, memberId = senderId)
         roomMessagePublisher.publish(
             RoomTopic(roomId),
             RoomMessage(RoomMessageType.EMOJI, request.toMessage(roomId, senderId))
@@ -37,6 +41,7 @@ class RoomWsService(
     }
 
     fun sendPlaylistItemRequest(roomId: Long, senderId: Long, request: RoomSendPlaylistItemRequestRequest) {
+        validateIsParticipant(roomRepository = roomRepository, roomId = roomId, memberId = senderId)
         val item = playlistService.addItemRequest(request, memberId = senderId)
         roomMessagePublisher.publish(
             RoomTopic(roomId),
