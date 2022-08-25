@@ -25,7 +25,7 @@ class MoodSuggestionEventListener(
         val room = RoomServiceHelper.findRoomByIdFetchMember(roomRepository, event.roomId)
         val principals = WsMemberPrincipalContext.get(room.getCreator())
         val payload = WsResponse.ok(
-            type = WsResponseType.MOOD_REQUEST,
+            type = WsResponseType.MOOD_CHANGE_REQUEST,
             data = MoodSuggestionReceivedResponse(
                 name = event.name,
                 totalCounts = moodSuggestionRepository.countByRoomId(roomId = room.id)
