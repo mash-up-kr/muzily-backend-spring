@@ -13,9 +13,9 @@ import kr.mashup.ladder.room.dto.request.RoomChangeOrderOfPlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomDeclinePlaylistItemRequestRequest
 import kr.mashup.ladder.room.dto.request.RoomRemovePlaylistItemRequest
 import kr.mashup.ladder.room.dto.request.RoomSendPlaylistItemRequestRequest
+import kr.mashup.ladder.room.dto.request.RoomUpdatePlayInformationRequest
 import kr.mashup.ladder.room.service.RoomServiceHelper.validateIsCreator
 import kr.mashup.ladder.room.service.RoomServiceHelper.validateIsParticipant
-import kr.mashup.ladder.room.dto.request.RoomUpdatePlayInformationRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -116,7 +116,11 @@ class PlaylistService(
             roomId = playlist.roomId,
             memberId = memberId
         )
-        playlistItemRepository.deleteAllById(request.playlistItemIds)
+        val playListItems = playlistItemRepository.findAllById(request.playlistItemIds)
+        if (playListItems.isEmpty()) {
+            return
+        }
+        playlistItemRepository.deleteAllById(playListItems.map { playlistItem -> playlistItem.id })
         playlist.removeFromOrderBulk(request.playlistItemIds)
     }
 
