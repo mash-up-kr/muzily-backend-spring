@@ -1,17 +1,22 @@
-### 방의 분위기를 추천합니다
+### 방의 분위기 변경을 요청합니다
 POST {{api}}/api/v1/room/{{ROOM_ID}}/mood/suggestions
 Content-Type: application/json
 Authorization: Bearer {{SESSION_ID}}
 
 {
-    "names": [
-        "신나는",
-        "여행",
-        "드라이브"
-    ]
+    "name": "생일 축하 노래를 원해요"
 }
 
 
 ### 방에 추천된 분위기 목록을 조회합니다
 GET {{api}}/api/v1/room/{{ROOM_ID}}/mood/suggestions?size=2
+Authorization: Bearer {{SESSION_ID}}
+
+> {%
+client.global.set("SUGGESTION_ID", response.body["contents"][0]["suggestionId"])
+%}
+
+
+### 방에 추천된 분위기 목록을 삭제합니다
+DELETE {{api}}/api/v1/room/{{ROOM_ID}}/mood/suggestions/{{SUGGESTION_ID}}
 Authorization: Bearer {{SESSION_ID}}

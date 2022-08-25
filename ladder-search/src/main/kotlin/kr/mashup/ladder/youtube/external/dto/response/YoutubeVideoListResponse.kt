@@ -17,7 +17,7 @@ data class YoutubeVideoResponse(
 
     fun validateAllowedCategory() {
         if (!YoutubeVideoCategory.isMusicCategory(snippet.categoryId)) {
-            throw YoutubeNotAllowedCategoryException("해당하는 Youtube 영상(${id})의 카테고리(${snippet.categoryId})는 음악 카테고리(${YoutubeVideoCategory.MUSIC.categoryId})가 아닙니다")
+            throw YoutubeNotAllowedCategoryException("해당 Youtube 영상(${id})의 카테고리(${snippet.categoryId})는 허용되지 않았습니다")
         }
     }
 

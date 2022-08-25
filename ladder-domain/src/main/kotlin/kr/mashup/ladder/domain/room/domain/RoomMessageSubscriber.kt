@@ -2,6 +2,7 @@ package kr.mashup.ladder.domain.room.domain
 
 import com.fasterxml.jackson.core.type.TypeReference
 import kr.mashup.ladder.common.util.JsonUtil
+import kr.mashup.ladder.domain.mood.domain.MoodSuggestionMessage
 import kr.mashup.ladder.domain.room.domain.chat.RoomChatMessage
 import kr.mashup.ladder.domain.room.domain.emoji.RoomEmojiMessage
 import kr.mashup.ladder.domain.room.domain.playlist.RoomPlayInformationUpdateMessage
@@ -67,6 +68,12 @@ class RoomMessageSubscriber(
                 val roomMessage = JsonUtil.fromByteArray(
                     message.body,
                     object : TypeReference<RoomMessage<RoomPlayInformationUpdateMessage>>() {})
+                applicationEventPublisher.publishEvent(roomMessage.data.toEvent())
+            }
+            RoomMessageType.MOOD_CHANGE_REQUEST -> {
+                val roomMessage = JsonUtil.fromByteArray(
+                    message.body,
+                    object : TypeReference<RoomMessage<MoodSuggestionMessage>>() {})
                 applicationEventPublisher.publishEvent(roomMessage.data.toEvent())
             }
         }

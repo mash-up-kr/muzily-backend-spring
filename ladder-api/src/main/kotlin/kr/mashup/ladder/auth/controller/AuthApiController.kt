@@ -6,9 +6,9 @@ import kr.mashup.ladder.auth.dto.response.LoginResponse
 import kr.mashup.ladder.auth.service.AnonymousAuthService
 import kr.mashup.ladder.auth.service.AuthService
 import kr.mashup.ladder.auth.service.AuthServiceFinder
+import kr.mashup.ladder.common.constants.ApiResponseConstants
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.resolver.MEMBER_ID
-import kr.mashup.ladder.common.constants.ApiResponseConstants
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -22,7 +22,7 @@ class AuthApiController(
     private val httpSession: HttpSession,
 ) {
 
-    @ApiOperation("소셜 로그인/회원가입 API")
+    @ApiOperation("소셜 로그인/회원가입을 요청합니다")
     @PostMapping("/api/v1/auth")
     fun handleAuthentication(
         @Valid @RequestBody request: AuthRequest,
@@ -33,7 +33,7 @@ class AuthApiController(
         return LoginResponse(memberId = memberId, token = httpSession.id)
     }
 
-    @ApiOperation("익명 회원가입 API")
+    @ApiOperation("게스트 로그인을 위한 토큰을 요청합니다")
     @PostMapping("/api/v1/auth/anonymous")
     fun createAnonymousMember(): LoginResponse {
         val memberId = anonymousAuthService.createAnonymousMember()
@@ -41,7 +41,7 @@ class AuthApiController(
         return LoginResponse(memberId = memberId, token = httpSession.id)
     }
 
-    @ApiOperation("로그아웃 API")
+    @ApiOperation("로그아웃을 요청합니다")
     @Auth
     @PostMapping("/api/v1/logout")
     fun logout(): String {
