@@ -4,13 +4,13 @@ import kr.mashup.ladder.domain.room.domain.playlist.RoomPlaylistItemRemoveMessag
 
 data class RoomRemovePlaylistItemRequest(
     val playlistId: Long,
-    val playlistItemId: Long,
+    val playlistItemIds: List<Long>,
 ) {
     fun toMessage(roomId: Long): RoomPlaylistItemRemoveMessage {
         return RoomPlaylistItemRemoveMessage(
             roomId = roomId,
             playlistId = playlistId,
-            playlistItemId = playlistItemId
+            playlistItemIds = playlistItemIds
         )
     }
 }

@@ -18,7 +18,7 @@ class RoomPlaylistItemRemoveMessageReceiveEventListener(
         val destination = "$WS_DESTINATION_PREFIX_TOPIC/v1/rooms/${event.roomId}"
         val payload = WsResponse.ok(
             WsResponseType.PLAYLIST_ITEM_REMOVE,
-            RoomPlaylistItemRemoveResponse(playlistId = event.playlistId, playlistItemId = event.playlistItemId))
+            RoomPlaylistItemRemoveResponse(playlistId = event.playlistId, playlistItemIds = event.playlistItemIds))
         simpMessagingTemplate.convertAndSend(destination, payload)
     }
 }

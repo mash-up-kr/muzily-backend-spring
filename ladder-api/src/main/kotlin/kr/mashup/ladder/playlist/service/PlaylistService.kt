@@ -2,10 +2,8 @@ package kr.mashup.ladder.playlist.service
 
 import kr.mashup.ladder.domain.playlist.domain.PlaylistNotFoundException
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
-import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItem
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemNotFoundException
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItemRepository
-import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
 import kr.mashup.ladder.playlist.dto.PlaylistDto
 import kr.mashup.ladder.playlist.dto.PlaylistItemDto
@@ -118,8 +116,8 @@ class PlaylistService(
             roomId = playlist.roomId,
             memberId = memberId
         )
-        playlistItemRepository.deleteById(request.playlistItemId)
-        playlist.removeFromOrder(request.playlistItemId)
+        playlistItemRepository.deleteAllById(request.playlistItemIds)
+        playlist.removeFromOrderBulk(request.playlistItemIds)
     }
 
     @Transactional
