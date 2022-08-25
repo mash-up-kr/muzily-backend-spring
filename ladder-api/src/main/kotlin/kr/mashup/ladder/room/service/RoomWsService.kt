@@ -40,7 +40,7 @@ class RoomWsService(
         val item = playlistService.addItemRequest(request, memberId = senderId)
         roomMessagePublisher.publish(
             RoomTopic(roomId),
-            RoomMessage(RoomMessageType.PLAYLIST_ITEM_REQUEST, request.toMessage(roomId, senderId, item.id))
+            RoomMessage(RoomMessageType.PLAYLIST_ITEM_REQUEST, request.toMessage(roomId, senderId, item.playlistItemId))
         )
     }
 
@@ -64,7 +64,7 @@ class RoomWsService(
         val item = playlistService.addItem(memberId, request)
         roomMessagePublisher.publish(
             RoomTopic(roomId),
-            RoomMessage(RoomMessageType.PLAYLIST_ITEM_ADD, request.toMessage(roomId, item.id))
+            RoomMessage(RoomMessageType.PLAYLIST_ITEM_ADD, request.toMessage(roomId, item.playlistItemId))
         )
     }
 
