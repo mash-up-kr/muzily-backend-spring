@@ -17,7 +17,7 @@ class MemberApiController(
     private val memberService: MemberService,
 ) {
 
-    @ApiOperation("나의 멤버 정보를 조회하는 API")
+    @ApiOperation("나의 회원 정보를 조회합니다")
     @Auth
     @GetMapping("/api/v1/members")
     fun getMyMemberInfo(
@@ -26,7 +26,7 @@ class MemberApiController(
         return memberService.retrieveMemberInfo(memberId)
     }
 
-    @ApiOperation("나의 멤버 정보를 수정하는 API")
+    @ApiOperation("나의 회원 정보를 수정합니다")
     @Auth
     @PutMapping("/api/v1/members")
     fun updateMyMemberInfo(

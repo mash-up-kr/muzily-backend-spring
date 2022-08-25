@@ -1,9 +1,9 @@
 package kr.mashup.ladder.room.controller
 
 import io.swagger.annotations.ApiOperation
+import kr.mashup.ladder.common.constants.ApiResponseConstants.SUCCESS
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.annotation.MemberId
-import kr.mashup.ladder.common.constants.ApiResponseConstants.SUCCESS
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
 import kr.mashup.ladder.room.dto.response.CreatedRoomResponse
@@ -33,7 +33,7 @@ class RoomApiController(
         return roomService.createRoom(request = request, memberId = memberId)
     }
 
-    @ApiOperation("방에 대한 정보를 수정합니다")
+    @ApiOperation("방장이 방의 정보를 수정합니다")
     @Auth(allowedAnonymous = false)
     @PutMapping("/api/v1/rooms/{roomId}")
     fun updateRoomInfo(
@@ -44,7 +44,7 @@ class RoomApiController(
         return roomService.updateRoomInfo(roomId = roomId, request = request, memberId = memberId)
     }
 
-    @ApiOperation("방을 삭제합니다")
+    @ApiOperation("방장이 방을 삭제합니다")
     @Auth(allowedAnonymous = false)
     @DeleteMapping("/api/v1/rooms/{roomId}")
     fun deleteRoom(
@@ -64,7 +64,7 @@ class RoomApiController(
         return roomService.retrieveMyRoom(memberId = memberId)
     }
 
-    @ApiOperation("특정 방에 대한 정보를 조회합니다 (참여자만 가능)")
+    @ApiOperation("특정 방에 대한 정보를 조회합니다 (방의 참여자만 가능)")
     @Auth
     @GetMapping("/api/v1/rooms/{roomId}")
     fun retrieveRoomDetailInfo(

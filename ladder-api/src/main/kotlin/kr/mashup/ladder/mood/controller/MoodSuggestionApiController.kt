@@ -24,7 +24,7 @@ class MoodSuggestionApiController(
     private val moodSuggestionService: MoodSuggestionService,
 ) {
 
-    @ApiOperation("방의 분위기 변경을 요청합니다")
+    @ApiOperation("방의 참가자가 방의 분위기 변경을 요청합니다")
     @Auth
     @PostMapping("/api/v1/room/{roomId}/mood/suggestions")
     fun suggestRoomMood(
@@ -36,7 +36,7 @@ class MoodSuggestionApiController(
         return SUCCESS
     }
 
-    @ApiOperation("관리자가 방에 제안된 분위기 목록을 조회합니다 (최근꺼부터 커서 페이징)")
+    @ApiOperation("방장이 방에 제안된 분위기 목록을 조회합니다 (최근꺼부터 커서 페이징)")
     @Auth
     @GetMapping("/api/v1/room/{roomId}/mood/suggestions")
     fun retrieveMoodSuggestions(
@@ -51,7 +51,7 @@ class MoodSuggestionApiController(
         )
     }
 
-    @ApiOperation("관리자가 방에 제안한 분위기를 삭제합니다")
+    @ApiOperation("방장이 방에 요청된 분위기를 읽음 처리 합니다")
     @Auth
     @DeleteMapping("/api/v1/room/{roomId}/mood/suggestions/{suggestionId}")
     fun deleteMoodSuggestion(

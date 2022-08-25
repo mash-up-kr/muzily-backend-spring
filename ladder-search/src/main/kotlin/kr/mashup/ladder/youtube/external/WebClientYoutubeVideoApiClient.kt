@@ -45,7 +45,7 @@ class WebClientYoutubeVideoApiClient(
             .awaitSingle()
             .let { matchedVideos ->
                 if (matchedVideos.isEmpty()) {
-                    throw YoutubeVideoNotFoundException("해당하는 음악 카테고리의 Youtube 영상(${videoId})은 존재하지 않습니다")
+                    throw YoutubeVideoNotFoundException("해당 Youtube 영상(${videoId})은 존재하지 않습니다")
                 }
                 matchedVideos.first()
             }

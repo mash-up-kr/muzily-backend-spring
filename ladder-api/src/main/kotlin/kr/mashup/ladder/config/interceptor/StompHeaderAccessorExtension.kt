@@ -12,7 +12,7 @@ private const val MEMBER_ID_SESSION_ATTRIBUTE_KEY = MEMBER_ID
 fun StompHeaderAccessor.getSessionIdFromHeader(): String {
     val header = this.getFirstNativeHeader(AUTHORIZATION_HEADER_KEY)
     if (header.isNullOrBlank() || !header.startsWith(AUTHORIZATION_HEADER_VALUE_PREFIX)) {
-        throw IllegalArgumentException()
+        throw IllegalArgumentException("잘못된 Authorization Header (${header})가 요청되었습니다")
     }
 
     return header.split(AUTHORIZATION_HEADER_VALUE_PREFIX)[1]

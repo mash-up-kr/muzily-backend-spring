@@ -43,9 +43,8 @@ class MoodSuggestionService(
     @Transactional
     fun deleteMoodSuggestion(roomId: Long, memberId: Long, suggestionId: Long) {
         validateIsCreator(roomRepository = roomRepository, roomId = roomId, memberId = memberId)
-
         val suggestion = moodSuggestionRepository.findByIdAndRoomId(suggestionId, roomId)
-            ?: throw MoodSuggestionNotFoundException("방($roomId)에 해당하는 추천 분위기($suggestionId)는 존재하지 않습니다")
+            ?: throw MoodSuggestionNotFoundException("방($roomId)에 해당하는 분위기 변경 요청($suggestionId)는 존재하지 않습니다")
         moodSuggestionRepository.delete(suggestion)
     }
 

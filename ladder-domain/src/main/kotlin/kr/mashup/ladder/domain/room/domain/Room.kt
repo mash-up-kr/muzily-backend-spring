@@ -54,7 +54,7 @@ class Room(
 
     private fun validateIsNotParticipantInRoom(memberId: Long) {
         if (isParticipant(memberId)) {
-            throw RoomMemberConflictException("이미 해당하는 방(${id})에 참여하고 있는 멤버(${memberId}) 입니다")
+            throw RoomMemberConflictException("이미 방(${id})에 참여하고 있는 멤버(${memberId}) 입니다")
         }
     }
 
@@ -72,7 +72,7 @@ class Room(
 
     fun getCreator(): Long {
         return this.participants.find { participant -> participant.role == RoomRole.CREATOR }?.memberId
-            ?: throw IllegalArgumentException("방(${id})에 대한 생성자가 존재하지 않습니다")
+            ?: throw IllegalArgumentException("방(${id})에 대한 방장이 존재하지 않습니다")
     }
 
     companion object {
