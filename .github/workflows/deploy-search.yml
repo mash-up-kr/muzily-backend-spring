@@ -4,7 +4,7 @@ on:
     inputs:
       version:
         description: "버전"
-        default: '0.0.1'
+        default: '0.0.2'
         required: true
       profile:
         description: "프로파일"
