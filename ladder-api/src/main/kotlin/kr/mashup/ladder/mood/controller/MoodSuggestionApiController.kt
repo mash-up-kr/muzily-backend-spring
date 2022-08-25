@@ -24,7 +24,7 @@ class MoodSuggestionApiController(
     private val moodSuggestionService: MoodSuggestionService,
 ) {
 
-    @ApiOperation("방의 참가자가 방의 분위기 변경을 요청합니다")
+    @ApiOperation("방의 참가자가 방의 분위기 변경을 요청합니다 (웹 소켓 연동 필요)")
     @Auth
     @PostMapping("/api/v1/room/{roomId}/mood/suggestions")
     fun suggestRoomMood(

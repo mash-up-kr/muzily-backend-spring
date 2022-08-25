@@ -36,7 +36,8 @@ class MoodSuggestionService(
                 next = suggestionsCursor.nextCursor()?.id,
                 hasNext = suggestionsCursor.hasNext(),
             ),
-            contents = suggestionsCursor.getItems().map { suggestion -> MoodSuggestionResponse.of(suggestion) }
+            contents = suggestionsCursor.getItems().map { suggestion -> MoodSuggestionResponse.of(suggestion) },
+            totalCounts = moodSuggestionRepository.countByRoomId(roomId = roomId), // TODO: 카운트 관리 방식 수정....
         )
     }
 

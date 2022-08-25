@@ -9,4 +9,6 @@ interface MoodSuggestionQueryRepository {
 
     fun findByIdAndRoomId(suggestionId: Long, roomId: Long): MoodSuggestion?
 
+    fun countByRoomId(roomId: Long): Long
+
 }

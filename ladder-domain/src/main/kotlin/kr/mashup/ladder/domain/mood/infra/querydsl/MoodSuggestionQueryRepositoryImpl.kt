@@ -56,4 +56,12 @@ class MoodSuggestionQueryRepositoryImpl(
             .fetchOne()
     }
 
+    override fun countByRoomId(roomId: Long): Long {
+        return queryFactory.select(moodSuggestion.id.count())
+            .from(moodSuggestion)
+            .where(
+                moodSuggestion.roomId.eq(roomId)
+            ).fetchOne() ?: 0L
+    }
+
 }
