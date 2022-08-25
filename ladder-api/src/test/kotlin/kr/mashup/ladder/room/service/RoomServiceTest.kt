@@ -32,7 +32,7 @@ internal class RoomServiceTest(
         val request = RoomCreateRequest(name = "방에 대한 설명", emojiType = EmojiType.BOOK)
 
         // when
-        roomService.create(request, memberId = member.id)
+        roomService.createRoom(request, memberId = member.id)
 
         // then
         val rooms = roomRepository.findAll()
@@ -48,7 +48,7 @@ internal class RoomServiceTest(
         val request = RoomCreateRequest(name = "방에 대한 설명", emojiType = EmojiType.BOOK)
 
         // when
-        roomService.create(request, memberId = member.id)
+        roomService.createRoom(request, memberId = member.id)
 
         // then
         val rooms = roomRepository.findAll()
@@ -70,7 +70,7 @@ internal class RoomServiceTest(
         )
 
         // when
-        roomService.create(request, memberId = member.id)
+        roomService.createRoom(request, memberId = member.id)
 
         // then
         val playlists = playlistRepository.findAll()
@@ -96,7 +96,7 @@ internal class RoomServiceTest(
 
         // when & then
         assertThatThrownBy {
-            roomService.create(request, memberId = member.id)
+            roomService.createRoom(request, memberId = member.id)
         }.isInstanceOf(RoomConflictException::class.java)
     }
 
@@ -118,7 +118,7 @@ internal class RoomServiceTest(
         )
 
         // when
-        roomService.update(roomId = room.id, request = request, memberId = member.id)
+        roomService.updateRoomInfo(roomId = room.id, request = request, memberId = member.id)
 
         // then
         val rooms = roomRepository.findAll()
@@ -140,7 +140,7 @@ internal class RoomServiceTest(
 
         // when & then
         assertThatThrownBy {
-            roomService.update(roomId = notFoundRoomId, request = request, memberId = member.id)
+            roomService.updateRoomInfo(roomId = notFoundRoomId, request = request, memberId = member.id)
         }.isInstanceOf(RoomNotFoundException::class.java)
     }
 
@@ -164,7 +164,7 @@ internal class RoomServiceTest(
 
         // when & then
         assertThatThrownBy {
-            roomService.update(roomId = room.id, request = request, memberId = isNotOwnerId)
+            roomService.updateRoomInfo(roomId = room.id, request = request, memberId = isNotOwnerId)
         }.isInstanceOf(ForbiddenException::class.java)
     }
 
@@ -184,7 +184,7 @@ internal class RoomServiceTest(
 
         // when & then
         assertThatThrownBy {
-            roomService.update(roomId = room.id, request = request, memberId = member.id)
+            roomService.updateRoomInfo(roomId = room.id, request = request, memberId = member.id)
         }.isInstanceOf(RoomNotFoundException::class.java)
     }
 

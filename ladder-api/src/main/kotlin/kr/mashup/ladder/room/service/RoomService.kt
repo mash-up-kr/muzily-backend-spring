@@ -24,7 +24,7 @@ class RoomService(
 ) {
 
     @Transactional
-    fun create(request: RoomCreateRequest, memberId: Long): RoomDetailInfoResponse {
+    fun createRoom(request: RoomCreateRequest, memberId: Long): RoomDetailInfoResponse {
         validateNotExistsCreatedRoomByMember(memberId = memberId)
         val room: Room = roomRepository.save(request.toEntity(memberId = memberId))
 
@@ -43,7 +43,7 @@ class RoomService(
     }
 
     @Transactional
-    fun update(roomId: Long, request: RoomUpdateRequest, memberId: Long): RoomDetailInfoResponse {
+    fun updateRoomInfo(roomId: Long, request: RoomUpdateRequest, memberId: Long): RoomDetailInfoResponse {
         val room = findRoomByIdFetchMember(roomRepository, roomId = roomId)
         validateIsCreator(roomRepository = roomRepository, roomId = roomId, memberId = memberId)
 
@@ -57,14 +57,14 @@ class RoomService(
     }
 
     @Transactional(readOnly = true)
-    fun getMyCreatedRoom(memberId: Long): CreatedRoomResponse {
+    fun retrieveMyRoom(memberId: Long): CreatedRoomResponse {
         val roomId = roomRepository.findRoomIdByCreatorId(creatorId = memberId)
             ?: throw CreatedRoomNotFoundException("멤버($memberId)가 생성한 방이 존재하지 않습니다")
         return CreatedRoomResponse.of(roomId = roomId)
     }
 
     @Transactional(readOnly = true)
-    fun getRoom(roomId: Long, memberId: Long): RoomDetailInfoResponse {
+    fun retrieveRoomDetailInfo(roomId: Long, memberId: Long): RoomDetailInfoResponse {
         val room = findRoomById(roomRepository, roomId)
         validateIsParticipant(roomRepository = roomRepository, roomId = room.id, memberId = memberId)
 

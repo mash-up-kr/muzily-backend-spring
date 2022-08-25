@@ -30,7 +30,7 @@ class MoodSuggestionController(
         @MemberId memberId: Long,
         @Valid @RequestBody request: AddMoodSuggestionRequest,
     ): String {
-        moodSuggestionService.suggestRoomMood(roomId = roomId, memberId = memberId, request = request)
+        moodSuggestionService.suggestMood(roomId = roomId, memberId = memberId, request = request)
         return SUCCESS
     }
 
