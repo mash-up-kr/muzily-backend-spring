@@ -1,6 +1,7 @@
 package kr.mashup.ladder.room.service
 
 import kr.mashup.ladder.common.exception.ErrorCode.IS_NOT_CREATOR_IN_ROOM_FORBIDDEN
+import kr.mashup.ladder.common.exception.ErrorCode.IS_NOT_PARTICIPANT_IN_ROOM_FORBIDDEN
 import kr.mashup.ladder.common.exception.model.ForbiddenException
 import kr.mashup.ladder.domain.room.domain.Room
 import kr.mashup.ladder.domain.room.exception.RoomNotFoundException
@@ -11,7 +12,7 @@ object RoomServiceHelper {
     fun validateIsCreator(roomRepository: RoomRepository, roomId: Long, memberId: Long) {
         if (!roomRepository.existsRoomByIdAndCreatorId(roomId = roomId, creatorId = memberId)) {
             throw ForbiddenException(
-                "멤버($memberId)는 해당하는 방($roomId)에 대한 권한이 없습니다",
+                "멤버($memberId)는 방($roomId)의 방장이 아닙니다",
                 IS_NOT_CREATOR_IN_ROOM_FORBIDDEN
             )
         }
@@ -20,8 +21,8 @@ object RoomServiceHelper {
     fun validateIsParticipant(roomRepository: RoomRepository, roomId: Long, memberId: Long) {
         if (!roomRepository.existsRoomByIdAndMemberId(roomId = roomId, creatorId = memberId)) {
             throw ForbiddenException(
-                "멤버($memberId)는 해당하는 방($roomId)에 대한 권한이 없습니다",
-                IS_NOT_CREATOR_IN_ROOM_FORBIDDEN
+                "멤버($memberId)는 방($roomId)의 참가자가 아닙니다",
+                IS_NOT_PARTICIPANT_IN_ROOM_FORBIDDEN
             )
         }
     }
@@ -38,7 +39,7 @@ object RoomServiceHelper {
 
     fun findRoomByInvitationKey(roomRepository: RoomRepository, invitationKey: String): Room {
         return roomRepository.findRoomByInvitationKey(invitationKey)
-            ?: throw RoomNotFoundException("해당하는 초대장(${invitationKey})에 해당하는 방은 존재하지 않습니다")
+            ?: throw RoomNotFoundException("해당하는 초대장(${invitationKey})의 방은 존재하지 않습니다")
     }
 
 }

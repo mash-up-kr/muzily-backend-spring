@@ -6,10 +6,8 @@ import kr.mashup.ladder.common.dto.response.PagingResponse
 import kr.mashup.ladder.domain.mood.exception.MoodSuggestionNotFoundException
 import kr.mashup.ladder.domain.mood.infra.jpa.MoodSuggestionRepository
 import kr.mashup.ladder.domain.room.infra.jpa.RoomRepository
-import kr.mashup.ladder.mood.dto.request.AddMoodSuggestionRequest
 import kr.mashup.ladder.mood.dto.response.MoodSuggestionResponse
 import kr.mashup.ladder.room.service.RoomServiceHelper.validateIsCreator
-import kr.mashup.ladder.room.service.RoomServiceHelper.validateIsParticipant
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -18,13 +16,6 @@ class MoodSuggestionService(
     private val moodSuggestionRepository: MoodSuggestionRepository,
     private val roomRepository: RoomRepository,
 ) {
-
-    @Transactional
-    fun suggestMood(roomId: Long, request: AddMoodSuggestionRequest, memberId: Long) {
-        validateIsParticipant(roomRepository = roomRepository, roomId = roomId, memberId = memberId)
-
-        moodSuggestionRepository.saveAll(request.toEntity(roomId = roomId, memberId = memberId))
-    }
 
     @Transactional
     fun retrieveMoodSuggestions(

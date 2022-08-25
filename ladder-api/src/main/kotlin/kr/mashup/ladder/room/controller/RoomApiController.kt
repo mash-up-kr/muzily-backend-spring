@@ -1,9 +1,9 @@
 package kr.mashup.ladder.room.controller
 
 import io.swagger.annotations.ApiOperation
-import kr.mashup.ladder.common.constants.ApiResponseConstants.SUCCESS
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.annotation.MemberId
+import kr.mashup.ladder.common.constants.ApiResponseConstants.SUCCESS
 import kr.mashup.ladder.room.dto.request.RoomCreateRequest
 import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
 import kr.mashup.ladder.room.dto.response.CreatedRoomResponse
