@@ -47,7 +47,7 @@ class RoomService(
         val room = findRoomByIdFetchMember(roomRepository, roomId = roomId)
         validateIsCreator(roomRepository = roomRepository, roomId = roomId, memberId = memberId)
 
-        room.update(name = request.name, emojiType = request.emojiType)
+        room.update(name = request.name, moodDescription = request.moodDescription, emojiType = request.emojiType)
 
         return RoomDetailInfoResponse.of(
             room = room,

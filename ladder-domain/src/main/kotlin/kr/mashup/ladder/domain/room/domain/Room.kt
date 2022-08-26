@@ -21,9 +21,8 @@ class Room(
     @Embedded
     var invitationKey: InvitationKey,
 
-    @Column(nullable = false, length = 30)
-    @Enumerated(EnumType.STRING)
-    var emojiType: EmojiType,
+    @Embedded
+    var mood: RoomMood,
 
     @Column(nullable = false, length = 30)
     @Enumerated(EnumType.STRING)
@@ -33,9 +32,12 @@ class Room(
     @OneToMany(mappedBy = "room", cascade = [CascadeType.ALL], orphanRemoval = true)
     val participants: MutableList<RoomMemberMapper> = mutableListOf()
 
-    fun update(name: String, emojiType: EmojiType) {
+    fun update(name: String, moodDescription: String, emojiType: EmojiType) {
         this.name = name
-        this.emojiType = emojiType
+        this.mood = RoomMood(
+            moodDescription = moodDescription,
+            emojiType = emojiType
+        )
     }
 
     fun delete() {
@@ -78,13 +80,17 @@ class Room(
     companion object {
         fun newInstance(
             name: String,
+            moodDescription: String,
             emojiType: EmojiType,
             memberId: Long,
         ): Room {
             val room = Room(
                 name = name,
                 invitationKey = InvitationKey.newInstance(),
-                emojiType = emojiType,
+                mood = RoomMood(
+                    moodDescription = moodDescription,
+                    emojiType = emojiType,
+                )
             )
             room.addCreator(memberId)
             return room

@@ -9,6 +9,9 @@ data class RoomCreateRequest(
     @field:NotBlank(message = "방의 이름을 입력해주세요")
     val name: String = "",
 
+    @field:NotBlank(message = "방 분위기를 입력해주세요")
+    val moodDescription: String = "",
+
     @field:NotNull(message = "방 분위기 이모지를 선택해주세요")
     val emojiType: EmojiType,
 ) {
@@ -17,6 +20,7 @@ data class RoomCreateRequest(
         name = name,
         memberId = memberId,
         emojiType = emojiType,
+        moodDescription = moodDescription,
     )
 
 }
