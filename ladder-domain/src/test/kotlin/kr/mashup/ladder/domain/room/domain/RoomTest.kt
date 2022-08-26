@@ -12,7 +12,7 @@ internal class RoomTest {
         val name = "코딩할때 듣기 좋은 노래"
 
         // when
-        val room = Room.newInstance(name = name, memberId = 1L, emojiType = EmojiType.BOOK)
+        val room = Room.newInstance(name = name, memberId = 1L, emojiType = EmojiType.BOOK, moodDescription = "분위기 설명")
 
         // then
         assertAll(

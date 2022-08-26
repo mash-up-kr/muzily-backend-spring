@@ -2,12 +2,11 @@ package kr.mashup.ladder.room.dto.response
 
 import kr.mashup.ladder.common.dto.response.BaseTimeResponse
 import kr.mashup.ladder.domain.room.domain.Room
-import kr.mashup.ladder.domain.room.domain.emoji.EmojiType
 
 data class RoomDetailInfoResponse(
     val roomId: Long,
     val name: String,
-    val emojiType: EmojiType,
+    val mood: RoomMoodResponse,
     val invitation: RoomInviteInfoResponse,
     val participantsCount: Int,
     val currentUser: RoomMyRoleResponse,
@@ -21,7 +20,7 @@ data class RoomDetailInfoResponse(
                 name = room.name,
                 invitation = RoomInviteInfoResponse.of(room.invitationKey),
                 participantsCount = room.participants.size,
-                emojiType = room.emojiType,
+                mood = RoomMoodResponse(emojiType = room.mood.emojiType, moodDescription = room.mood.moodDescription),
                 currentUser = RoomMyRoleResponse.of(room = room, memberId = memberId),
                 playlist = playlistId?.let { RoomPlaylistInfoResponse.of(playlistId = it) }
             )

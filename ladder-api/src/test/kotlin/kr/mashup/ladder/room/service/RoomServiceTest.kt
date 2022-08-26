@@ -6,6 +6,7 @@ import kr.mashup.ladder.domain.playlist.domain.Playlist
 import kr.mashup.ladder.domain.playlist.domain.PlaylistRepository
 import kr.mashup.ladder.domain.room.domain.InvitationKey
 import kr.mashup.ladder.domain.room.domain.Room
+import kr.mashup.ladder.domain.room.domain.RoomMood
 import kr.mashup.ladder.domain.room.domain.RoomRole
 import kr.mashup.ladder.domain.room.domain.RoomStatus
 import kr.mashup.ladder.domain.room.domain.emoji.EmojiType
@@ -29,7 +30,7 @@ internal class RoomServiceTest(
     @Test
     fun `새로운 방을 생성한다`() {
         // given
-        val request = RoomCreateRequest(name = "방에 대한 설명", emojiType = EmojiType.BOOK)
+        val request = RoomCreateRequest(name = "방에 대한 설명", emojiType = EmojiType.BOOK, moodDescription = "드라이브")
 
         // when
         roomService.createRoom(request, memberId = member.id)
@@ -39,13 +40,14 @@ internal class RoomServiceTest(
         assertThat(rooms).hasSize(1)
         assertRoom(room = rooms[0], name = request.name)
         assertThat(rooms[0].invitationKey).isNotNull
-        assertThat(rooms[0].emojiType).isEqualTo(request.emojiType)
+        assertThat(rooms[0].mood.moodDescription).isEqualTo(request.moodDescription)
+        assertThat(rooms[0].mood.emojiType).isEqualTo(request.emojiType)
     }
 
     @Test
     fun `새로운 방을 생성하면 해당 멤버는 방의 방장이 된다`() {
         // given
-        val request = RoomCreateRequest(name = "방에 대한 설명", emojiType = EmojiType.BOOK)
+        val request = RoomCreateRequest(name = "방에 대한 설명", emojiType = EmojiType.BOOK, moodDescription = "드라이브")
 
         // when
         roomService.createRoom(request, memberId = member.id)
@@ -67,6 +69,7 @@ internal class RoomServiceTest(
         val request = RoomCreateRequest(
             name = "방에 대한 설명",
             emojiType = EmojiType.BOOK,
+            moodDescription = "드라이브"
         )
 
         // when
@@ -84,7 +87,10 @@ internal class RoomServiceTest(
         val room = Room(
             name = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
-            emojiType = EmojiType.BOOK,
+            mood = RoomMood(
+                emojiType = EmojiType.BOOK,
+                moodDescription = "잔잔한"
+            )
         )
         room.addCreator(member.id)
         roomRepository.save(room)
@@ -106,7 +112,10 @@ internal class RoomServiceTest(
         val room = Room(
             name = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
-            emojiType = EmojiType.BOOK,
+            mood = RoomMood(
+                emojiType = EmojiType.BOOK,
+                moodDescription = "잔잔한"
+            )
         )
         room.addCreator(member.id)
         val savedRoom = roomRepository.save(room)
@@ -115,6 +124,7 @@ internal class RoomServiceTest(
         val request = RoomUpdateRequest(
             name = "변경 된 방에 대한 설명",
             emojiType = EmojiType.BOOK,
+            moodDescription = "분위기 좋은"
         )
 
         // when
@@ -125,7 +135,8 @@ internal class RoomServiceTest(
         assertThat(rooms).hasSize(1)
         assertRoom(room = rooms[0], name = request.name)
         assertThat(rooms[0].invitationKey).isNotNull
-        assertThat(rooms[0].emojiType).isEqualTo(request.emojiType)
+        assertThat(rooms[0].mood.emojiType).isEqualTo(request.emojiType)
+        assertThat(rooms[0].mood.moodDescription).isEqualTo(request.moodDescription)
     }
 
     @Test
@@ -136,6 +147,7 @@ internal class RoomServiceTest(
         val request = RoomUpdateRequest(
             name = "변경 된 방에 대한 설명",
             emojiType = EmojiType.BOOK,
+            moodDescription = "분위기 좋은"
         )
 
         // when & then
@@ -152,7 +164,10 @@ internal class RoomServiceTest(
         val room = Room(
             name = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
-            emojiType = EmojiType.BOOK,
+            mood = RoomMood(
+                emojiType = EmojiType.BOOK,
+                moodDescription = "잔잔한"
+            )
         )
         room.addCreator(member.id)
         roomRepository.save(room)
@@ -160,6 +175,7 @@ internal class RoomServiceTest(
         val request = RoomUpdateRequest(
             name = "변경 된 방에 대한 설명",
             emojiType = EmojiType.BOOK,
+            moodDescription = "분위기 좋은"
         )
 
         // when & then
@@ -175,12 +191,15 @@ internal class RoomServiceTest(
             name = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
             status = RoomStatus.DELETED,
-            emojiType = EmojiType.BOOK,
+            mood = RoomMood(
+                emojiType = EmojiType.BOOK,
+                moodDescription = "잔잔한"
+            )
         )
         room.addCreator(member.id)
         roomRepository.save(room)
 
-        val request = RoomUpdateRequest(name = "변경 된 방에 대한 설명", emojiType = EmojiType.BOOK)
+        val request = RoomUpdateRequest(name = "변경 된 방에 대한 설명", emojiType = EmojiType.BOOK, moodDescription = "분위기 좋은")
 
         // when & then
         assertThatThrownBy {
@@ -194,7 +213,10 @@ internal class RoomServiceTest(
         val room = Room(
             name = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
-            emojiType = EmojiType.BOOK,
+            mood = RoomMood(
+                emojiType = EmojiType.BOOK,
+                moodDescription = "잔잔한"
+            )
         )
         room.addCreator(member.id)
         roomRepository.save(room)
@@ -218,7 +240,10 @@ internal class RoomServiceTest(
         val room = Room(
             name = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
-            emojiType = EmojiType.BOOK,
+            mood = RoomMood(
+                emojiType = EmojiType.BOOK,
+                moodDescription = "잔잔한"
+            )
         )
         room.addCreator(member.id)
         roomRepository.save(room)
@@ -236,7 +261,10 @@ internal class RoomServiceTest(
             name = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
             status = RoomStatus.DELETED,
-            emojiType = EmojiType.BOOK,
+            mood = RoomMood(
+                emojiType = EmojiType.BOOK,
+                moodDescription = "잔잔한"
+            )
         )
         room.addCreator(member.id)
         roomRepository.save(room)

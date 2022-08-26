@@ -13,6 +13,7 @@ class RoomFixture {
             return RoomCreateRequest(
                 name = "매쇼~쉬는탐",
                 emojiType = EmojiType.BOOK,
+                moodDescription = "분위기 좋은"
             )
         }
 

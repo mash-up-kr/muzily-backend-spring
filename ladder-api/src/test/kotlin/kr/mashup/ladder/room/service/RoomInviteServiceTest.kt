@@ -3,6 +3,7 @@ package kr.mashup.ladder.room.service
 import kr.mashup.ladder.SetupMemberIntegrationTest
 import kr.mashup.ladder.domain.room.domain.InvitationKey
 import kr.mashup.ladder.domain.room.domain.Room
+import kr.mashup.ladder.domain.room.domain.RoomMood
 import kr.mashup.ladder.domain.room.domain.RoomRole
 import kr.mashup.ladder.domain.room.domain.emoji.EmojiType
 import kr.mashup.ladder.domain.room.exception.RoomMemberConflictException
@@ -24,7 +25,10 @@ internal class RoomInviteServiceTest(
         val room = Room(
             name = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
-            emojiType = EmojiType.BOOK,
+            mood = RoomMood(
+                emojiType = EmojiType.BOOK,
+                moodDescription = "잔잔한"
+            )
         )
         roomRepository.save(room)
 
@@ -45,7 +49,10 @@ internal class RoomInviteServiceTest(
         val room = Room(
             name = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
-            emojiType = EmojiType.BOOK,
+            mood = RoomMood(
+                emojiType = EmojiType.BOOK,
+                moodDescription = "잔잔한"
+            )
         )
         room.addGuest(member.id)
         roomRepository.save(room)
@@ -62,7 +69,10 @@ internal class RoomInviteServiceTest(
         val room = Room(
             name = "방에 대한 설명",
             invitationKey = InvitationKey.newInstance(),
-            emojiType = EmojiType.BOOK,
+            mood = RoomMood(
+                emojiType = EmojiType.BOOK,
+                moodDescription = "잔잔한"
+            )
         )
         room.addCreator(member.id)
         roomRepository.save(room)
