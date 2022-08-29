@@ -10,6 +10,7 @@ enum class YoutubeVideoCategory(
 ) {
 
     MUSIC(description = "음악", categoryId = 10),
+    VIDEO_BLOGGING(description = "Videoblogging", categoryId = 22),
     ENTERTAINMENT(description = "Entertainment", categoryId = 24),
     CLASSIC(description = "Classics", categoryId = 33),
     ;
