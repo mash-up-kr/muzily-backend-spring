@@ -19,6 +19,7 @@ import kr.mashup.ladder.room.dto.request.RoomUpdateRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 
 internal class RoomServiceTest(
     private val roomService: RoomService,
@@ -104,6 +105,30 @@ internal class RoomServiceTest(
         assertThatThrownBy {
             roomService.createRoom(request, memberId = member.id)
         }.isInstanceOf(RoomConflictException::class.java)
+    }
+
+    @Test
+    fun `방에 참가자인 경우에는 새로 방을 생성할 수 있다`() {
+        // given
+        val room = Room(
+            name = "방에 대한 설명",
+            invitationKey = InvitationKey.newInstance(),
+            mood = RoomMood(
+                emojiType = EmojiType.BOOK,
+                moodDescription = "잔잔한"
+            )
+        )
+        roomRepository.save(room)
+
+        val request = RoomCreateRequest(
+            name = "방에 대한 설명",
+            emojiType = EmojiType.BOOK,
+        )
+
+        // when
+        assertDoesNotThrow {
+            roomService.createRoom(request, memberId = member.id)
+        }
     }
 
     @Test

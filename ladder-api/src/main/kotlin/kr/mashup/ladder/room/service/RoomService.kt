@@ -25,7 +25,7 @@ class RoomService(
 
     @Transactional
     fun createRoom(request: RoomCreateRequest, memberId: Long): RoomDetailInfoResponse {
-        validateNotExistsCreatedRoomByMember(memberId = memberId)
+        validateNotExistsCreatedRoomByCreator(memberId = memberId)
         val room: Room = roomRepository.save(request.toEntity(memberId = memberId))
 
         val playlist = playlistRepository.save(Playlist(room.id))
@@ -36,8 +36,8 @@ class RoomService(
         )
     }
 
-    private fun validateNotExistsCreatedRoomByMember(memberId: Long) {
-        if (roomRepository.existsRoomByMemberId(memberId)) {
+    private fun validateNotExistsCreatedRoomByCreator(memberId: Long) {
+        if (roomRepository.existsRoomByCreatorId(memberId)) {
             throw RoomConflictException("멤버($memberId)은 이미 등록한 방이 있습니다 멤버 당 1개의 방만 생성할 수 있습니다")
         }
     }

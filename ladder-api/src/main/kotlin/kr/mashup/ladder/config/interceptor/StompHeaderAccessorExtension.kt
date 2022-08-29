@@ -1,5 +1,6 @@
 package kr.mashup.ladder.config.interceptor
 
+import kr.mashup.ladder.common.exception.model.UnAuthorizedException
 import kr.mashup.ladder.config.resolver.MEMBER_ID
 import kr.mashup.ladder.config.ws.WS_DESTINATION_PREFIX_TOPIC
 import org.springframework.http.HttpHeaders
@@ -12,7 +13,7 @@ private const val MEMBER_ID_SESSION_ATTRIBUTE_KEY = MEMBER_ID
 fun StompHeaderAccessor.getSessionIdFromHeader(): String {
     val header = this.getFirstNativeHeader(AUTHORIZATION_HEADER_KEY)
     if (header.isNullOrBlank() || !header.startsWith(AUTHORIZATION_HEADER_VALUE_PREFIX)) {
-        throw IllegalArgumentException("잘못된 Authorization Header (${header})가 요청되었습니다")
+        throw UnAuthorizedException("잘못된 Authorization Header (${header})가 요청되었습니다")
     }
 
     return header.split(AUTHORIZATION_HEADER_VALUE_PREFIX)[1]

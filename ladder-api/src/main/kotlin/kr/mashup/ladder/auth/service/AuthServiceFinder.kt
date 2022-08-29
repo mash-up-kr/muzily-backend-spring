@@ -28,7 +28,8 @@ class AuthServiceFinder(
     }
 
     fun getService(socialType: SocialType): AuthService {
-        return authServiceMap[socialType] ?: throw UnknownErrorException("지원하지 않는 $socialType 입니다")
+        return authServiceMap[socialType]
+            ?: throw UnknownErrorException("지원하지 않는 $socialType 입니다")
     }
 
 }

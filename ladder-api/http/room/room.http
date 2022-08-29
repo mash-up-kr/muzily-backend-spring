@@ -1,11 +1,12 @@
 ### 방을 생성합니다
 POST {{api}}/api/v1/rooms
 Content-Type: application/json
-Authorization: Bearer {{SESSION_ID}}
+Authorization: Bearer 28b648b6-1f48-46a9-bf0d-c96cab90b68c
 
 {
     "name": "메쇼~쉬는탐",
-    "emojiType": "HEART"
+    "emojiType": "HEART",
+    "moodDescription": "123123"
 }
 
 > {%

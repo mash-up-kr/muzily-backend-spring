@@ -19,13 +19,14 @@ class RoomQueryRepositoryImpl(
             ).fetchOne()
     }
 
-    override fun existsRoomByMemberId(memberId: Long): Boolean {
+    override fun existsRoomByCreatorId(memberId: Long): Boolean {
         return queryFactory.selectOne()
             .from(room)
             .innerJoin(roomMemberMapper)
             .on(roomMemberMapper.room.id.eq(room.id))
             .where(
                 roomMemberMapper.memberId.eq(memberId),
+                roomMemberMapper.role.eq(RoomRole.CREATOR),
                 room.status.eq(RoomStatus.ACTIVE),
             ).fetchFirst() != null
     }

@@ -6,7 +6,7 @@ interface RoomQueryRepository {
 
     fun findRoomByInvitationKey(invitationKey: String): Room?
 
-    fun existsRoomByMemberId(memberId: Long): Boolean
+    fun existsRoomByCreatorId(memberId: Long): Boolean
 
     fun findRoomIdByCreatorId(creatorId: Long): Long?
 
