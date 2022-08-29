@@ -7,11 +7,9 @@ data class MoodSuggestionMessage(
     val name: String,
 ) {
 
-    fun toEvent(): MoodSuggestionReceivedEvent {
-        return MoodSuggestionReceivedEvent(
-            roomId = roomId,
-            name = name,
-        )
-    }
+    fun toEvent() = MoodSuggestionReceivedEvent(
+        roomId = roomId,
+        name = name,
+    )
 
 }

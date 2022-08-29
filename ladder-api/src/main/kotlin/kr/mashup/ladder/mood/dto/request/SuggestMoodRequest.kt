@@ -9,19 +9,15 @@ data class SuggestMoodRequest(
     val name: String = "",
 ) {
 
-    fun toEntity(roomId: Long, memberId: Long): MoodSuggestion {
-        return MoodSuggestion.of(
-            roomId = roomId,
-            name = name,
-            recommenderId = memberId,
-        )
-    }
+    fun toEntity(roomId: Long, memberId: Long) = MoodSuggestion.of(
+        roomId = roomId,
+        name = name,
+        recommenderId = memberId,
+    )
 
-    fun toMessage(roomId: Long): MoodSuggestionMessage {
-        return MoodSuggestionMessage(
-            roomId = roomId,
-            name = name
-        )
-    }
+    fun toMessage(roomId: Long) = MoodSuggestionMessage(
+        roomId = roomId,
+        name = name
+    )
 
 }

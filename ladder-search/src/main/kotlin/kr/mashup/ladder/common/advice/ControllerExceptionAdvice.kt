@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.server.ServerWebInputException
 import java.util.stream.Collectors
 
-private val logger = KotlinLogging.logger {}
-
 @RestControllerAdvice
 class ControllerExceptionAdvice {
+
+    private val logger = KotlinLogging.logger {}
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BindException::class)

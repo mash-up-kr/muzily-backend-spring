@@ -41,7 +41,6 @@ class RoomWsService(
     }
 
     fun sendPlaylistItemRequest(roomId: Long, senderId: Long, request: RoomSendPlaylistItemRequestRequest) {
-        validateIsParticipant(roomRepository = roomRepository, roomId = roomId, memberId = senderId)
         val item = playlistService.addItemRequest(request, memberId = senderId)
         roomMessagePublisher.publish(
             RoomTopic(roomId),

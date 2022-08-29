@@ -13,11 +13,6 @@ class HealthCheckController(
     private val applicationAvailability: ApplicationAvailability,
 ) {
 
-    @GetMapping("/health")
-    fun health(): String {
-        return SUCCESS
-    }
-
     @GetMapping("/liveness")
     fun liveness(): String {
         val livenessState = applicationAvailability.livenessState

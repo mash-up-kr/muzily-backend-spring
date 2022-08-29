@@ -8,7 +8,7 @@ import javax.persistence.Enumerated
 
 @Embeddable
 data class RoomMood(
-    @Column(length = 100) // TODO: not null
+    @Column(nullable = false, length = 100)
     var moodDescription: String,
 
     @Column(nullable = false, length = 30)

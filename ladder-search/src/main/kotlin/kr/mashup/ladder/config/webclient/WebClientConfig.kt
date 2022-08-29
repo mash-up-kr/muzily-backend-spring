@@ -20,13 +20,13 @@ class WebClientConfig {
 
     @Bean
     fun webClient(): WebClient {
-        val connectionProvider: ConnectionProvider = ConnectionProvider.builder("ladder-search-webclient")
-            .build()
-
         return WebClient.builder()
             .clientConnector(
                 ReactorClientHttpConnector(
-                    HttpClient.create(connectionProvider)
+                    HttpClient.create(
+                        ConnectionProvider.builder("ladder-search-webclient")
+                            .build()
+                    )
                         .doOnConnected { conn ->
                             conn
                                 .addHandlerLast(ReadTimeoutHandler(READ_TIME_OUT_MS, TimeUnit.MILLISECONDS))
