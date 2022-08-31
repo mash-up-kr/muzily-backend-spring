@@ -45,10 +45,12 @@ class AuthInterceptor(
 
         if (!auth.allowedAnonymous) {
             if (AccountConnectType.CONNECTED == member.accountConnectType) {
+                request.setAttribute(MEMBER_ID, memberId)
                 return true
             }
             throw ForbiddenNotAllowedAnonymousException("멤버($memberId)는 게스트 사용자입니다. 계정에 연결된 멤버만이 접근할 수 있습니다")
         }
+        request.setAttribute(MEMBER_ID, memberId)
         return true
     }
 
