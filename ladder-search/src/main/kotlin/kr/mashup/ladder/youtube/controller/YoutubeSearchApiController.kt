@@ -16,7 +16,7 @@ class YoutubeSearchApiController(
         @RequestParam videoId: String,
     ): YoutubeVideoResponse {
         val response = youtubeVideoApiClient.getVideoInfo(videoId = videoId)
-        response.validateAllowedCategory()
+//        response.validateAllowedCategory()
         return response
     }
 
