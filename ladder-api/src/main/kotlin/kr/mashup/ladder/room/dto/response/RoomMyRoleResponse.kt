@@ -8,8 +8,8 @@ data class RoomMyRoleResponse(
 ) {
 
     companion object {
-        fun of(room: Room, memberId: Long) = RoomMyRoleResponse(
-            role = room.getRole(memberId),
+        fun of(room: Room, memberId: Long?) = RoomMyRoleResponse(
+            role = memberId?.let { room.getRole(memberId) },
         )
     }
 

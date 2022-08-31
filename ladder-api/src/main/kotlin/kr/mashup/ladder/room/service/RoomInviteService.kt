@@ -14,7 +14,7 @@ class RoomInviteService(
 ) {
 
     @Transactional(readOnly = true)
-    fun getByInvitationKey(invitationKey: String, memberId: Long): RoomInfoResponse {
+    fun getByInvitationKey(invitationKey: String, memberId: Long?): RoomInfoResponse {
         val room = findRoomByInvitationKey(roomRepository, invitationKey)
         return RoomInfoResponse.of(
             room = room, memberId = memberId,

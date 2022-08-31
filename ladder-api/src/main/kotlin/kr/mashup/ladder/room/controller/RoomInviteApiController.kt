@@ -1,9 +1,9 @@
 package kr.mashup.ladder.room.controller
 
 import io.swagger.annotations.ApiOperation
+import kr.mashup.ladder.common.constants.ApiResponseConstants
 import kr.mashup.ladder.config.annotation.Auth
 import kr.mashup.ladder.config.annotation.MemberId
-import kr.mashup.ladder.common.constants.ApiResponseConstants
 import kr.mashup.ladder.room.dto.response.RoomInfoResponse
 import kr.mashup.ladder.room.service.RoomInviteService
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,11 +17,11 @@ class RoomInviteApiController(
 ) {
 
     @ApiOperation("방에 대한 초대장 정보를 조회합니다")
-    @Auth
+    @Auth(optionalAuth = true)
     @GetMapping("/api/v1/rooms/invitation/{invitationKey}")
     fun getRoomInvitationInfo(
         @PathVariable invitationKey: String,
-        @MemberId memberId: Long,
+        @MemberId memberId: Long?,
     ): RoomInfoResponse {
         return roomInviteService.getByInvitationKey(invitationKey = invitationKey, memberId = memberId)
     }

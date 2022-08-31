@@ -1,7 +1,8 @@
 package kr.mashup.ladder.config.resolver
 
-import kr.mashup.ladder.config.annotation.MemberId
 import kr.mashup.ladder.common.exception.model.UnknownErrorException
+import kr.mashup.ladder.config.annotation.Auth
+import kr.mashup.ladder.config.annotation.MemberId
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
@@ -24,6 +25,11 @@ class MemberIdResolver : HandlerMethodArgumentResolver {
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
     ): Any? {
+        val auth = parameter.getMethodAnnotation(Auth::class.java)
+            ?: throw UnknownErrorException("예상치 못한 에러가 발생하였습니다. memberid를 받아오지 못했습니다")
+        if (auth.optionalAuth) {
+            return webRequest.getAttribute(MEMBER_ID, 0)
+        }
         return webRequest.getAttribute(MEMBER_ID, 0)
             ?: throw UnknownErrorException("예상치 못한 에러가 발생하였습니다. memberid를 받아오지 못했습니다")
     }

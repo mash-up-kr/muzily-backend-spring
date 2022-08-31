@@ -14,7 +14,7 @@ data class RoomDetailInfoResponse(
 ) : BaseTimeResponse() {
 
     companion object {
-        fun of(room: Room, playlistId: Long?, memberId: Long): RoomDetailInfoResponse {
+        fun of(room: Room, playlistId: Long?, memberId: Long?): RoomDetailInfoResponse {
             val response = RoomDetailInfoResponse(
                 roomId = room.id,
                 name = room.name,

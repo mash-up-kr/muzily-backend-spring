@@ -31,23 +31,17 @@ class AuthInterceptor(
         }
         val auth = handler.getMethodAnnotation(Auth::class.java) ?: return true
 
-        val header: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
-        if (header.isNullOrBlank() || !header.startsWith(HEADER_TOKEN_PREFIX)) {
-            throw UnAuthorizedException("Bearer 형식이 아닌 헤더 (${header})입니다.")
+        val authorization = request.getHeader(HttpHeaders.AUTHORIZATION)
+        val memberId: Long? = getMemberId(authorization)
+        if (memberId == null) {
+            if (auth.optionalAuth) {
+                return true
+            }
+            throw UnAuthorizedException("유효하지 않은 Authorization 헤더 (${authorization}) 입니다.")
         }
 
-        val sessionId = header.split(HEADER_TOKEN_PREFIX)[1]
-        val memberId: Long? = findSessionBySessionId(sessionId).getAttribute(MEMBER_ID)
-
-        if (memberId != null && passCheckAuth(auth = auth, memberId = memberId)) {
-            request.setAttribute(MEMBER_ID, memberId)
-        }
-        return true
-    }
-
-    private fun passCheckAuth(auth: Auth, memberId: Long): Boolean {
         val member = memberRepository.findByIdOrNull(memberId)
-            ?: throw UnAuthorizedException("유효하지 않은 세션의 멤버(${memberId}) 입니다.")
+            ?: throw UnAuthorizedException("유효하지 않은 세션의 멤버ID (${memberId}) 입니다.")
 
         if (!auth.allowedAnonymous) {
             if (AccountConnectType.CONNECTED == member.accountConnectType) {
@@ -58,9 +52,16 @@ class AuthInterceptor(
         return true
     }
 
-    private fun findSessionBySessionId(sessionId: String): Session {
+    private fun getMemberId(header: String?): Long? {
+        if (header.isNullOrBlank() || !header.startsWith(HEADER_TOKEN_PREFIX)) {
+            return null
+        }
+        val sessionId = header.split(HEADER_TOKEN_PREFIX)[1]
+        return findSessionBySessionId(sessionId)?.getAttribute(MEMBER_ID)
+    }
+
+    private fun findSessionBySessionId(sessionId: String): Session? {
         return sessionRepository.findById(sessionId)
-            ?: throw UnAuthorizedException("해당하는 세션($sessionId)은 존재하지 않습니다")
     }
 
 }
