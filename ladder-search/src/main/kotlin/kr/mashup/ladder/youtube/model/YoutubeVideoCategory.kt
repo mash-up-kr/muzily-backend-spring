@@ -12,6 +12,7 @@ enum class YoutubeVideoCategory(
     FILM(description = "Film & Animation", categoryId = 1),
     MUSIC(description = "Music", categoryId = 10),
     VIDEO_BLOGGING(description = "Videoblogging", categoryId = 21),
+    PEOPLE_BLOG(description = "People & Blog", categoryId = 22),
     ENTERTAINMENT(description = "Entertainment", categoryId = 24),
     CLASSIC(description = "Classics", categoryId = 33),
     ;
