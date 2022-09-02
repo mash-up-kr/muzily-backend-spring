@@ -2,10 +2,11 @@ package kr.mashup.ladder.common.util
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 
 object JsonUtil {
-    private val objectMapper = ObjectMapper().registerModule(kotlinModule())
+    private val objectMapper = ObjectMapper().registerModules(kotlinModule(), JavaTimeModule())
 
     fun toJson(value: Any): String {
         return objectMapper.writeValueAsString(value)

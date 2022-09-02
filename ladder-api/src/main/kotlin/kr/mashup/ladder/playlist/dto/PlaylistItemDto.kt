@@ -1,6 +1,7 @@
 package kr.mashup.ladder.playlist.dto
 
 import kr.mashup.ladder.domain.playlistitem.domain.PlaylistItem
+import java.time.LocalDateTime
 
 data class PlaylistItemDto(
     val playlistItemId: Long,
@@ -10,6 +11,8 @@ data class PlaylistItemDto(
     val thumbnail: String,
     val duration: Int,
     val dominantColor: String?,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime,
 ) {
     companion object {
         fun of(item: PlaylistItem): PlaylistItemDto {
@@ -21,6 +24,8 @@ data class PlaylistItemDto(
                 thumbnail = item.thumbnail,
                 duration = item.duration,
                 dominantColor = item.dominantColor,
+                createdAt = item.createdAt,
+                updatedAt = item.updatedAt
             )
         }
     }
