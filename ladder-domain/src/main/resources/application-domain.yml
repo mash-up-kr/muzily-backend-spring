@@ -83,7 +83,7 @@ spring:
       ddl-auto: update
   datasource:
     hikari:
-      jdbc-url: ENC(gpzVhOKwPZBNGhz8Pi7fxHDTI4i8++7DjMva06v7ZaA56ahbiwhzyh96Dl+dDnozTmxPqtPSS2cgaKFbbnGYwXtlhck9mxsWupxYe/fy26ClOxXEr896ge+s4E3dXMW9)
+      jdbc-url: ENC(LLlmuV8kJ0AJR03x8lavWkB+M4JFds+cmrAgA06RxmMPxDJimqS451SN+Cj18a84GaddY5yZLQuCY4UsPUqO6qB3xT21EAez8j61Ets0uj4HBXTvVIxNs8sLg8dzbuCauVfs7YitegdQ5/vKDasGVw==)
       driver-class-name: com.mysql.cj.jdbc.Driver
       username: ENC(IlBCS9vGUY24UAH9DHNcSKQOb3x5EMZ84MnQjwPihd8h8HZXYD12KBxwpZ7KKBZE)
       password: ENC(6KNadT5PUB4bmhFRlrYbm3TNHpOIjOzQPUQUTicix0rnvtpACyu01d3UZiTUL5S2)
